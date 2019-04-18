@@ -1,0 +1,65 @@
+= Nanook Table
+
+
+== Tutorial
+
+=== Create an equivalence class table from scratch
+
+=== Transform the table to a data generator
+
+=== Introduce sections
+
+=== Create your own generators
+
+=== Create your own writers
+
+=== Create your own filter Processor
+
+
+
+
+
+
+=== Advanced features
+
+==== References
+
+==== Instance IDs
+
+
+
+
+
+
+== Guides
+
+=== Decision table
+
+==== Execute section
+
+==== Never execute section
+
+==== Multiplicity section
+
+==== Multi row section
+
+==== Tag section
+
+==== Filter section
+
+==== Summary section
+
+
+=== Matrix table
+
+
+
+== API
+
+=== Generator
+
+=== Writer
+
+=== Filter Processor
+
+=== Processor

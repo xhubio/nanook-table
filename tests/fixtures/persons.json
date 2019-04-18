@@ -1,0 +1,782 @@
+{
+  "Person_no_ref": {
+    "type": "decision-table",
+    "name": "Person_no_ref",
+    "testcaseOrder": [
+      "c2d33713-c833-4658-9107-a6ac5d798c97",
+      "dccdc43c-40ff-4a95-abb1-b869adea7f2f",
+      "e79b7001-936a-4594-a177-4f684aeac04a",
+      "55401074-8065-4ec5-91ec-1c67e2e9a6a1"
+    ],
+    "testcases": {
+      "c2d33713-c833-4658-9107-a6ac5d798c97": {
+        "name": 1,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "bbe75bd5-34e6-43e8-b013-f58a5ccfea30": "x",
+          "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "e",
+          "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f": "a",
+          "65414bc8-95f7-495f-88d8-c3b8de431327": "e",
+          "ff10e487-c560-404e-a4a0-7209f547a2ba": "a",
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28": "x"
+        },
+        "id": "c2d33713-c833-4658-9107-a6ac5d798c97"
+      },
+      "dccdc43c-40ff-4a95-abb1-b869adea7f2f": {
+        "name": 2,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "x",
+          "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f": "x",
+          "65414bc8-95f7-495f-88d8-c3b8de431327": "a",
+          "ff10e487-c560-404e-a4a0-7209f547a2ba": "e",
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28": "x"
+        },
+        "id": "dccdc43c-40ff-4a95-abb1-b869adea7f2f"
+      },
+      "e79b7001-936a-4594-a177-4f684aeac04a": {
+        "name": 3,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "x",
+          "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "x",
+          "ff10e487-c560-404e-a4a0-7209f547a2ba": "x",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307": "x"
+        },
+        "id": "e79b7001-936a-4594-a177-4f684aeac04a"
+      },
+      "55401074-8065-4ec5-91ec-1c67e2e9a6a1": {
+        "name": 4,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "x",
+          "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "x",
+          "65414bc8-95f7-495f-88d8-c3b8de431327": "x",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307": "x"
+        },
+        "id": "55401074-8065-4ec5-91ec-1c67e2e9a6a1"
+      }
+    },
+    "sections": {
+      "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb": {
+        "sectionType": "FieldSection",
+        "name": "Primary data",
+        "mandatory": true,
+        "multiple": true,
+        "headerRow": "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb",
+        "dataRows": [
+          "20b0812c-3d64-4860-a371-52a1f1a6e1f0",
+          "39c0abdd-fc5d-4cda-988d-e59ca1abd4d9",
+          "746d8187-0879-45ad-813d-1ce6d532b688"
+        ],
+        "subSections": {
+          "20b0812c-3d64-4860-a371-52a1f1a6e1f0": {
+            "sectionType": "FieldSubSection",
+            "name": "first-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "20b0812c-3d64-4860-a371-52a1f1a6e1f0",
+            "dataRows": [
+              "95b0d66c-c4a4-4340-90da-a05c3c538cbd",
+              "bbe75bd5-34e6-43e8-b013-f58a5ccfea30"
+            ],
+            "equivalenceClasses": {
+              "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "valid",
+              "bbe75bd5-34e6-43e8-b013-f58a5ccfea30": "empty"
+            },
+            "comments": {
+              "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "A valid first name",
+              "bbe75bd5-34e6-43e8-b013-f58a5ccfea30": "No value given"
+            },
+            "tdgs": {
+              "95b0d66c-c4a4-4340-90da-a05c3c538cbd": "gen::faker:name.firstName",
+              "bbe75bd5-34e6-43e8-b013-f58a5ccfea30": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb"
+          },
+          "39c0abdd-fc5d-4cda-988d-e59ca1abd4d9": {
+            "sectionType": "FieldSubSection",
+            "name": "last-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "39c0abdd-fc5d-4cda-988d-e59ca1abd4d9",
+            "dataRows": [
+              "8d3c0a5e-52a4-4470-af8a-b7377ef50c79",
+              "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f"
+            ],
+            "equivalenceClasses": {
+              "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "valid",
+              "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f": "empty"
+            },
+            "comments": {
+              "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "A valid last name",
+              "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f": "No value given"
+            },
+            "tdgs": {
+              "8d3c0a5e-52a4-4470-af8a-b7377ef50c79": "gen::faker:name.lastName",
+              "496e5403-9be5-4016-8f4a-4f2ac2c1ee0f": "<empty>"
+            },
+            "tdgMandatory": false,
+            "parent": "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb"
+          },
+          "746d8187-0879-45ad-813d-1ce6d532b688": {
+            "sectionType": "FieldSubSection",
+            "name": "email",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "746d8187-0879-45ad-813d-1ce6d532b688",
+            "dataRows": [
+              "65414bc8-95f7-495f-88d8-c3b8de431327",
+              "ff10e487-c560-404e-a4a0-7209f547a2ba"
+            ],
+            "equivalenceClasses": {
+              "65414bc8-95f7-495f-88d8-c3b8de431327": "valid",
+              "ff10e487-c560-404e-a4a0-7209f547a2ba": "empty"
+            },
+            "comments": {
+              "65414bc8-95f7-495f-88d8-c3b8de431327": "A valid last name",
+              "ff10e487-c560-404e-a4a0-7209f547a2ba": "No value given"
+            },
+            "tdgs": {
+              "65414bc8-95f7-495f-88d8-c3b8de431327": "gen::myPerson",
+              "ff10e487-c560-404e-a4a0-7209f547a2ba": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb"
+          }
+        },
+        "tdgMandatory": false
+      },
+      "547b5480-7e33-4391-86f1-30fd4c61bbe5": {
+        "sectionType": "SummarySection",
+        "name": "Summary",
+        "multiple": true,
+        "headerRow": "547b5480-7e33-4391-86f1-30fd4c61bbe5",
+        "dataRows": []
+      },
+      "a1877332-0d90-45d2-b329-1de0c9ead5cf": {
+        "sectionType": "MultiRowSection",
+        "name": "Effect",
+        "mandatory": false,
+        "multiple": true,
+        "headerRow": "a1877332-0d90-45d2-b329-1de0c9ead5cf",
+        "dataRows": [
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307"
+        ],
+        "keys": {
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28": "Abort action",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307": "Create new Person record"
+        },
+        "comments": {
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28": "a comment 1",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307": "a comment 2"
+        },
+        "others": {
+          "13b99bbb-1a23-4cc2-9366-b81ae9b11a28": "other effect 1",
+          "ccbc735b-40dc-46b9-a9f8-da7ea3d54307": "other effect 2"
+        }
+      }
+    },
+    "sectionOrder": [
+      "7b5b97e4-2534-4fd7-a1f3-1708856ac5fb",
+      "547b5480-7e33-4391-86f1-30fd4c61bbe5",
+      "a1877332-0d90-45d2-b329-1de0c9ead5cf"
+    ]
+  },
+  "Person_with_friend": {
+    "type": "decision-table",
+    "name": "Person_with_friend",
+    "testcaseOrder": [
+      "96a823ca-4613-4897-a75f-309fa664ab8b",
+      "b0696d82-f4cb-46b7-b3ba-604fb75d5a46",
+      "53f82107-6f39-4451-a5b9-3b674db1556f",
+      "4da445e5-d5d1-4cfa-9a81-efc0a2268f0c",
+      "1cf757ca-ebcc-4812-85ba-8001e6becd40",
+      "f0eae00d-a305-4125-be82-a23e2639f58b"
+    ],
+    "testcases": {
+      "96a823ca-4613-4897-a75f-309fa664ab8b": {
+        "name": 1,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "aa4caa80-03e3-4682-b9d1-d5b3e2999570": "x",
+          "df20d471-408a-452d-8623-0397d9cea719": "e",
+          "ccf4d210-7e00-427e-9293-f9faff4c60c4": "a",
+          "8ce988df-63d2-49e0-93b5-956cfc0027ef": "e",
+          "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "a",
+          "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "e",
+          "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "a",
+          "db386470-85bf-442f-9fe7-ee80bca7191b": "e",
+          "dca4e544-b1cc-4235-b536-0c68ab259068": "e",
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f": "x"
+        },
+        "id": "96a823ca-4613-4897-a75f-309fa664ab8b"
+      },
+      "b0696d82-f4cb-46b7-b3ba-604fb75d5a46": {
+        "name": 2,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "d2d0331d-69df-49a0-821f-d421082510c3": "x",
+          "ccf4d210-7e00-427e-9293-f9faff4c60c4": "x",
+          "8ce988df-63d2-49e0-93b5-956cfc0027ef": "a",
+          "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "e",
+          "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "e",
+          "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "a",
+          "db386470-85bf-442f-9fe7-ee80bca7191b": "e",
+          "dca4e544-b1cc-4235-b536-0c68ab259068": "e",
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f": "x"
+        },
+        "id": "b0696d82-f4cb-46b7-b3ba-604fb75d5a46"
+      },
+      "53f82107-6f39-4451-a5b9-3b674db1556f": {
+        "name": 3,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "d2d0331d-69df-49a0-821f-d421082510c3": "x",
+          "df20d471-408a-452d-8623-0397d9cea719": "x",
+          "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "x",
+          "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "x",
+          "db386470-85bf-442f-9fe7-ee80bca7191b": "x",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "x"
+        },
+        "id": "53f82107-6f39-4451-a5b9-3b674db1556f"
+      },
+      "4da445e5-d5d1-4cfa-9a81-efc0a2268f0c": {
+        "name": 4,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "d2d0331d-69df-49a0-821f-d421082510c3": "x",
+          "df20d471-408a-452d-8623-0397d9cea719": "x",
+          "8ce988df-63d2-49e0-93b5-956cfc0027ef": "x",
+          "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "x",
+          "dca4e544-b1cc-4235-b536-0c68ab259068": "x",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "x"
+        },
+        "id": "4da445e5-d5d1-4cfa-9a81-efc0a2268f0c"
+      },
+      "1cf757ca-ebcc-4812-85ba-8001e6becd40": {
+        "name": 5,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "d2d0331d-69df-49a0-821f-d421082510c3": "x",
+          "df20d471-408a-452d-8623-0397d9cea719": "x",
+          "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "x",
+          "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "x",
+          "db386470-85bf-442f-9fe7-ee80bca7191b": "x",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "x"
+        },
+        "id": "1cf757ca-ebcc-4812-85ba-8001e6becd40"
+      },
+      "f0eae00d-a305-4125-be82-a23e2639f58b": {
+        "name": 6,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "d2d0331d-69df-49a0-821f-d421082510c3": "x",
+          "df20d471-408a-452d-8623-0397d9cea719": "x",
+          "8ce988df-63d2-49e0-93b5-956cfc0027ef": "x",
+          "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "x",
+          "dca4e544-b1cc-4235-b536-0c68ab259068": "x",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "x"
+        },
+        "id": "f0eae00d-a305-4125-be82-a23e2639f58b"
+      }
+    },
+    "sections": {
+      "1322b055-fc2d-447c-b974-db5d1e6849d5": {
+        "sectionType": "FieldSection",
+        "name": "Primary data",
+        "mandatory": true,
+        "multiple": true,
+        "headerRow": "1322b055-fc2d-447c-b974-db5d1e6849d5",
+        "dataRows": [
+          "0adf52d1-7beb-4a8b-ad66-acf08fbedac0",
+          "34af444c-7bdf-4f6e-a683-57c29be4252a",
+          "7f5dab86-5f9d-4519-99f3-a5226b9c6efd",
+          "12099c9a-6574-4d0b-a42a-7a09731191d9",
+          "d9267023-22e2-40e7-93e8-6230fe051331"
+        ],
+        "subSections": {
+          "0adf52d1-7beb-4a8b-ad66-acf08fbedac0": {
+            "sectionType": "FieldSubSection",
+            "name": "first-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "0adf52d1-7beb-4a8b-ad66-acf08fbedac0",
+            "dataRows": [
+              "d2d0331d-69df-49a0-821f-d421082510c3",
+              "aa4caa80-03e3-4682-b9d1-d5b3e2999570"
+            ],
+            "equivalenceClasses": {
+              "d2d0331d-69df-49a0-821f-d421082510c3": "valid",
+              "aa4caa80-03e3-4682-b9d1-d5b3e2999570": "empty"
+            },
+            "comments": {
+              "d2d0331d-69df-49a0-821f-d421082510c3": "A valid first name",
+              "aa4caa80-03e3-4682-b9d1-d5b3e2999570": "No value given"
+            },
+            "tdgs": {
+              "d2d0331d-69df-49a0-821f-d421082510c3": "gen::faker:name.firstName",
+              "aa4caa80-03e3-4682-b9d1-d5b3e2999570": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "1322b055-fc2d-447c-b974-db5d1e6849d5"
+          },
+          "34af444c-7bdf-4f6e-a683-57c29be4252a": {
+            "sectionType": "FieldSubSection",
+            "name": "last-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "34af444c-7bdf-4f6e-a683-57c29be4252a",
+            "dataRows": [
+              "df20d471-408a-452d-8623-0397d9cea719",
+              "ccf4d210-7e00-427e-9293-f9faff4c60c4"
+            ],
+            "equivalenceClasses": {
+              "df20d471-408a-452d-8623-0397d9cea719": "valid",
+              "ccf4d210-7e00-427e-9293-f9faff4c60c4": "empty"
+            },
+            "comments": {
+              "df20d471-408a-452d-8623-0397d9cea719": "A valid last name",
+              "ccf4d210-7e00-427e-9293-f9faff4c60c4": "No value given"
+            },
+            "tdgs": {
+              "df20d471-408a-452d-8623-0397d9cea719": "gen::faker:name.lastName",
+              "ccf4d210-7e00-427e-9293-f9faff4c60c4": "<empty>"
+            },
+            "tdgMandatory": false,
+            "parent": "1322b055-fc2d-447c-b974-db5d1e6849d5"
+          },
+          "7f5dab86-5f9d-4519-99f3-a5226b9c6efd": {
+            "sectionType": "FieldSubSection",
+            "name": "email",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "7f5dab86-5f9d-4519-99f3-a5226b9c6efd",
+            "dataRows": [
+              "8ce988df-63d2-49e0-93b5-956cfc0027ef",
+              "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5"
+            ],
+            "equivalenceClasses": {
+              "8ce988df-63d2-49e0-93b5-956cfc0027ef": "valid",
+              "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "empty"
+            },
+            "comments": {
+              "8ce988df-63d2-49e0-93b5-956cfc0027ef": "A valid last name"
+            },
+            "tdgs": {
+              "8ce988df-63d2-49e0-93b5-956cfc0027ef": "gen::myPerson",
+              "5a0e96cb-59d5-40d9-8ce5-91d3a5a630b5": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "1322b055-fc2d-447c-b974-db5d1e6849d5"
+          },
+          "12099c9a-6574-4d0b-a42a-7a09731191d9": {
+            "sectionType": "FieldSubSection",
+            "name": "friend_email",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "12099c9a-6574-4d0b-a42a-7a09731191d9",
+            "dataRows": [
+              "f9cfd174-3f83-4b02-bf5b-b49951b4d47a",
+              "4dd5532c-75b4-4d05-b227-1a59d27eeb0b"
+            ],
+            "equivalenceClasses": {
+              "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "valid",
+              "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "empty"
+            },
+            "comments": {
+              "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "A valid last name"
+            },
+            "tdgs": {
+              "f9cfd174-3f83-4b02-bf5b-b49951b4d47a": "ref:1:Person_no_ref:email:4",
+              "4dd5532c-75b4-4d05-b227-1a59d27eeb0b": "<no friend>"
+            },
+            "tdgMandatory": false,
+            "parent": "1322b055-fc2d-447c-b974-db5d1e6849d5"
+          },
+          "d9267023-22e2-40e7-93e8-6230fe051331": {
+            "sectionType": "FieldSubSection",
+            "name": "friend_firstName",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "d9267023-22e2-40e7-93e8-6230fe051331",
+            "dataRows": [
+              "db386470-85bf-442f-9fe7-ee80bca7191b",
+              "dca4e544-b1cc-4235-b536-0c68ab259068"
+            ],
+            "equivalenceClasses": {
+              "db386470-85bf-442f-9fe7-ee80bca7191b": "same as email",
+              "dca4e544-b1cc-4235-b536-0c68ab259068": "other"
+            },
+            "comments": {},
+            "tdgs": {
+              "db386470-85bf-442f-9fe7-ee80bca7191b": "ref:1:Person_no_ref:first-name:4",
+              "dca4e544-b1cc-4235-b536-0c68ab259068": "Ref:2:Person_no_ref:first-name:4"
+            },
+            "tdgMandatory": false,
+            "parent": "1322b055-fc2d-447c-b974-db5d1e6849d5"
+          }
+        },
+        "tdgMandatory": false
+      },
+      "81aa1735-0e96-4307-b074-323bb9452898": {
+        "sectionType": "SummarySection",
+        "name": "Summary",
+        "multiple": true,
+        "headerRow": "81aa1735-0e96-4307-b074-323bb9452898",
+        "dataRows": []
+      },
+      "f394d3dd-8730-46fb-90c1-7a2f2f4f01bd": {
+        "sectionType": "MultiRowSection",
+        "name": "Effect",
+        "mandatory": false,
+        "multiple": true,
+        "headerRow": "f394d3dd-8730-46fb-90c1-7a2f2f4f01bd",
+        "dataRows": [
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194"
+        ],
+        "keys": {
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f": "Abort action",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "Create new Person record"
+        },
+        "comments": {
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f": "a comment 1",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "a comment 2"
+        },
+        "others": {
+          "37ca60ce-5e37-4e20-bd70-9945709ecf4f": "other effect 1",
+          "532c9d4a-758b-43e7-89f3-53e0e2609194": "other effect 2"
+        }
+      }
+    },
+    "sectionOrder": [
+      "1322b055-fc2d-447c-b974-db5d1e6849d5",
+      "81aa1735-0e96-4307-b074-323bb9452898",
+      "f394d3dd-8730-46fb-90c1-7a2f2f4f01bd"
+    ]
+  },
+  "Person": {
+    "type": "decision-table",
+    "name": "Person",
+    "testcaseOrder": [
+      "1fc0a6fc-80ac-4765-bcc2-163bce4575f3",
+      "8afee1f8-5019-474c-a978-a996c06b93ce",
+      "df0b6001-cc1c-4cf6-9592-f9160a7f1bb5",
+      "a009ce25-fee5-4a97-9df7-ca309c81c468",
+      "b772eb6a-e1de-4c78-b819-062974e1d350"
+    ],
+    "testcases": {
+      "1fc0a6fc-80ac-4765-bcc2-163bce4575f3": {
+        "name": 1,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "73fb1d26-a69f-489a-a62a-836bfff3bd61": "x",
+          "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b": "x",
+          "791cd07a-b912-4285-94cd-b23d1d4b4327": "e",
+          "a8c2177a-8989-4f86-9054-d205393cfcec": "e",
+          "6ffc78d4-194a-4311-b706-7148d6361ee5": "e",
+          "b4c947a0-27bd-4ae3-b058-17b410380f37": "e",
+          "434c5fac-a405-4605-8304-e5591c1d9aba": "x"
+        },
+        "id": "1fc0a6fc-80ac-4765-bcc2-163bce4575f3"
+      },
+      "8afee1f8-5019-474c-a978-a996c06b93ce": {
+        "name": 2,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "73fb1d26-a69f-489a-a62a-836bfff3bd61": "x",
+          "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "x",
+          "a8c2177a-8989-4f86-9054-d205393cfcec": "x",
+          "6ffc78d4-194a-4311-b706-7148d6361ee5": "e",
+          "b4c947a0-27bd-4ae3-b058-17b410380f37": "e",
+          "434c5fac-a405-4605-8304-e5591c1d9aba": "x"
+        },
+        "id": "8afee1f8-5019-474c-a978-a996c06b93ce"
+      },
+      "df0b6001-cc1c-4cf6-9592-f9160a7f1bb5": {
+        "name": 3,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "73fb1d26-a69f-489a-a62a-836bfff3bd61": "x",
+          "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "x",
+          "791cd07a-b912-4285-94cd-b23d1d4b4327": "x",
+          "b4c947a0-27bd-4ae3-b058-17b410380f37": "x",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "x"
+        },
+        "id": "df0b6001-cc1c-4cf6-9592-f9160a7f1bb5"
+      },
+      "a009ce25-fee5-4a97-9df7-ca309c81c468": {
+        "name": 4,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "73fb1d26-a69f-489a-a62a-836bfff3bd61": "x",
+          "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "x",
+          "791cd07a-b912-4285-94cd-b23d1d4b4327": "x",
+          "6ffc78d4-194a-4311-b706-7148d6361ee5": "x",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "x"
+        },
+        "id": "a009ce25-fee5-4a97-9df7-ca309c81c468"
+      },
+      "b772eb6a-e1de-4c78-b819-062974e1d350": {
+        "name": 5,
+        "isPartOfCompletion": true,
+        "execute": true,
+        "data": {
+          "a2690b83-f947-4d40-87a0-b5d3a0a2c96b": "x",
+          "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "e",
+          "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b": "e",
+          "791cd07a-b912-4285-94cd-b23d1d4b4327": "e",
+          "a8c2177a-8989-4f86-9054-d205393cfcec": "e",
+          "6ffc78d4-194a-4311-b706-7148d6361ee5": "e",
+          "b4c947a0-27bd-4ae3-b058-17b410380f37": "e",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "x"
+        },
+        "id": "b772eb6a-e1de-4c78-b819-062974e1d350"
+      }
+    },
+    "sections": {
+      "2d9a1887-f899-4979-99ed-dfc2c6ab10f8": {
+        "sectionType": "FieldSection",
+        "name": "Secondary data",
+        "mandatory": true,
+        "multiple": true,
+        "headerRow": "2d9a1887-f899-4979-99ed-dfc2c6ab10f8",
+        "dataRows": [
+          "a104e594-e76f-4cd5-b90b-b77d78e1594e"
+        ],
+        "subSections": {
+          "a104e594-e76f-4cd5-b90b-b77d78e1594e": {
+            "sectionType": "FieldSubSection",
+            "name": "person exists",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "a104e594-e76f-4cd5-b90b-b77d78e1594e",
+            "dataRows": [
+              "73fb1d26-a69f-489a-a62a-836bfff3bd61",
+              "a2690b83-f947-4d40-87a0-b5d3a0a2c96b"
+            ],
+            "equivalenceClasses": {
+              "73fb1d26-a69f-489a-a62a-836bfff3bd61": "not existing",
+              "a2690b83-f947-4d40-87a0-b5d3a0a2c96b": "double"
+            },
+            "comments": {
+              "73fb1d26-a69f-489a-a62a-836bfff3bd61": "do nothing",
+              "a2690b83-f947-4d40-87a0-b5d3a0a2c96b": "create a person before"
+            },
+            "tdgs": {
+              "73fb1d26-a69f-489a-a62a-836bfff3bd61": "<NOTHING>",
+              "a2690b83-f947-4d40-87a0-b5d3a0a2c96b": "<DOUBLE>"
+            },
+            "tdgMandatory": false,
+            "parent": "2d9a1887-f899-4979-99ed-dfc2c6ab10f8"
+          }
+        },
+        "tdgMandatory": false
+      },
+      "3399b935-d12c-4236-b9c1-1860172a81a8": {
+        "sectionType": "FieldSection",
+        "name": "Primary data",
+        "mandatory": true,
+        "multiple": true,
+        "headerRow": "3399b935-d12c-4236-b9c1-1860172a81a8",
+        "dataRows": [
+          "28c2062a-f438-4ca4-8e31-7f5c50ef176d",
+          "3d02dabb-5c48-4f67-94ef-8fbc302edddd",
+          "51ce78bb-b578-45b4-b708-9111f3b57af9"
+        ],
+        "subSections": {
+          "28c2062a-f438-4ca4-8e31-7f5c50ef176d": {
+            "sectionType": "FieldSubSection",
+            "name": "first-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "28c2062a-f438-4ca4-8e31-7f5c50ef176d",
+            "dataRows": [
+              "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1",
+              "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b"
+            ],
+            "equivalenceClasses": {
+              "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "valid",
+              "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b": "empty"
+            },
+            "comments": {
+              "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "A valid first name",
+              "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b": "No value given"
+            },
+            "tdgs": {
+              "68fac6e7-f80d-478a-8ca8-0b5df2ad11e1": "gen::faker:name.firstName",
+              "4a28ef8b-d666-4e5a-84fe-dae2e7bd033b": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "3399b935-d12c-4236-b9c1-1860172a81a8"
+          },
+          "3d02dabb-5c48-4f67-94ef-8fbc302edddd": {
+            "sectionType": "FieldSubSection",
+            "name": "last-name",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "3d02dabb-5c48-4f67-94ef-8fbc302edddd",
+            "dataRows": [
+              "791cd07a-b912-4285-94cd-b23d1d4b4327",
+              "a8c2177a-8989-4f86-9054-d205393cfcec"
+            ],
+            "equivalenceClasses": {
+              "791cd07a-b912-4285-94cd-b23d1d4b4327": "valid",
+              "a8c2177a-8989-4f86-9054-d205393cfcec": "empty"
+            },
+            "comments": {
+              "791cd07a-b912-4285-94cd-b23d1d4b4327": "A valid last name",
+              "a8c2177a-8989-4f86-9054-d205393cfcec": "No value given"
+            },
+            "tdgs": {
+              "791cd07a-b912-4285-94cd-b23d1d4b4327": "gen::faker:name.lastName",
+              "a8c2177a-8989-4f86-9054-d205393cfcec": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "3399b935-d12c-4236-b9c1-1860172a81a8"
+          },
+          "51ce78bb-b578-45b4-b708-9111f3b57af9": {
+            "sectionType": "FieldSubSection",
+            "name": "email",
+            "mandatory": true,
+            "multiple": true,
+            "headerRow": "51ce78bb-b578-45b4-b708-9111f3b57af9",
+            "dataRows": [
+              "6ffc78d4-194a-4311-b706-7148d6361ee5",
+              "b4c947a0-27bd-4ae3-b058-17b410380f37"
+            ],
+            "equivalenceClasses": {
+              "6ffc78d4-194a-4311-b706-7148d6361ee5": "valid",
+              "b4c947a0-27bd-4ae3-b058-17b410380f37": "empty"
+            },
+            "comments": {
+              "6ffc78d4-194a-4311-b706-7148d6361ee5": "A valid last name",
+              "b4c947a0-27bd-4ae3-b058-17b410380f37": "No value given"
+            },
+            "tdgs": {
+              "6ffc78d4-194a-4311-b706-7148d6361ee5": "gen::myPerson",
+              "b4c947a0-27bd-4ae3-b058-17b410380f37": "gen::empty"
+            },
+            "tdgMandatory": false,
+            "parent": "3399b935-d12c-4236-b9c1-1860172a81a8"
+          }
+        },
+        "tdgMandatory": false
+      },
+      "3dbca33c-8fad-47f2-86f6-2ac74777e636": {
+        "sectionType": "SummarySection",
+        "name": "Summary",
+        "multiple": true,
+        "headerRow": "3dbca33c-8fad-47f2-86f6-2ac74777e636",
+        "dataRows": []
+      },
+      "2dc8b77b-0d19-4933-b0a2-dbb70d1bd833": {
+        "sectionType": "MultiRowSection",
+        "name": "Effect",
+        "mandatory": false,
+        "multiple": true,
+        "headerRow": "2dc8b77b-0d19-4933-b0a2-dbb70d1bd833",
+        "dataRows": [
+          "434c5fac-a405-4605-8304-e5591c1d9aba",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126"
+        ],
+        "keys": {
+          "434c5fac-a405-4605-8304-e5591c1d9aba": "Abort action",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "Create new Person record"
+        },
+        "comments": {
+          "434c5fac-a405-4605-8304-e5591c1d9aba": "a comment 1",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "a comment 2"
+        },
+        "others": {
+          "434c5fac-a405-4605-8304-e5591c1d9aba": "other effect 1",
+          "6877653a-ebff-4ce9-9cb5-be6942d4d126": "other effect 2"
+        }
+      }
+    },
+    "sectionOrder": [
+      "2d9a1887-f899-4979-99ed-dfc2c6ab10f8",
+      "3399b935-d12c-4236-b9c1-1860172a81a8",
+      "3dbca33c-8fad-47f2-86f6-2ac74777e636",
+      "2dc8b77b-0d19-4933-b0a2-dbb70d1bd833"
+    ]
+  },
+  "Action on Person": {
+    "name": "Action on Person",
+    "type": "matrix-table",
+    "rows": [
+      {
+        "name": "Person",
+        "shortName": "psn",
+        "position": 1,
+        "execute": "x",
+        "generator": "Ref::Person::5",
+        "description": "pers desc"
+      },
+      {
+        "name": "Person without email",
+        "position": 2,
+        "generator": "ref::Person::3"
+      }
+    ],
+    "columns": [
+      {
+        "name": "KEINE",
+        "position": 1,
+        "execute": "x",
+        "generator": "gen::empty"
+      },
+      {},
+      {
+        "name": "add email",
+        "position": 3,
+        "generator": "gen::empty"
+      },
+      {
+        "name": "delete email",
+        "position": 4,
+        "execute": "x",
+        "generator": "Gen::empty"
+      },
+      {
+        "name": "change last name",
+        "position": 5,
+        "execute": "x",
+        "generator": "ref::Action on Person:r0:c0"
+      }
+    ],
+    "data": [
+      [
+        "x",
+        null,
+        null,
+        "x",
+        "x"
+      ],
+      [
+        "x",
+        null,
+        "x",
+        null,
+        "x"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+lib
+node_modules
+coverage
+jsdoc
+npm-debug.log
+package-lock.json
+yarn.lock
+tests/volatile

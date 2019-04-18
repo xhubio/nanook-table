@@ -1,0 +1,9 @@
+{
+  "testEnvironment": "node",
+  "collectCoverage": true,
+  "coverageDirectory": "coverage",
+  "testMatch": [
+    "**/tests/**/*Test.js?(x)",
+    "**/?(*.)(spec|test).js?(x)"
+  ]
+}

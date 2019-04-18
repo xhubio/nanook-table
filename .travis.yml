@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- 10.11
+sudo: false
+branches:
+  only:
+  - master
+  - /^greenkeeper-.*$/
+  - /^greenkeeper/.*$/
+cache:
+  directories:
+  - node_modules
+notifications:
+  email:
+  - torstenlink@gmx.de
+before_install:
+- npm i -g npm@latest
+before_script:
+- npm prune
+- npm install -g codecov
+script:
+- npm run test
+after_script:
+- codecov
+after_success:
+- npx semantic-release

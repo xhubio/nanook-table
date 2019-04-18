@@ -1,0 +1,342 @@
+{
+  "multiplicity": {
+    "1": {
+      "multiplicity": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "3": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "5": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2.1": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2.2": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2.3": {
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    }
+  },
+  "multiplicity1": {
+    "1": {
+      "multiplicity1": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "3": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "5": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2.1": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2.2": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2.3": {
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    }
+  },
+  "range": {
+    "1_1": {
+      "range": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "1_2": {
+      "range": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "1_3": {
+      "range": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2_1": {
+      "range": {
+        "Field 2": "<GUMB>:b>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2_2": {
+      "range": {
+        "Field 2": "<GUMB>:b>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_3": {
+      "range": {
+        "Field 2": "<GUMB>:b>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "3_1": {
+      "range": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "3_2": {
+      "range": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4_1": {
+      "range": {
+        "Field 2": "<GUMB>:b>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4_2": {
+      "range": {
+        "Field 2": "<GUMB>:b>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    }
+  },
+  "range2": {
+    "3": {
+      "range2": {
+        "Field 1": "<GUMB>:oben>",
+        "Field 2": "<GUMB>:a>"
+      }
+    },
+    "1_1": {
+      "range2": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "1_2": {
+      "range2": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "1_3": {
+      "range2": {
+        "Field 2": "<GUMB>:a>"
+      },
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      }
+    },
+    "2_1": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_2": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:valid>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_3": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_4": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_5": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "2_6": {
+      "range2": {},
+      "multiplicity": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:valid>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4_1": {
+      "range2": {
+        "Field 1": "<GUMB>:oben>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:empty>",
+        "last-name": "<DATA:empty>",
+        "email": "<DATA:empty>"
+      }
+    },
+    "4_2": {
+      "range2": {
+        "Field 1": "<GUMB>:oben>"
+      },
+      "multiplicity1": {
+        "first-name": "<DATA:valid>",
+        "last-name": "<DATA:valid>",
+        "email": "<DATA:empty>"
+      }
+    }
+  }
+}
