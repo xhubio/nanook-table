@@ -3,15 +3,18 @@ import util from 'util'
 import path from 'path'
 import { exec } from 'child_process'
 import mkdirp from 'mkdirp'
+import globby from 'globby'
 
 const md = util.promisify(mkdirp)
 const readFile = util.promisify(fs.readFile)
 const writeFile = util.promisify(fs.writeFile)
+const copyFile = util.promisify(fs.copyFile)
 
 const websiteRepoPath =
   '/Users/torstenlink/Documents/entwicklung/nanook/nanook-website'
-// const imagePath = path.join(websiteRepoPath, 'website', 'static')
+const WEBSITE_IMAGES = path.join(websiteRepoPath, 'website', 'static', 'img')
 const docPath = path.join(websiteRepoPath, 'docs')
+const SOURCE_IMAGES = 'build/images'
 
 const INPUT = [
   {
@@ -103,6 +106,29 @@ async function createDocbook(srcFileName, targetFileName) {
   })
 }
 
+
+/**
+ * copies all the imgaes from the build directory into the website repo image
+ * directory
+ * @param sourceDir {string} The directory to search for images
+ * @param targetDir {string} The target image directory
+ */
+async function copyImages(sourceDir, targetDir) {
+  const images = await globby([
+    path.join(sourceDir, '**/*.jpg'),
+    path.join(sourceDir, '**/*.png'),
+    path.join(sourceDir, '**/*.svg'),
+  ])
+
+  for (const img of images) {
+    const sourceRelative = path.relative(sourceDir, img)
+    const target = path.join(targetDir, sourceRelative)
+    const subTargetDir = path.dirname(target)
+    await md(subTargetDir)
+    await copyFile(img, target)
+  }
+}
+
 /**
  * first create the docbook files
  * @param srcFileName {string} The docbook source file to be converted
@@ -137,8 +163,7 @@ async function convert2Markdown(srcFileName, targetFileName) {
  */
 async function modifyMarkdown({ srcFile, targetFile, headerInfo }) {
   let content = await readFile(srcFile, 'utf-8')
-  debugger
-  content = content.replace(/image\//g, '/img/')
+  content = content.replace(/images\//g, '/img/')
   content = content.replace(/^# .*\n/, '')
   const newContent = []
 
@@ -156,10 +181,15 @@ async function modifyMarkdown({ srcFile, targetFile, headerInfo }) {
 }
 
 async function run(inputArray) {
+  // copy all the copyImages
+  await copyImages(SOURCE_IMAGES, WEBSITE_IMAGES)
+
   for (const fileObj of inputArray) {
     const src = path.join(__dirname, '..', fileObj.src)
     const docbook = path.join(__dirname, '..', fileObj.docbook)
-    const markdown = `${path.basename(docbook, '.xml').md}`
+    const dockbookDir = path.dirname(docbook)
+    const dockbookFilenameOnly = path.basename(docbook, '.xml')
+    const markdown = path.join(dockbookDir, `${dockbookFilenameOnly}.md`)
     const target = path.join(docPath, fileObj.target)
 
     console.log('-------------------------------------------------')
