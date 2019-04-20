@@ -1,0 +1,31 @@
+== User account creation
+The example use case in this tutorial is creating tests for user id creation.
+The application is a web site where an user can enter its userId, a password and a password verification.
+
+The following three chapters showing the specification for each field of our demo application. 
+
+=== User ID
+The user is able to choose its own id.
+The id must have a minimum length of two characters.
+The user id must not contain a space. Spaces at
+the beginning or at the end are trimmed.
+The id must not exceed a length of 30 characters.
+The id must not exist. Only ascii characters are
+allowed (a-z|A-Z), numbers, and also hyphen and underscore.
+The user name is case insensitive.
+
+
+=== Password
+The password has to meet the following requirements:
+* The password must not have leading or trailing spaces.
+* The password is required.
+* It must have a minimum length of 5 characters.
+* It must not exceed more than 20 characters.
+* All characters are allowed.
+* It must not equal, start or end with the user id.
+* It must contain at least one number, one upper case letter, one lower case letter and one special character.
+
+=== Second password field
+The second password has the same requirements as the first password field with one more restriction:
+
+* The password must equal the first password

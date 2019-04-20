@@ -23,7 +23,10 @@
     "test_only": "jest",
     "test": "npm run build && jest -c jest.config.json",
     "debug": "npm run build && node --inspect-brk ./node_modules/.bin/jest -i --config=./jest.config.json",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "doc": "node createLinks && npm run doc_tutorial && npm run doc_manual",
+    "doc_tutorial": "asciidoctor doc/tutorial.adoc && asciidoctor-pdf doc/tutorial.adoc",
+    "doc_manual": "asciidoctor doc/userManual.adoc && asciidoctor-pdf doc/userManual.adoc"
   },
   "contributors": [
     {
@@ -56,13 +59,15 @@
     "semantic-release": "15.13.3"
   },
   "dependencies": {
-    "@xhubiotable/data-generator": "^2.1.3",
-    "@xhubiotable/file-processor": "^2.2.0",
-    "@xhubiotable/importer-xlsx": "^2.0.4",
-    "@xhubiotable/logger": "^2.0.3",
-    "@xhubiotable/model": "^2.2.0",
-    "@xhubiotable/model-decision": "^2.2.0",
-    "@xhubiotable/model-matrix": "^2.2.0",
-    "@xhubiotable/processor": "^2.2.1"
+    "@xhubiotable/data-generator": "2.1.3",
+    "@xhubiotable/file-processor": "2.2.0",
+    "@xhubiotable/importer-xlsx": "2.0.4",
+    "@xhubiotable/logger": "2.0.3",
+    "@xhubiotable/model": "2.2.0",
+    "@xhubiotable/model-decision": "2.2.0",
+    "@xhubiotable/model-matrix": "2.2.0",
+    "@xhubiotable/processor": "2.2.1",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.3"
   }
 }

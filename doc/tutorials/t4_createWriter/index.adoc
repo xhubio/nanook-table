@@ -1,0 +1,14 @@
+== Create your own writer
+
+This chapter shows how to create your own writer and make use of them. For this tutorial
+the writer should generate a CSV file of the created test data. The data is written on a per
+test case basis. If you need one file containing all the data of all test cases, it is a good
+practice to aggregate the file later on. Short before execution. So you can store the generated
+data and decide later which test cases to include into the next run. Also if you would
+like to retest only some of the tests. So I recommend to split the data per test cases.
+
+:leveloffset: +1
+
+include::step1.adoc[]
+
+:leveloffset: -1

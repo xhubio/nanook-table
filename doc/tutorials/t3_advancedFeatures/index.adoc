@@ -1,0 +1,16 @@
+== Advanced features
+
+This tutorial shows some more features of the equivalence class tables.
+
+
+:leveloffset: +1
+
+include::step1.adoc[]
+
+include::step2.adoc[]
+
+include::step3.adoc[]
+
+include::step4.adoc[]
+
+:leveloffset: -1

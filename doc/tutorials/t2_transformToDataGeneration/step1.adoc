@@ -1,0 +1,9 @@
+== Format the table
+In the previous tutorial we have created an equivalence class table without any
+predefined format rules. But to make the table parsable for the table
+processor we need to follow some formatting rules.
+
+The next sections describe the format of the table to make it parseable.
+
+=== General Overview
+include::../../../node_modules/\@xhubiotable/model-decision/doc/equivalence_class_table_layout.adoc[]

@@ -1,0 +1,21 @@
+= Equivalence class tutorial
+Teaches how to create an equivalence class table for defined test cases and create test data.
+
+:toc:
+
+
+
+
+include::tutorials/introduction.adoc[]
+
+
+include::tutorials/t1_equivalenceTableFromScratch/index.adoc[]
+
+
+include::tutorials/t2_transformToDataGeneration/index.adoc[]
+
+
+include::tutorials/t3_advancedFeatures/index.adoc[]
+
+
+include::tutorials/t4_createWriter/index.adoc[]

@@ -1,0 +1,20 @@
+=== Table values
+Description of the values for the tables.
+
+[cols="^1,6",options="header"]
+|====
+|Value| Description
+|x| This means choose this equivalence class. Only one 'x' is per field is allowed. This value may only be combined with a 'i'
+|e| The 'e' stands for 'equal'. You don't care which equivalence class is chosen. Many 'e' entries are allowed.
+|a| The 'a' is like the 'e', but it means choose this value. From the logic point of view it is the same as an 'e'.
+For the data generator it is like a 'x'. Only one 'a' in a field is allowed.
+|i| The 'i' stands for 'irregular' or 'impossible'. It means that this value could not be. The data generator will
+never generate values for an 'i'
+|====
+
+
+The use case for an 'a' needs a little bit of explanation. Assume the example with the user id generation. The table
+says if the user id is not filled it will not generate an id.So it doesn't matter what you enter in the password fields
+the application throws an error. But the application may check all the fields and then list all the missing values.
+This is not the expected behaviour for the test. There we only expect one error message. So it may be useful to
+enter valid values in the password fields. For this we can mark the valid values with an 'a'.

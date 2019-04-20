@@ -1,0 +1,143 @@
+== Create a project for creating the data
+
+
+=== Create an initial npm module
+
+Create a new empty directory. Change into it and do npm init.
+
+[source,c]
+----
+mkdir demo-tdg
+cd demo-tdg
+mkdir resources
+mkdir tdg
+mkdir src
+npm init
+npm install --save @xhubiotable/processor
+----
+
+<<<
+=== Create the script to call the processor
+Create a new file 'src/tdg.js' with the following content.
+
+[source,js]
+----
+const path = require('path')
+const p = require('@xhubiotable/processor')
+const { LoggerMemory } = require('@xhubiotable/logger')
+
+async function doIt() {
+  const logger = new LoggerMemory()               <1>
+  logger.writeConsole = true                      <2>
+
+  const fileProcessor = await p.createDefaultFileProcessor(logger)
+                                                  <3>
+
+  const processor = new p.Processor({             <4>
+    logger,
+    generatorRegistry: p.createDefaultGeneratorRegistry(),
+    writer: p.createDefaultWriter(logger)
+  })
+
+  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
+                                                  <5>
+
+  processor.tables = fileProcessor.tables         <6>
+
+  await processor.process()                       <7>
+}
+
+
+doIt().then(() => {
+  console.log('Finish')
+}).catch(err => {
+  console.log(err)
+})
+----
+<1> Create a logger. For all tutorials we will take the Memory Logger. This
+logger stores all the log entries. It is a good logger for unit testing.
+
+<2> Tells the memory logger that it should also write the logs to console out.
+
+<3> Creates a file processor. The file processor is responsible for loading an Excel sheet and transforming
+it into a table object as it is used by the processor.
+
+<4> Creates the processor.  +
+The processor needs a registry where all the available generators are registered. In
+the current example the registry is empty. But a registry is required. +
+The writer is responsible to write the created test data into the desired format. The default writer
+just writes the test case data as a JSON file. You can add as many writers as you like.
+
+<5> Loads the spread sheet and creates the table object. You an call the load function
+multiple times depending on how many spreadsheets you would like to load.
+Each spread sheet may have multiple tables. The table names must be unique across all the
+spread sheets.
+The path must point to the file you have created in the previous step.
+
+<6> Get the loaded table objects and insert them into the processor.
+
+<7> Processes all tables and generates the data.
+
+
+Create a directory 'resources' and copy the excel file you have created before into it.
+The Excel file must be named 'demo.xlsx'.
+
+
+=== Run the script
+
+To run the script execute:
+
+----
+node src/tdg.js
+----
+
+After this you should find a new file called 'tdg/TC1/testcaseData.json'. This file was written by the default writer.
+
+<<<
+=== Understand the generated data
+The content of the file should look like the following:
+
+[source,json]
+----
+{
+  "tableName": "Sheet1",      <1>
+  "name": "TC1",              <2>
+  "data": {                   <3>
+    "Sheet1": {               <4>
+      "ab0dc423-2338-44eb-a230-bbab1040c8ff": {
+                              <5>
+
+        "email": "foo.bar@gum.com"
+                              <6>
+      }
+    }
+  },
+  "instanceId": "ab0dc423-2338-44eb-a230-bbab1040c8ff",
+                              <7>
+  "callTree": {               <8>
+    "instanceId": "3dd74281-c117-4c51-b8f5-f1262116124a",
+    "tableName": "Sheet1",
+    "testcaseName": "TC1",
+    "children": []
+  }
+}
+----
+<1> The name of the table which creates this test case. (Later on we learn the details on this.)
+<2> The name of the test case. The content of the header column in the sheet.
+<3> The data object contains all the generated data.
+<4> The name of the sheet again.
+<5> The instance of the created test case data. (An instanceId belongs to an instance of a given test case and is
+ explained later in detail. For the moment just accept that the id exist and that it makes sense).
+<6> The generated data.
+<7> The main instanceId of this test case.
+<8> The call tree of the tables. (This is for debugging your test data. More on this later.)
+
+Each time you call the script we generate the same data as we added static data in the table. Only the instanceIds
+are changing with each call of the script. In the next section we replace the static data with a generator.
+
+
+[NOTE]
+The example code is located at: +
+src/t2/step3 +
+Just type there: +
+node tdg.js

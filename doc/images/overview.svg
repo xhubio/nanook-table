@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="-45 818 568 231" width="568" height="231">
+  <defs>
+    <font-face font-family="Helvetica Neue" font-size="16" panose-1="2 0 5 3 0 0 0 2 0 4" units-per-em="1000" underline-position="-100" underline-thickness="50" slope="0" x-height="517" cap-height="714" ascent="951.9958" descent="-212.99744" font-weight="400">
+      <font-face-src>
+        <font-face-name name="HelveticaNeue"/>
+      </font-face-src>
+    </font-face>
+  </defs>
+  <metadata> Produced by OmniGraffle 7.9.4 
+    <dc:date>2019-01-06 14:36:01 +0000</dc:date>
+  </metadata>
+  <g id="Canvas_1" fill="none" stroke-opacity="1" stroke="none" fill-opacity="1" stroke-dasharray="none">
+    <title>Overview</title>
+    <g id="Canvas_1: Layer 1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <rect x="-44" y="1017" width="566" height="31" fill="#80ff80"/>
+        <rect x="-44" y="1017" width="566" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-39 1023.276)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="241.856" y="15">Processor</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <rect x="248" y="975.7393" width="131" height="31" fill="yellow"/>
+        <rect x="248" y="975.7393" width="131" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(253 982.0153)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="4.66" y="15">ServiceRegistry</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <rect x="248" y="818.5" width="24.903475" height="157.23934" fill="yellow"/>
+        <rect x="248" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(251.22774 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31.09967" y="15">Generator 1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <rect x="354.09653" y="818.5" width="24.903475" height="157.23934" fill="yellow"/>
+        <rect x="354.09653" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(357.32426 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31.09967" y="15">Generator n</tspan>
+        </text>
+      </g>
+      <g id="Graphic_7">
+        <rect x="301.04826" y="818.5" width="24.903475" height="157.23934" fill="yellow"/>
+        <rect x="301.04826" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(304.276 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="31.09967" y="15">Generator 2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <rect x="391" y="975.7393" width="131" height="31" fill="#7ebcd8"/>
+        <rect x="391" y="975.7393" width="131" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(396 982.0153)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="18.284" y="15">Writer Array</tspan>
+        </text>
+      </g>
+      <g id="Graphic_8">
+        <rect x="444.04826" y="818.5" width="24.903475" height="157.23934" fill="#7ebcd8"/>
+        <rect x="444.04826" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(447.276 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="45.76367" y="15">Writer 2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_9">
+        <rect x="391" y="818.5" width="24.903475" height="157.23934" fill="#7ebcd8"/>
+        <rect x="391" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(394.22774 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="45.76367" y="15">Writer 1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_10">
+        <rect x="497.0965" y="818.5" width="24.903475" height="157.23934" fill="#7ebcd8"/>
+        <rect x="497.0965" y="818.5" width="24.903475" height="157.23934" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(500.32426 970.7393) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="45.76367" y="15">Writer n</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <rect x="-44" y="975.7393" width="280" height="31" fill="#ffc0c0"/>
+        <rect x="-44" y="975.7393" width="280" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-39 982.0153)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="84.192" y="15">File Processor</tspan>
+        </text>
+      </g>
+      <g id="Graphic_18">
+        <rect x="-44" y="934.4787" width="131" height="31" fill="#d3e1b3"/>
+        <rect x="-44" y="934.4787" width="131" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-39 940.7547)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="11.892" y="15">Importer Map</tspan>
+        </text>
+      </g>
+      <g id="Graphic_17">
+        <rect x="-44" y="819" width="24.903475" height="115.47868" fill="#d3e1b3"/>
+        <rect x="-44" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(-40.77226 929.4787) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.62734" y="15">File Reader 1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_16">
+        <rect x="62.096525" y="819" width="24.903475" height="115.47868" fill="#d3e1b3"/>
+        <rect x="62.096525" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(65.32426 929.4787) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.62734" y="15">File Reader n</tspan>
+        </text>
+      </g>
+      <g id="Graphic_15">
+        <rect x="9.048263" y="819" width="24.903475" height="115.47868" fill="#d3e1b3"/>
+        <rect x="9.048263" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(12.276001 929.4787) rotate(-90)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="black" x="5.62734" y="15">File Reader 2</tspan>
+        </text>
+      </g>
+      <g id="Graphic_23">
+        <rect x="105" y="934.4787" width="131" height="31" fill="#c6001d"/>
+        <rect x="105" y="934.4787" width="131" height="31" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(110 940.7547)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="19.164" y="15">Parser Map</tspan>
+        </text>
+      </g>
+      <g id="Graphic_22">
+        <rect x="105" y="819" width="24.903475" height="115.47868" fill="#c6001d"/>
+        <rect x="105" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(108.22774 929.4787) rotate(-90)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="1.9233402" y="15">Table Parser 1</tspan>
+        </text>
+      </g>
+      <g id="Graphic_21">
+        <rect x="211.09653" y="819" width="24.903475" height="115.47868" fill="#c6001d"/>
+        <rect x="211.09653" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(214.32426 929.4787) rotate(-90)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="1.9233402" y="15">Table Parser n</tspan>
+        </text>
+      </g>
+      <g id="Graphic_20">
+        <rect x="158.04826" y="819" width="24.903475" height="115.47868" fill="#c6001d"/>
+        <rect x="158.04826" y="819" width="24.903475" height="115.47868" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(161.276 929.4787) rotate(-90)" fill="white">
+          <tspan font-family="Helvetica Neue" font-size="16" font-weight="400" fill="white" x="1.9233402" y="15">Table Parser 2</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>

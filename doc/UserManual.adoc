@@ -1,0 +1,54 @@
+= User Manual
+:toc:
+
+
+== Overview of Nanook test data generator
+include::generalOverview.adoc[]
+
+
+
+
+== Processor
+
+include::../node_modules/\@xhubiotable/processor/doc/processorOverview.adoc[leveloffset=+1]
+
+include::../node_modules/\@xhubiotable/processor/doc/processorUsage.adoc[leveloffset=+1]
+
+
+=== Generator Values
+This section describes the values to be entered in the 'generator column' of a table.
+
+include::../node_modules/\@xhubiotable/processor/doc/staticData.adoc[leveloffset=+1]
+
+include::../node_modules/\@xhubiotable/processor/doc/generatorCommand.adoc[leveloffset=+1]
+
+include::../node_modules/\@xhubiotable/processor/doc/referenceOverview.adoc[leveloffset=+1]
+
+
+== Equivalence Class Table
+
+include::../node_modules/\@xhubiotable/model-decision/doc/index.adoc[leveloffset=+1]
+
+
+== Matrix Table
+
+include::../node_modules/\@xhubiotable/model-matrix/doc/index.adoc[leveloffset=+1]
+
+
+
+== Specification Table
+
+TODO
+
+
+== Generators
+
+include::../node_modules/\@xhubiotable/data-generator/doc/index.adoc[leveloffset=+1]
+
+
+== Writer
+
+include::../node_modules/\@xhubiotable/processor/doc/writer.adoc[]
+
+== Appendix
+include::details/appendix.adoc[]

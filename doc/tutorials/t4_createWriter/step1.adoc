@@ -1,0 +1,170 @@
+== Create the writer
+
+First let's have a look at the default writer provided by the '@xhubiotable/processor' module.
+
+[source,js]
+----
+const fs = requite('fs')
+const util = requite('util')
+const InterfaceWriter = requite('@xhubiotable/processor').InterfaceWriter
+const writeFile = util.promisify(fs.writeFile)
+
+class DefaultWriter extends InterfaceWriter {
+  /**
+   * Writes the data
+   */
+  async write(testcaseData) {          <1>
+    const fileName = await this.createFileName(testcaseData)
+                                       <2>
+    return writeFile(fileName, JSON.stringify(testcaseData, null, 2))
+                                       <3>
+  }
+
+  /**
+   * Creates the file name to write the testcaseData object
+   * @param testcaseData {object} The testcaseData object
+   * @return fileName {string} The file name to write the object
+   */
+  async createFileName(testcaseData) {
+    const tcName = testcaseData.name
+    const targetDir = path.join('tdg', tcName)
+    await md(targetDir)
+
+    return path.join(targetDir, 'testcaseData.json')
+  }
+}
+----
+<1> The only function which needs to be overwritten is the 'async write(testcaseData)' function.
+It is called for each test case with all the created test case data. The 'testcaseData' object
+contains the data. The default writer will just write out this object. If you need many different files
+each writer extracts just the data it needs and writes it to a file.
+
+<2> Just create a file name.
+
+<3> Writes the file.
+
+
+
+
+
+Now it's time for your own writer.
+Create a file called 'csvWriter.js' and add the following content.
+
+[source,js]
+----
+const fs = require('fs')
+const util = require('util')
+const path = require('path')
+const InterfaceWriter = require('@xhubiotable/processor').InterfaceWriter
+
+const writeFile = util.promisify(fs.writeFile)
+const DELIMITER = ','     <1>
+
+class CsvWriter extends InterfaceWriter {
+
+  async write(testcaseData) {
+    const fileName = await this.createFileName(testcaseData)
+                          <2>
+
+    const sheetName = testcaseData.tableName
+    const res = []
+
+    for(const instId of Object.keys(testcaseData.data[sheetName])){
+                          <3>
+      const dat = testcaseData.data[sheetName][instId]
+                          <4>
+      const friend = dat['friend email'] ? dat['friend email'] : ''
+      const row = [dat['first name'], dat['last name'], dat.email, friend]
+                          <5>
+      res.push(row.join(DELIMITER))
+    }
+
+    return writeFile(fileName, res.join('\n'))
+                          <6>
+  }
+
+  /**
+   * Creates the file name to write the testcaseData object
+   * @param testcaseData {object} The testcaseData object
+   * @return fileName {string} The file name to write the object
+   */
+  async createFileName(testcaseData) {
+    const tcName = testcaseData.name
+    const targetDir = path.join('tdg', tcName)
+    return path.join(targetDir, 'person.csv')
+  }
+}
+
+module.exports.CsvWriter = CsvWriter
+----
+
+<1> Set the delimiter for the CSV file.
+<2> Create the file name. In this function we do not create the directory if not exists, because this is
+already done in the default writer.
+<3> Iterate over all the instanceIds of the data object. In this case we do not distinguish between the main
+data and the referenced data. But this depends on the use case.
+<4> Get the data object of the current instanceId.
+<5> Build the row.
+<6> Write the file.
+
+The next step is adding the writer to the processor. For this the 'tdg.js' file needs to be modified.
+
+[source,js]
+----
+const path = require('path')
+const p = require('@xhubiotable/processor')
+const LoggerMemory = require('@xhubiotable/logger').LoggerMemory
+const GeneratorPerson = require('./GeneratorPerson').GeneratorPerson
+const CsvWriter = require('./CsvWriter').CsvWriter
+                      <1>
+
+
+async function doIt() {
+  const logger = new LoggerMemory()
+  logger.writeConsole = true
+
+  const fileProcessor = await p.createDefaultFileProcessor(logger)
+
+  const csvWriter = new CsvWriter({logger})
+                      <2>
+  const defaultWriter = p.createDefaultWriter(logger)[0]
+                      <3>
+
+  const processor = new p.Processor({
+    logger,
+    generatorRegistry: p.createDefaultGeneratorRegistry(),
+    writer: [defaultWriter, csvWriter]
+                      <4>
+  })
+
+  const genPerson = new GeneratorPerson({logger})
+  processor.generatorRegistry.registerGenerator('generatorPerson', genPerson)
+
+  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
+  processor.tables = fileProcessor.tables
+
+  await processor.process()
+}
+
+
+doIt().then(() => {
+  console.log('Finish')
+}).catch(err => {
+  console.log(err)
+})
+----
+<1> Import the writer class.
+<2> Create an instance of the csv writer.
+<3> The 'createDefaultWriter()' function returns an array with one default writer. So we just get the first
+writer from the array.
+<4> Create an array with both writers. The writers are executed in the given order. So only the first writer
+needs to create the output directory.
+
+Now run the execution again. Afterwards you will find an additional file called 'person.csv' in the result directory.
+
+
+[NOTE]
+The example code is located at: +
+src/t4/step1 +
+Just type there: +
+node tdg.js

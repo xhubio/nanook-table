@@ -1,0 +1,19 @@
+.shows the general command for a generator
+----
+gen:<instanceId>:<generatorName>:<parameter>
+----
+
+gen::
+	This prefix tells the processor that this is a call to a generator.
+
+
+instanceId::
+	The instance of the test data. But don't think about this at the moment. This will be
+	explained in detail later. First you need to understand of the data generation process works.
+
+generatorName::
+	This is the name of an existing data generator.
+
+parameter::
+	Any parameters the generator may need. It is up to the generator what kind of format the parameters
+	need to have.
