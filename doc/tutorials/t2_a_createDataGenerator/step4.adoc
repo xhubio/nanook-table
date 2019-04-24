@@ -1,4 +1,3 @@
-<<<
 == Create your own generator
 
 First of all we need to update the Excel sheet to use the

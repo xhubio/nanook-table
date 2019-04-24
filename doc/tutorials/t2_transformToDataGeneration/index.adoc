@@ -16,6 +16,5 @@ include::step2.adoc[]
 
 include::step3.adoc[]
 
-include::step4.adoc[]
 
 :leveloffset: -1

@@ -36,6 +36,9 @@ const SOURCE_IMAGES = 'build/images'
  */
 
 const INPUT = [
+  // ---------------------------------------------
+  // - Tutorial
+  // ---------------------------------------------
   {
     src: 'doc/tutorials/introduction.adoc',
     docbook: 'build/tutorial/overview.xml',
@@ -60,12 +63,23 @@ const INPUT = [
     title: 'Transform the table to a data generator',
     sidebar_label: 'Transform to data generator',
   },
+
   //   {
   //     src: 'doc/tutorials//index.adoc',
   //     id: 'tutorials/introduceSections',
   //     title: '',
   //     sidebar_label: '',
   //   },
+
+  {
+    src: 'doc/tutorials/t2_a_createDataGenerator/step4.adoc',
+    docbook: 'build/tutorial/createGenerator.xml',
+    target: 'tutorials/createGenerator.md',
+    id: 'createGenerator',
+    title: 'Create your own data generator',
+    sidebar_label: 'Create data generator',
+  },
+
   //   {
   //     src: 'doc/tutorials//index.adoc',
   //     id: 'tutorials/createGenerator',
@@ -88,6 +102,18 @@ const INPUT = [
   //     sidebar_label: '',
   //   },
   //
+
+  // ---------------------------------------------
+  // - Guide
+  // ---------------------------------------------
+  {
+    src: 'node_modules/@xhubiotable/processor/doc/processorOverview.adoc',
+    docbook: 'build/guide/generalOverview.xml',
+    target: 'guide/generalOverview.md',
+    id: 'generalOverview',
+    title: 'Overview of Nanook test data generator and table processor',
+    sidebar_label: 'General Overview',
+  },
 
   {
     src:
@@ -116,11 +142,88 @@ const INPUT = [
     title: 'Matrix table overview',
     sidebar_label: 'Overview',
   },
+
+  // ---------------------------------------------
+  // - Guide Generator Command
+  // ---------------------------------------------
+  {
+    src: 'node_modules/@xhubiotable/processor/doc/staticData.adoc',
+    docbook: 'build/guide/generatorCommand/staticData.xml',
+    target: 'guide/generatrorCommand/staticData.md',
+    id: 'static',
+    title: 'Static Data',
+    sidebar_label: 'Static Data',
+  },
+  {
+    src: 'node_modules/@xhubiotable/processor/doc/generatorCommand.adoc',
+    docbook: 'build/guide/generatorCommand/generator.xml',
+    target: 'guide/generatrorCommand/generator.md',
+    id: 'generator',
+    title: 'Generator commands',
+    sidebar_label: 'Generator',
+  },
+  {
+    src: 'node_modules/@xhubiotable/processor/doc/referenceOverview.adoc',
+    docbook: 'build/guide/generatorCommand/reference.xml',
+    target: 'guide/generatrorCommand/reference.md',
+    id: 'reference',
+    title: 'References',
+    sidebar_label: 'References',
+  },
+
+  // ---------------------------------------------
+  // - Guide Advanced
+  // ---------------------------------------------
+
   //
   //   { src: '', id: 'guide/advanced/references', title: '', sidebar_label: '' },
   //   { src: '', id: 'guide/advanced/instanceIds', title: '', sidebar_label: '' },
   //
   //   { src: '', id: 'api/overview', title: '', sidebar_label: '' },
+
+  // ---------------------------------------------
+  // - Modules
+  // ---------------------------------------------
+  {
+    src: 'node_modules/@xhubiotable/model/doc/index.adoc',
+    docbook: 'build/modules/model.xml',
+    target: 'modules/model.md',
+    id: 'model',
+    title: 'Model',
+    sidebar_label: 'Model',
+  },
+  {
+    src: 'node_modules/@xhubiotable/logger/doc/index.adoc',
+    docbook: 'build/modules/logger.xml',
+    target: 'modules/logger.md',
+    id: 'logger',
+    title: 'Logger',
+    sidebar_label: 'Logger',
+  },
+  {
+    src: 'node_modules/@xhubiotable/file-processor/doc/index.adoc',
+    docbook: 'build/modules/fileProcessor.xml',
+    target: 'modules/fileProcessor.md',
+    id: 'fileProcessor',
+    title: 'File Processor',
+    sidebar_label: 'File Processor',
+  },
+  {
+    src: 'node_modules/@xhubiotable/data-generator/doc/index.adoc',
+    docbook: 'build/modules/dataGenerator.xml',
+    target: 'modules/dataGenerator.md',
+    id: 'dataGenerator',
+    title: 'Data Generator',
+    sidebar_label: 'Data Generator',
+  },
+  {
+    src: 'node_modules/@xhubiotable/processor/doc/writer.adoc',
+    docbook: 'build/modules/writer.xml',
+    target: 'modules/writer.md',
+    id: 'writer',
+    title: 'Writer',
+    sidebar_label: 'Writer',
+  },
 ]
 
 /**
