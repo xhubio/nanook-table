@@ -7,3 +7,4 @@ package-lock.json
 yarn.lock
 tests/volatile
 build
+yarn-error.log

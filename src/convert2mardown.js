@@ -16,6 +16,25 @@ const WEBSITE_IMAGES = path.join(websiteRepoPath, 'website', 'static', 'img')
 const docPath = path.join(websiteRepoPath, 'docs')
 const SOURCE_IMAGES = 'build/images'
 
+/**
+ * {
+ *   // The soure adoc file
+ *   src: 'doc/tutorials/introduction.adoc',
+ *
+ *   // The name of the docbok xml to be created
+ *   docbook: 'build/tutorial/overview.xml',
+ *
+ *   // The path in the docs director of the wibsite repository
+ *   target: 'tutorials/overview.md',
+ *
+ *   // The id as it was defined in the sidebar.json
+ *   id: 'overview',
+ *   title: 'Overview',
+ *   sidebar_label: 'Overview',
+ * },
+ *
+ */
+
 const INPUT = [
   {
     src: 'doc/tutorials/introduction.adoc',
@@ -69,10 +88,34 @@ const INPUT = [
   //     sidebar_label: '',
   //   },
   //
-  //   { src: '', id: 'guide/equivalence/overview', title: '', sidebar_label: '' },
-  //   { src: '', id: 'guide/equivalence/sections', title: '', sidebar_label: '' },
-  //
-  //   { src: '', id: 'guide/matrix/overview', title: '', sidebar_label: '' },
+
+  {
+    src:
+      'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_layout.adoc',
+    docbook: 'build/guide/equivalence/equivalence_class_table_layout.xml',
+    target: 'guide/equivalence/overview.md',
+    id: 'overview',
+    title: 'Decision table overview',
+    sidebar_label: 'Overview',
+  },
+  {
+    src:
+      'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_sections.adoc',
+    docbook: 'build/guide/equivalence/equivalence_class_table_sections.xml',
+    target: 'guide/equivalence/sections.md',
+    id: 'sections',
+    title: 'Decision table sections',
+    sidebar_label: 'Section',
+  },
+
+  {
+    src: 'node_modules/@xhubiotable/model-matrix/doc/matrix_table.adoc',
+    docbook: 'build/guide/matrix/equivalence_class_table_layout.xml',
+    target: 'guide/matrix/overview.md',
+    id: 'overview',
+    title: 'Matrix table overview',
+    sidebar_label: 'Overview',
+  },
   //
   //   { src: '', id: 'guide/advanced/references', title: '', sidebar_label: '' },
   //   { src: '', id: 'guide/advanced/instanceIds', title: '', sidebar_label: '' },
@@ -105,7 +148,6 @@ async function createDocbook(srcFileName, targetFileName) {
     )
   })
 }
-
 
 /**
  * copies all the imgaes from the build directory into the website repo image
