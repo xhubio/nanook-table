@@ -1,8 +1,8 @@
 == Add calculations and prettify the table
-Now that we have all the equivalence classes filled per field we are able to
+Now that we have all the equivalence classes filled by field, we are able to
 calculate how many test cases are necessary to test this functionality.
 
-In order to do so we multiply the number of equivalence classes of each field.
+In order to do so, we multiply the number of equivalence classes of each field.
 
 * userid has 16 classes
 * password has 12 classes
@@ -10,15 +10,15 @@ In order to do so we multiply the number of equivalence classes of each field.
 
 So the number of test cases is 16*12*13 = 2496.
 This is a lot to test. Could this be optimised? If yes, how
-to optimise it without losing test coverage. This is the main
+to optimise it without losing test coverage? This is the main
 benefit of the equivalence class table technique.
 
-First we will add some formulas to the spreadsheet to do the calculations.
+First, we will add some formulas to the spreadsheet to do the calculations.
 
 image::images/tutorials/t1/step3_formula.png[width=420]
 
 The numbers count the amount of classes in each field. Do this for each of the fields.
-And also add a row at the end which shows the result of the multiplication.
+Also add a row at the end which shows the result of the multiplication.
 
 image::images/tutorials/t1/step3_format.png[width=620]
 

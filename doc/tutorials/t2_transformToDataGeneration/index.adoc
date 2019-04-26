@@ -4,8 +4,8 @@ In the first tutorial we have created a normal equivalence class table. It shows
 that we need to create 39 test cases. But we still need to create the data manually.
 It does not create the data for us.
 
-So let us transform this table into a data generation table. To do this create a new column between 'Equivalence class' and 'Description'.
-The column header is 'generator'. In this column we add the commands to call generators which will create
+So let us transform this table into a data generation table. To do this, create a new column between 'Equivalence class' and 'Description'.
+The column header is named 'generator'. In this column we add the commands to call generators which will create
 the data for us.
 
 :leveloffset: +1
