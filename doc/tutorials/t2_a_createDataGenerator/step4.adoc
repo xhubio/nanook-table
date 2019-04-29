@@ -30,7 +30,7 @@ extends the 'DataGeneratorBase' class.
 
 [source,js]
 ----
-const DataGeneratorBase = require('@xhubiotable/data-generator').DataGeneratorBase
+const DataGeneratorBase = require('@xhubio/nanook-table').DataGeneratorBase
 
 class GeneratorPerson extends DataGeneratorBase {
 

@@ -5,9 +5,9 @@ import { exec } from 'child_process'
 import mkdirp from 'mkdirp'
 import globby from 'globby'
 
+import { modifyMarkdown } from './insertHeaderInMarkdown'
+
 const md = util.promisify(mkdirp)
-const readFile = util.promisify(fs.readFile)
-const writeFile = util.promisify(fs.writeFile)
 const copyFile = util.promisify(fs.copyFile)
 
 const websiteRepoPath =
@@ -242,6 +242,7 @@ async function createDocbook(srcFileName, targetFileName) {
         if (stderr) {
           reject(stderr)
         } else if (error) {
+          // eslint-disable-next-line no-console
           console.log('ERROR Dockbook:', error)
           reject(error.code)
         } else {
@@ -288,6 +289,7 @@ async function convert2Markdown(srcFileName, targetFileName) {
       `pandoc  --atx-headers --wrap=preserve -t gfm -f docbook ${srcFileName} > ${targetFileName}`,
       (error, stdout, stderr) => {
         if (error) {
+          // eslint-disable-next-line no-console
           console.log('ERROR consvert:', error)
           reject(error.code)
         }
@@ -298,31 +300,6 @@ async function convert2Markdown(srcFileName, targetFileName) {
       }
     )
   })
-}
-
-/**
- * Inserts the header and update the image includes
- * @param srcFile {string} The unmodified markdown file
- * @param targetFile {string} The path for the modified result file
- * @param headerInfo {object} The values to be inserted into the header
- */
-async function modifyMarkdown({ srcFile, targetFile, headerInfo }) {
-  let content = await readFile(srcFile, 'utf-8')
-  content = content.replace(/images\//g, '/img/')
-  content = content.replace(/^# .*\n/, '')
-  const newContent = []
-
-  // if the first line starts with a title, the title needs to be removed
-
-  newContent.push('---')
-  newContent.push(`id: ${headerInfo.id}`)
-  newContent.push(`title: ${headerInfo.title}`)
-  newContent.push(`sidebar_label: ${headerInfo.sidebar_label}`)
-  newContent.push('---')
-  newContent.push('')
-  newContent.push(content)
-
-  await writeFile(targetFile, newContent.join('\n'))
 }
 
 async function run(inputArray) {
@@ -337,7 +314,9 @@ async function run(inputArray) {
     const markdown = path.join(dockbookDir, `${dockbookFilenameOnly}.md`)
     const target = path.join(docPath, fileObj.target)
 
+    // eslint-disable-next-line no-console
     console.log('-------------------------------------------------')
+    // eslint-disable-next-line no-console
     console.log(`Work on file: ${src}`)
 
     try {
@@ -353,30 +332,18 @@ async function run(inputArray) {
         },
       })
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e)
     }
   }
 }
 
-// /**
-//  * Copies the images from this repo into the images folder of the wibsite repo
-//  *
-//  */
-// function copyImages() {}
-//
-// function insertHeader() {}
-//
-// /**
-//  * The image path in the documents must be updated to work
-//  * with docusaurus
-//  */
-// function replaceImagePath() {}
-//
-
 run(INPUT)
   .then(() => {
-    console.log('DOOONE')
+    // eslint-disable-next-line no-console
+    console.log('Done converting the asciidoc files to markdown.')
   })
   .catch(err => {
+    // eslint-disable-next-line no-console
     console.log(err)
   })

@@ -26,7 +26,10 @@
     "prepare": "npm run build",
     "doc": "node createLinks && npm run doc_tutorial && npm run doc_manual",
     "doc_tutorial": "asciidoctor doc/tutorial.adoc && asciidoctor-pdf doc/tutorial.adoc",
-    "doc_manual": "asciidoctor doc/userManual.adoc && asciidoctor-pdf doc/userManual.adoc"
+    "doc_manual": "asciidoctor doc/userManual.adoc && asciidoctor-pdf doc/userManual.adoc",
+    "website_api": "node lib/createApi",
+    "website_doc": "node lib/convert2markdown",
+    "update_website": "npm run build && npm run website_doc && npm run website_api"
   },
   "contributors": [
     {
@@ -54,6 +57,8 @@
     "jest": "24.7.1",
     "jest-cli": "24.7.1",
     "jest-environment-node-debug": "2.0.0",
+    "jsdoc-export-default-interop": "^0.3.1",
+    "jsdoc-to-markdown": "^4.0.1",
     "prettier": "1.17.0",
     "regenerator-runtime": "0.13.2",
     "semantic-release": "15.13.3"
