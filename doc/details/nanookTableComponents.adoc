@@ -4,20 +4,20 @@ Component overview of Nanook-Table
 image::images/nanookTableOverview.svg[]
 
 === File Reader
-A file reader is responsible to read spreadsheet files and provides
+A file reader is responsible to read spreadsheet files and providing
 a generic interface for a parser. There is a file reader which is
 able to read Microsoft Excel files and another reader may read OpenOffice
-Documents.
+documents.
 
 === Importer Map
 The file readers are registered in a map by the file extension they
 handle. For example: +
-The Excel file reader is registered with the extension 'xls' and 'xlsx'.
+The Excel file reader is registered with the extensions 'xls' and 'xlsx'.
 So the same reader may be registered multiple times.
 
 === Table Parser
-The table parser is responsible to read a table format. So there is a
-parser to read the Equivalence class table and another reader reads the
+The table parser is responsible for reading a table format. There is a
+parser to read the equivalence class table and another one to read the
 matrix table format.
 
 === Parser Map
@@ -27,10 +27,10 @@ This key must be in the first cell of the table. The same parser may be register
 under different keys.
 
 === File Processor
-The file processor gets a file name as input. Then it extracts the extension and checks if a
-importer is registered for this extension. If so the file is read. One file (a workbook) may
-contain many tables. The file processor reads the first cell of each table and checks if a
-parser is registered for this table type. Each table no parser is registered for is ignored.
+The file processor takes a file name as input. Then it extracts the extension and checks if an
+importer is registered for this extension. If so, the file is read. One file (a workbook) may
+contain multiple tables. The file processor reads the first cell of each table and checks if a
+parser is registered for this table type. Each table no parser is registered for is being ignored.
 
 If a parser is registered for this kind of table, the file processor gives over the table to
 the parser. The result of parsing is a table model.
@@ -39,11 +39,11 @@ All the table models are stored in an array.
 
 === Generator
 A generator is responsible for generating data. The generator returns a value or may directly
-change or insert data on the given 'tescaseData' object.
+change or insert data to the given 'tescaseData' object.
 
 === Service Registry
 All the generators are registered in a 'ServiceRegistry'. The name under which the generator is registered is
-the same name that is used in the table to call the generator. Also each generator has access to the service
+the same name that is used in the table to call the generator. Also, each generator has access to the service
 registry and can call other generators this way.
 
 === Writer
@@ -65,5 +65,5 @@ All the filter are stored in a map by the filter name.
 
 
 === Processor
-The processor glues all together. It gets the tables from the 'File Processor'. Then it executes all the tables
+The processor glues everything together. It gets the tables from the 'File Processor', then it executes all the tables
 with the help of the generators and writers.

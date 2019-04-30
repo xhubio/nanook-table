@@ -4,10 +4,10 @@ This tutorial teaches you how to create an equivalence class table from scratch.
 It does not yet use any test data creation functionality.
 
 The goal is to transfer the requirements from a specification into a table.
-As an example we would like to test the creation of a userId and password for
+As an example, we would like to test the creation of a userId and password for
 a virtual application. The user can freely choose the userId and the password.
 
-The next chapter will show the specification for this application dialog. Then we create
+The next chapter will show the specification for this application dialog. Then we will create
 the equivalence class table step by step.
 
 :leveloffset: +1

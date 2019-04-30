@@ -1,14 +1,13 @@
 == Using References
-References are a way to split complex equivalence class tables in
-a bunch of smaller tables. Or to reference a complete record which exists
-also. In the previous example we have added a 'friend email' field.
+References are a way to split complex equivalence class tables into
+a bunch of smaller tables or to reference a complete, existing record. In the previous example we have added a 'friend email' field.
 The email is generated as expected. But what if our system needs to have the
-full record before you can enter an email of a friend. So the system will proof
-that the email exists. In the test data we need to create an existing record
-first before we can enter the 'friend email'.
+full record before we can enter an email of a friend, so that it can proof
+that the email exists? In the test data we need to create an existing record
+first, before we can enter the 'friend email'.
 
 To solve this we can use the reference. So let's change the generator call for
-the friend email into a reference call.
+the friend email to a reference call.
 
 From:
 
@@ -27,12 +26,12 @@ ref::sheet1:email:friend
 ref:<instanceId suffix>:<sheet name>:<field name>:<test case name>
 ----
 
-Also changed the text case names.
+We also change the test case name.
 
 image::images/tutorials/t3/step4.png[]
 
-We have now one test case called 'TC1' and one test case 'friend'. For this test case we have removed the
-friend email field. Because if we leave the 'x' here we have a recursion.
+We now have one test case called 'TC1' and one test case called 'friend'. For this test case we have removed the
+friend email field, because if we would leave the 'x' here we would have a recursion.
 
 Start the generator and have a look at the generated data.
 
@@ -64,7 +63,7 @@ Start the generator and have a look at the generated data.
   "callTree": {}
 }
 ----
-<1> The main data set. It is the same instanceId as the id in the property
+<1> The main data set. It has the same instanceId as the id in the property
 'instanceId' (see mark 4)
 <2> The friend email. This email is the same email coming from the second
 record which is generated with a new instanceId.
@@ -74,5 +73,5 @@ was taken.
 [NOTE]
 The example code is located at: +
 src/t3/step4 +
-Just type there: +
+In there, simply run: +
 node tdg.js
