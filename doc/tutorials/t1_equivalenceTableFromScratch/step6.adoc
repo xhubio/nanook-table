@@ -1,6 +1,6 @@
 <<<
 == Cleanup the table
-As the table grows it will be more difficult to build combinations.
+As the table grows it will become more difficult to build combinations.
 So it is very helpful that the table follows a certain pattern (which is not always possible).
 In our case we started with the invalid user ids. But in the rows
 8,9,14,15 and 19 there are valid cases.
@@ -20,9 +20,9 @@ of 'password' and 'password2'.
 Choose the 'leading spaces' equivalence class of field 'userId' or any other equivalence class as long as
 it is a valid one.
 In 'password' choose the 'empty' class. As the 'password' is a mandatory
-field we can fill the 'password2' field with 'e'.
+field, we can fill the 'password2' field with 'e'.
 
-And then add a new result row with the expected error messages.
+Then add a new result row with the expected error messages.
 
 image::images/tutorials/t1/step6_tc12.png[width=640]
 

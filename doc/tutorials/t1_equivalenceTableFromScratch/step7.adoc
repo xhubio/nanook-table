@@ -1,11 +1,11 @@
 <<<
 == Iterate over the 'password2' field
 
-The following procedure depends on how the application reacts. Will it first proof that the password2
+The following procedure depends on how the application works. Will it first validate that password2
 is different to the first password field or does it first do the same checks
-as for the first password.
+as for the first password input?
 
-In this example we do the full iteration of all the classes also for password2.
+In this example, we do the full iteration of all the classes for password2 as well.
 Take the valid class of 'password' and create a test case for all the error
 cases of 'password2'
 

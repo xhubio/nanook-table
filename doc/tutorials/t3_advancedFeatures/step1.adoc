@@ -1,7 +1,7 @@
 == Execute Section
-This section gives you the possibility to switch on/off single test cases.
-If the section does not exists all test cases are executed. If the section
-exists, only the marked test cases are executed.
+This section gives you the possibility to switch single test cases on/off.
+If the section does not exist, all test cases will be executed. If the section
+exists, only the marked test cases will be executed.
 
 Add a new row in row '3' of the Excel sheet.
 
@@ -15,11 +15,11 @@ Add a new row in row '3' of the Excel sheet.
 
 image::images/tutorials/t3/step1.png[]
 
-As all the test cases have a 'T' in there column, all the test cases are executed. If you change
-some of them to 'F' then these test cases are not executed.
+As all the test cases have a 'T' in their column, all the test cases are executed. If you change
+some of them to 'F', then these test cases will not be executed.
 
 [NOTE]
 The example code is located at: +
 src/t3/step1 +
-Just type there: +
+In there, simply run: +
 node tdg.js

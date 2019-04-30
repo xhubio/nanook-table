@@ -1,6 +1,6 @@
 == Add a result section
-Until now we have defined what we think how the application
-behaves but it is not shown in the table. For this add new rows
+So far we have defined how we think the application
+behaves, but it is not shown in the table. For this, add new rows
 under the 'Summary' row.
 
 Add the following rows

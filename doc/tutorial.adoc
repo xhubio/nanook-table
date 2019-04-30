@@ -1,5 +1,5 @@
 = Equivalence class tutorial
-Teaches how to create an equivalence class table for defined test cases and create test data.
+This tutorial teaches how to create an equivalence class table for defined test cases and how to create test data.
 
 :toc:
 
