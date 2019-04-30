@@ -1,0 +1,13 @@
+image::images/nanookTableDataCreation.svg[]
+
+
+What is Nanook table?
+
+It is a processor which reads Spreadsheets to defined test cases
+and test data. It processes the sheets and generates test cases and test data.
+It helps you to recreate the test cases and test data while you working on the
+specification of test cases in the spreadsheet files.
+
+The spreadsheets help to keep the overview of the test cases and the
+test coverage. But is is hard to change the tests and update all the test data of
+you test cases. This is where Nanook-Table comes in.

@@ -107,12 +107,12 @@ const INPUT = [
   // - Guide
   // ---------------------------------------------
   {
-    src: 'node_modules/@xhubiotable/processor/doc/processorOverview.adoc',
+    src: 'doc/Overview.adoc',
     docbook: 'build/guide/generalOverview.xml',
     target: 'guide/generalOverview.md',
     id: 'generalOverview',
-    title: 'Overview of Nanook test data generator and table processor',
-    sidebar_label: 'General Overview',
+    title: 'Overview of Nanook-Table',
+    sidebar_label: 'Nanook-Table Overview',
   },
 
   {

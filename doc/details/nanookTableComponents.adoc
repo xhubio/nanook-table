@@ -1,10 +1,10 @@
-Put it all together. The following picture shows the correlation of
-all parts of Nanook.
 
-image::images/overview.svg[]
+Component overview of Nanook-Table
+
+image::images/nanookTableOverview.svg[]
 
 === File Reader
-A file reader is responsible to read spread sheet files and provides
+A file reader is responsible to read spreadsheet files and provides
 a generic interface for a parser. There is a file reader which is
 able to read Microsoft Excel files and another reader may read OpenOffice
 Documents.
@@ -54,6 +54,15 @@ and content. This is the domain of the writer.
 === Writer Array
 All the writers are stored in an array. For each test case all the writers are called in the order they are stored
 in the array.
+
+
+=== Filter
+A filter could filter created test cases. So if you tag your tests with a priority, you can later on filter
+for priorities.
+
+=== Filter Map
+All the filter are stored in a map by the filter name.
+
 
 === Processor
 The processor glues all together. It gets the tables from the 'File Processor'. Then it executes all the tables

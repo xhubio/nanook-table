@@ -423,6 +423,8 @@ const INPUT = [
     title: 'Processor',
     sidebar_label: 'Processor',
   },
+
+  // functions -----------------------------------
   {
     src: 'node_modules/@xhubiotable/processor/src/writeMetaData.js',
     target: 'api/processor/writeMetaData.md',
@@ -443,6 +445,32 @@ const INPUT = [
     id: 'utilCartesian',
     title: 'utilCartesian',
     sidebar_label: 'utilCartesian',
+  },
+
+  // filter --------------------------------------
+  {
+    src:
+      'node_modules/@xhubiotable/processor/src/filter/FilterProcessorInterface.js',
+    target: 'api/processor/filter/FilterProcessorInterface.md',
+    id: 'FilterProcessorInterface',
+    title: 'Interface Filter',
+    sidebar_label: 'Interface Filter',
+  },
+  {
+    src:
+      'node_modules/@xhubiotable/processor/src/filter/SimpleArrayFilterProcessor.js',
+    target: 'api/processor/filter/SimpleArrayFilterProcessor.md',
+    id: 'SimpleArrayFilterProcessor',
+    title: 'Simple Array Filter',
+    sidebar_label: 'Simple Array Filter',
+  },
+  {
+    src:
+      'node_modules/@xhubiotable/processor/src/filter/SimpleArrayIgnoreFilterProcessor.js',
+    target: 'api/processor/filter/SimpleArrayIgnoreFilterProcessor.md',
+    id: 'SimpleArrayIgnoreFilterProcessor',
+    title: 'Simple Array Ignore Filter',
+    sidebar_label: 'Simple Array Ignore Filter',
   },
 ]
 
@@ -500,6 +528,11 @@ async function run(inputArray) {
     }
   }
 }
+
+console.log('------------------------------')
+console.log('- Importand ')
+console.log('- Works only if the xhubiotable projects are linked ')
+console.log('------------------------------')
 
 run(INPUT)
   .then(() => {
