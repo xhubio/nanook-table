@@ -17,7 +17,7 @@ with it, it is a great way.
 When you define the tests with this method you also have a good documentation on which tests you perform and why.
 It provides the opportunity to optimise test cases, find all test cases needed and avoid duplicates.
 
-Also, you will be ablte to show your manager what you are doing (sometimes this is a very important factor).
+Also, you will be able to show your manager what you are doing (sometimes this is a very important factor).
 
 The examples (files and code) used in this tutorial can be downloaded from GitHub.
 
