@@ -1,12 +1,12 @@
 == Create the writer
 
-First let's have a look at the default writer provided by the '@xhubiotable/processor' module.
+First let's have a look at the default writer provided by the '@xhubio/nanook-table' module.
 
 [source,js]
 ----
 const fs = requite('fs')
 const util = requite('util')
-const InterfaceWriter = requite('@xhubiotable/processor').InterfaceWriter
+const InterfaceWriter = requite('@xhubio/nanook-table').InterfaceWriter
 const writeFile = util.promisify(fs.writeFile)
 
 class DefaultWriter extends InterfaceWriter {
@@ -36,10 +36,10 @@ class DefaultWriter extends InterfaceWriter {
 ----
 <1> The only function which needs to be overwritten is the 'async write(testcaseData)' function.
 It is called for each test case with all the created test case data. The 'testcaseData' object
-contains the data. The default writer will just write out this object. If you need many different files
-each writer extracts just the data it needs and writes it to a file.
+contains the data. The default writer will simply write out this object. If you need many different files,
+each writer will extract only the data it needs and write it to a file.
 
-<2> Just create a file name.
+<2> Creates a file name.
 
 <3> Writes the file.
 
@@ -55,7 +55,7 @@ Create a file called 'csvWriter.js' and add the following content.
 const fs = require('fs')
 const util = require('util')
 const path = require('path')
-const InterfaceWriter = require('@xhubiotable/processor').InterfaceWriter
+const InterfaceWriter = require('@xhubio/nanook-table').InterfaceWriter
 
 const writeFile = util.promisify(fs.writeFile)
 const DELIMITER = ','     <1>
@@ -99,21 +99,21 @@ module.exports.CsvWriter = CsvWriter
 ----
 
 <1> Set the delimiter for the CSV file.
-<2> Create the file name. In this function we do not create the directory if not exists, because this is
+<2> Create the file name. In this function we do not create the directory if it doesn't exist, because this is
 already done in the default writer.
-<3> Iterate over all the instanceIds of the data object. In this case we do not distinguish between the main
+<3> Iterate over all the instanceIds of the data object. In this case, we do not distinguish between the main
 data and the referenced data. But this depends on the use case.
 <4> Get the data object of the current instanceId.
 <5> Build the row.
 <6> Write the file.
 
-The next step is adding the writer to the processor. For this the 'tdg.js' file needs to be modified.
+The next step is adding the writer to the processor. For this, the 'tdg.js' file needs to be modified.
 
 [source,js]
 ----
 const path = require('path')
-const p = require('@xhubiotable/processor')
-const LoggerMemory = require('@xhubiotable/logger').LoggerMemory
+const p = require('@xhubio/nanook-table')
+const LoggerMemory = require('@xhubio/nanook-table').LoggerMemory
 const GeneratorPerson = require('./GeneratorPerson').GeneratorPerson
 const CsvWriter = require('./CsvWriter').CsvWriter
                       <1>
@@ -157,14 +157,14 @@ doIt().then(() => {
 <2> Create an instance of the csv writer.
 <3> The 'createDefaultWriter()' function returns an array with one default writer. So we just get the first
 writer from the array.
-<4> Create an array with both writers. The writers are executed in the given order. So only the first writer
+<4> Create an array with both writers. The writers are executed in the given order, so only the first writer
 needs to create the output directory.
 
-Now run the execution again. Afterwards you will find an additional file called 'person.csv' in the result directory.
+Now run the execution again. Afterwards, you will find an additional file called 'person.csv' in the result directory.
 
 
 [NOTE]
 The example code is located at: +
 src/t4/step1 +
-Just type there: +
+In there, simply run: +
 node tdg.js

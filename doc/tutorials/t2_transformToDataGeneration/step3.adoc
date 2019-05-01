@@ -3,7 +3,7 @@
 
 === Create an initial npm module
 
-Create a new empty directory. Change into it and do npm init.
+Create a new empty directory. Change into it and run npm init.
 
 [source,c]
 ----
@@ -13,7 +13,7 @@ mkdir resources
 mkdir tdg
 mkdir src
 npm init
-npm install --save @xhubiotable/processor
+npm install --save @xhubio/nanook-table
 ----
 
 <<<
@@ -23,8 +23,8 @@ Create a new file 'src/tdg.js' with the following content.
 [source,js]
 ----
 const path = require('path')
-const p = require('@xhubiotable/processor')
-const { LoggerMemory } = require('@xhubiotable/logger')
+const p = require('@xhubio/nanook-table')
+const { LoggerMemory } = require('@xhubio/nanook-table')
 
 async function doIt() {
   const logger = new LoggerMemory()               <1>
@@ -54,7 +54,7 @@ doIt().then(() => {
   console.log(err)
 })
 ----
-<1> Create a logger. For all tutorials we will take the Memory Logger. This
+<1> Create a logger. For all tutorials we will use the Memory Logger. This
 logger stores all the log entries. It is a good logger for unit testing.
 
 <2> Tells the memory logger that it should also write the logs to console out.
@@ -63,10 +63,10 @@ logger stores all the log entries. It is a good logger for unit testing.
 it into a table object as it is used by the processor.
 
 <4> Creates the processor.  +
-The processor needs a registry where all the available generators are registered. In
-the current example the registry is empty. But a registry is required. +
-The writer is responsible to write the created test data into the desired format. The default writer
-just writes the test case data as a JSON file. You can add as many writers as you like.
+The processor needs a registry in which all the available generators are registered. In
+the current example, the registry is empty. But a registry is required. +
+The writer is responsible to write the created test data in the desired format. The default writer
+simply writes the test case data as a JSON file. You can add as many writers as you like.
 
 <5> Loads the spread sheet and creates the table object. You an call the load function
 multiple times depending on how many spreadsheets you would like to load.
@@ -122,9 +122,9 @@ The content of the file should look like the following:
   }
 }
 ----
-<1> The name of the table which creates this test case. (Later on we learn the details on this.)
-<2> The name of the test case. The content of the header column in the sheet.
-<3> The data object contains all the generated data.
+<1> The name of the table which creates this test case. (Later on we will learn the details of this.)
+<2> The name of the test case. This corresponds to the content of the header column in the sheet.
+<3> The data object containing all the generated data.
 <4> The name of the sheet again.
 <5> The instance of the created test case data. (An instanceId belongs to an instance of a given test case and is
  explained later in detail. For the moment just accept that the id exist and that it makes sense).
@@ -132,12 +132,12 @@ The content of the file should look like the following:
 <7> The main instanceId of this test case.
 <8> The call tree of the tables. (This is for debugging your test data. More on this later.)
 
-Each time you call the script we generate the same data as we added static data in the table. Only the instanceIds
-are changing with each call of the script. In the next section we replace the static data with a generator.
+Each time we call the script, we generate the same data since we added static data in the table. Only the instanceIds
+are changing with each call of the script. In the next section we will replace the static data with a generator.
 
 
 [NOTE]
 The example code is located at: +
 src/t2/step3 +
-Just type there: +
+In there, simply run: +
 node tdg.js

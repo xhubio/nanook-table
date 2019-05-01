@@ -1,10 +1,10 @@
 == Using the 'instanceId'
-As discussed before in this tutorials. If a generator is called with the same instanceId it will return the
-same data. But what is if we would like to add a new field called 'friend email'. This is the email of a friend. In this
+As discussed before in this tutorial, if a generator is called with the same instanceId, it will return the
+same data. But what if we would like to add a new field called 'friend email'? This would be the email of a friend. In this
 case we would like to get a new email, not the same.
 
 Let's add a new field to our table.
-Add a new row for the FieldSubSection. and one row for the equivalence class of this field.
+Add a new row for the FieldSubSection and one row for the equivalence class of this field.
 Just copy the email field rows and add them. Then rename 'email' to 'friend email'.
 
 The table should looks like this:
@@ -17,9 +17,9 @@ src/t3/step3 +
 Just type there: +
 node tdg.js
 
-Now generate the data. And have a look at the created JSON file.
-The field 'email' and 'friend email' has the same value.
-To change this behaviour we need to unify the instanceId for this email.
+Now generate the data and have a look at the created JSON file.
+The fields 'email' and 'friend email' have the same value.
+To change this behaviour, we need to unify the instanceId for this email.
 So edit the generator command for 'friend email'.
 
 From :
@@ -32,7 +32,7 @@ to:
 ----
 gen:1:generatorPerson:email
 ----
-The '1' is a instanceId suffix. It will be added to the instanceId of the
+The '1' is an instanceId suffix. It will be added to the instanceId of the
 current test case. This ensures that the instanceId is unique again.
 Generate the data and have a look at the generated JSON file. The two emails
 should now be different.
@@ -41,5 +41,5 @@ should now be different.
 [NOTE]
 The example code is located at: +
 src/t3/step3.1 +
-Just type there: +
+In there, simply run: +
 node tdg.js
