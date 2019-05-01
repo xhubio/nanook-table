@@ -8,3 +8,5 @@ yarn.lock
 tests/volatile
 build
 yarn-error.log
+.idea
+*.iml
