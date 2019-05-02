@@ -65,13 +65,13 @@
   },
   "dependencies": {
     "@xhubiotable/data-generator": "2.1.5",
-    "@xhubiotable/file-processor": "2.3.2",
+    "@xhubiotable/file-processor": "2.3.3",
     "@xhubiotable/importer-xlsx": "2.0.5",
-    "@xhubiotable/logger": "2.0.5",
+    "@xhubiotable/logger": "2.0.6",
     "@xhubiotable/model": "2.3.2",
     "@xhubiotable/model-decision": "2.3.2",
     "@xhubiotable/model-matrix": "2.2.3",
-    "@xhubiotable/processor": "2.4.1",
+    "@xhubiotable/processor": "2.4.2",
     "globby": "9.2.0",
     "mkdirp": "0.5.1",
     "rimraf": "2.6.3"
