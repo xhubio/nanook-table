@@ -1,12 +1,12 @@
 = Quickstart
 :toc:
 
-==== Overview
+== Overview
 This tutorial will show you the steps in order to get started quickly in setting up test data generation. A simple
 example is shown in this guide to provide a quick overview and a first impression of Nanook.
 For a more detailed description please check our tutorial and the user manual.
 
-==== The equivalence class table
+== The equivalence class table
 
 The test cases are defined in an "equivalence class table" ("ECT"). The name equivalence class table is chosen because it contains
 classes considered to cause equivalent behavior within an application. For example a class "not empty field"
@@ -45,7 +45,7 @@ as the userId is empty.
 
 Columns G to J cover the other test cases we would like to cover.
 
-==== Generating test data
+== Generating test data
 
 Finally we generate the test data on basis of the just created table.
 In order to do so the repository "quickstart-source" has to be cloned with the command
@@ -64,5 +64,3 @@ Test data generation is based on the "Generator Function" column of our ECT. It 
 data as done for the class "valid user id" or dynamic data using a generator function like shown for the "userId not
 existent" class. The corresponding data generator for email generation is present in the "src"-folder (GeneratorPerson.js)
 and used in the quickstart.js file.
-
-
