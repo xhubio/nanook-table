@@ -55,9 +55,13 @@ In order to do so the repository "quickstart-source" has to be cloned with the c
 ----
 and data generation is started by calling
 ----
+yarn install
+----
+This will install all required dependencies. For more information on yarn check: https://yarnpkg.com/en/
+----
 node src/quickstart.js
 ----
-from the root folder of the project.
+from the root folder of the project. For more information on node.js check https://nodejs.org/en/
 
 In our example the test data will be generated in form of five JSON files (one for each testcase) that can be found in the folder "tdg".
 Test data generation is based on the "Generator Function" column of our ECT. It is possible to define static
