@@ -37,6 +37,17 @@ const SOURCE_IMAGES = 'build/images'
 
 const INPUT = [
   // ---------------------------------------------
+  // - Quickstart
+  // ---------------------------------------------
+  {
+    src: 'doc/Quickstart.adoc',
+    docbook: 'build/quickstart/quickstart.xml',
+    target: 'quickstart/quickstart.md',
+    id: 'quickstart',
+    title: 'Quickstart',
+    sidebar_label: 'Quickstart',
+  },
+  // ---------------------------------------------
   // - Tutorial
   // ---------------------------------------------
   {

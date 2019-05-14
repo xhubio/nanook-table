@@ -1,6 +1,3 @@
-= Quickstart
-:toc:
-
 == Overview
 This tutorial will show you the steps in order to get started quickly in setting up test data generation. A simple
 example is shown in this guide to provide a quick overview and a first impression of Nanook.

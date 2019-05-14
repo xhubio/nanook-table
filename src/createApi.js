@@ -312,6 +312,14 @@ const INPUT = [
     title: 'Filter Section Definition',
     sidebar_label: 'Filter Section Definition',
   },
+  {
+    src:
+      'node_modules/@xhubiotable/model-decision/src/GeneratorSwitchSectionDefinition.js',
+    target: 'api/model-decision/sections/GeneratorSwitchSectionDefinition.md',
+    id: 'GeneratorSwitchSectionDefinition',
+    title: 'Generator Switch Section Definition',
+    sidebar_label: 'Generator Switch Section  Definition',
+  },
   // Other ---------------------------------------
   {
     src:
