@@ -5,7 +5,11 @@
     "access": "public"
   },
   "keywords": [
-    "decision-table"
+    "decision table",
+    "data creation",
+    "test case creation",
+    "test data",
+    "test"
   ],
   "main": "lib/index.js",
   "repository": {
