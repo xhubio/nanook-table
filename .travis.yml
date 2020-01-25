@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 10.11
+- 12.14
 sudo: false
 branches:
   only:
@@ -13,14 +13,9 @@ cache:
 notifications:
   email:
   - torstenlink@gmx.de
-before_install:
-- npm i -g npm@latest
-before_script:
-- npm prune
-- npm install -g codecov
+install:
+- yarn install
 script:
-- npm run test
-after_script:
-- codecov
+- yarn test
 after_success:
 - npx semantic-release

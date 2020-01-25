@@ -67,9 +67,7 @@ async function createLinks() {
       } else {
         // eslint-disable-next-line no-console
         console.log(
-          `Error creating link '${
-            ln[1]
-          }'. There is alraedy a file with this name`
+          `Error creating link '${ln[1]}'. There is alraedy a file with this name`
         )
       }
     } catch (e) {

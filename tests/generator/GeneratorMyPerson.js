@@ -19,9 +19,7 @@ export default class GeneratorMyPerson extends DataGeneratorBase {
       (personData['first-name'] !== undefined ||
         personData['last-name'] !== undefined)
     ) {
-      return `${personData['first-name'].val}.${
-        personData['last-name'].val
-      }@foo.bar`
+      return `${personData['first-name'].val}.${personData['last-name'].val}@foo.bar`
     }
     return undefined
   }
