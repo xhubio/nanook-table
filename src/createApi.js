@@ -537,9 +537,13 @@ async function run(inputArray) {
   }
 }
 
+// eslint-disable-next-line no-console
 console.log('------------------------------')
+// eslint-disable-next-line no-console
 console.log('- Importand ')
+// eslint-disable-next-line no-console
 console.log('- Works only if the xhubiotable projects are linked ')
+// eslint-disable-next-line no-console
 console.log('------------------------------')
 
 run(INPUT)
@@ -547,7 +551,7 @@ run(INPUT)
     // eslint-disable-next-line no-console
     console.log('Done creating API documentation.')
   })
-  .catch(err => {
+  .catch((err) => {
     // eslint-disable-next-line no-console
     console.log(err)
   })

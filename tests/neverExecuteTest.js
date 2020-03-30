@@ -107,7 +107,7 @@ test('NeverExecute', async () => {
     before: async () => {
       return Promise.resolve()
     },
-    write: async testcaseData => {
+    write: async (testcaseData) => {
       if (result[testcaseData.tableName] === undefined) {
         result[testcaseData.tableName] = {}
       }
@@ -134,7 +134,7 @@ test('NeverExecute', async () => {
   await processor.process()
 
   // log all the errors
-  logger.entries.error.forEach(error => {
+  logger.entries.error.forEach((error) => {
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(error, null, 2))
   })

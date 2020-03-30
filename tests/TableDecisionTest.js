@@ -20,7 +20,7 @@ const logger = getLoggerMemory()
 logger.clear()
 logger.writeConsole = false
 
-test('createTodos', async done => {
+test('createTodos', async (done) => {
   const importer = new ImporterXlsx()
   const parser = new ParserDecision({ logger })
 

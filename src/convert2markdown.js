@@ -354,7 +354,7 @@ run(INPUT)
     // eslint-disable-next-line no-console
     console.log('Done converting the asciidoc files to markdown.')
   })
-  .catch(err => {
+  .catch((err) => {
     // eslint-disable-next-line no-console
     console.log(err)
   })

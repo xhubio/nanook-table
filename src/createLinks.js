@@ -83,7 +83,7 @@ createLinks()
     // eslint-disable-next-line no-console
     console.log('Created the links')
   })
-  .catch(err => {
+  .catch((err) => {
     // eslint-disable-next-line no-console
     console.log(err)
   })

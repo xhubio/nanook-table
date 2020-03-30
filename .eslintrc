@@ -16,7 +16,6 @@
   },
 
   "rules": {
-    "arrow-parens": [2, "as-needed"],
     "generator-star-spacing": [2, {"before": true, "after": false}],
     "array-bracket-spacing": 0,
     "arrow-spacing": 2,
