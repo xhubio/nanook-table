@@ -1,0 +1,35 @@
+name: CI
+'on': push
+jobs:
+  test_and_release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 14.15.0
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: >-
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{
+            hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: 'Build / Test Node ${{ matrix.node-version }}'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ matrix.node-version }}'
+      - run: npm install
+      - run: npm test
+      - run: npx semantic-release
+        env:
+          CI: 'true'
+          NPM_TOKEN: '${{ secrets.NPM_TOKEN }}'
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
