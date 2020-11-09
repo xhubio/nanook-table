@@ -8,7 +8,7 @@ import Validator from './Validator'
 // eslint-disable-next-line no-unused-vars
 const expected = {
   Person_with_friend: {
-    '1': {
+    1: {
       'first-name': 'Rudolf1',
       'last-name': 'Rentier1',
       email: 'Ruold1.rentier1@gum.de',
@@ -27,7 +27,7 @@ const expected = {
         },
       ],
     },
-    '2': {
+    2: {
       'first-name': 'Rudolf2',
       'last-name': 'Rentier2',
       email: 'Ruold2.rentier2@gum.de',

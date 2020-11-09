@@ -24,10 +24,10 @@ const addressExpected = {
     // '4-2': { street: 'street_func 1', number: 'num_func 4' },
     '4-3': { street: 'street_func 1', number: 'num_func 4' },
     '4-4': { street: 'street_func 1', number: 'num_func 4' },
-    '5': { street: 'street_func 2', number: 'num_func 3' },
-    '6': { street: 'street_func 1', number: 'num_func 4' },
-    '7': { street: 'street_func 2', number: 'num_func 3' },
-    '8': { street: 'street_func 2', number: 'num_func 4' },
+    5: { street: 'street_func 2', number: 'num_func 3' },
+    6: { street: 'street_func 1', number: 'num_func 4' },
+    7: { street: 'street_func 2', number: 'num_func 3' },
+    8: { street: 'street_func 2', number: 'num_func 4' },
   },
 }
 

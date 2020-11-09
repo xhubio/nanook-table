@@ -11,7 +11,7 @@ import { createOpts } from './Helper'
 // eslint-disable-next-line no-unused-vars
 const expected = {
   CreatePerson_mini: {
-    '2': {
+    2: {
       Effect: [
         {
           comment: 'a comment 1',
@@ -65,7 +65,7 @@ const expected = {
     //   ],
     //   gumbo: 'gen_func 4',
     // },
-    '3': {
+    3: {
       Effect: [
         {
           comment: 'a comment 2',

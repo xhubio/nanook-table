@@ -8,7 +8,7 @@ import Validator from './Validator'
 // eslint-disable-next-line no-unused-vars
 const personSelfRefExpected = {
   Person_self_ref: {
-    '1': {
+    1: {
       'first-name': 'Herbert1',
       'last-name': 'Batz1',
       name2: 'Herbert1',
@@ -25,7 +25,7 @@ const personSelfRefExpected = {
         },
       ],
     },
-    '2': {
+    2: {
       'first-name': 'Herbert2',
       'last-name': 'Batz2',
       name2: 'Herbert2',
@@ -37,7 +37,7 @@ const personSelfRefExpected = {
         },
       ],
     },
-    '3': {
+    3: {
       'first-name': 'Herbert3',
       'last-name': 'Batz3',
       name2: 'Herbert1',

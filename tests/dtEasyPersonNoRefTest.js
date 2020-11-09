@@ -8,7 +8,7 @@ import Validator from './Validator'
 // eslint-disable-next-line no-unused-vars
 const personNoRefExpected = {
   Person_no_ref: {
-    '1': {
+    1: {
       'first-name': '<EMPTY>',
       'last-name': '<empty>',
       email: '<EMPTY>',
@@ -20,7 +20,7 @@ const personNoRefExpected = {
         },
       ],
     },
-    '2': {
+    2: {
       'first-name': 'Franziska',
       'last-name': '<empty>',
       email: 'Franzi.Hubel@frog.de',
@@ -32,7 +32,7 @@ const personNoRefExpected = {
         },
       ],
     },
-    '3': {
+    3: {
       'first-name': 'Franziska',
       'last-name': 'Hubel',
       email: '<EMPTY>',
@@ -49,7 +49,7 @@ const personNoRefExpected = {
         },
       ],
     },
-    '4': {
+    4: {
       'first-name': 'Franziska',
       'last-name': 'Hubel',
       email: 'Franzi.Hubel@frog.de',
