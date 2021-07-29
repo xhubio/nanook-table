@@ -127,8 +127,7 @@ const INPUT = [
   },
 
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_layout.adoc',
+    src: 'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_layout.adoc',
     docbook: 'build/guide/equivalence/equivalence_class_table_layout.xml',
     target: 'guide/equivalence/overview.md',
     id: 'overview',
@@ -136,8 +135,7 @@ const INPUT = [
     sidebar_label: 'Overview',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_sections.adoc',
+    src: 'node_modules/@xhubiotable/model-decision/doc/equivalence_class_table_sections.adoc',
     docbook: 'build/guide/equivalence/equivalence_class_table_sections.xml',
     target: 'guide/equivalence/sections.md',
     id: 'sections',

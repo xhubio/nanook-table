@@ -32,8 +32,7 @@ const INPUT = [
   // - data generator
   // ---------------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/data-generator/src/DataGeneratorInterface.js',
+    src: 'node_modules/@xhubiotable/data-generator/src/DataGeneratorInterface.js',
     target: 'api/dataGenerator/DataGeneratorInterface.md',
     id: 'DataGeneratorInterface',
     title: 'Data Generator Interface',
@@ -54,8 +53,7 @@ const INPUT = [
     sidebar_label: 'Service Registry',
   },
   {
-    src:
-      'node_modules/@xhubiotable/data-generator/src/generator/GeneratorFaker.js',
+    src: 'node_modules/@xhubiotable/data-generator/src/generator/GeneratorFaker.js',
     target: 'api/dataGenerator/GeneratorFaker.md',
     id: 'GeneratorFaker',
     title: 'Generator Faker',
@@ -94,8 +92,7 @@ const INPUT = [
   },
   // Decision ------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/file-processor/src/ParserDecisionConstants.js',
+    src: 'node_modules/@xhubiotable/file-processor/src/ParserDecisionConstants.js',
     target: 'api/file-processor/decision/ParserDecisionConstants.md',
     id: 'ParserDecisionConstants',
     title: 'Parser Decision Constants',
@@ -110,8 +107,7 @@ const INPUT = [
   },
   // Matrix --------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/file-processor/src/ParserMatrixConstants.js',
+    src: 'node_modules/@xhubiotable/file-processor/src/ParserMatrixConstants.js',
     target: 'api/file-processor/matrix/ParserMatrixConstants.md',
     id: 'ParserMatrixConstants',
     title: 'Parser Matrix Constants',
@@ -126,8 +122,7 @@ const INPUT = [
   },
   // Specification -------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/file-processor/src/ParserSpecificationConstants.js',
+    src: 'node_modules/@xhubiotable/file-processor/src/ParserSpecificationConstants.js',
     target: 'api/file-processor/specification/ParserSpecificationConstants.md',
     id: 'ParserSpecificationConstants',
     title: 'Parser Specification Constants',
@@ -141,8 +136,7 @@ const INPUT = [
     sidebar_label: 'Parser Specification',
   },
   {
-    src:
-      'node_modules/@xhubiotable/file-processor/src/ParserSpecificationConverter.js',
+    src: 'node_modules/@xhubiotable/file-processor/src/ParserSpecificationConverter.js',
     target: 'api/file-processor/specification/ParserSpecificationConverter.md',
     id: 'ParserSpecificationConverter',
     title: 'Parser Specification Converter',
@@ -225,64 +219,56 @@ const INPUT = [
   // ---------------------------------------------
   // Sections ------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/BaseSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/BaseSectionDefinition.js',
     target: 'api/model-decision/sections/BaseSectionDefinition.md',
     id: 'BaseSectionDefinition',
     title: 'Base Section Definition',
     sidebar_label: 'Base Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/BaseSingleRowSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/BaseSingleRowSectionDefinition.js',
     target: 'api/model-decision/sections/BaseSingleRowSectionDefinition.md',
     id: 'BaseSingleRowSectionDefinition',
     title: 'Base Single Row Section Definition',
     sidebar_label: 'Base Single Row Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/ExecuteSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/ExecuteSectionDefinition.js',
     target: 'api/model-decision/sections/ExecuteSectionDefinition.md',
     id: 'ExecuteSectionDefinition',
     title: 'Execute Section Definition',
     sidebar_label: 'Execute Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/NeverExecuteSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/NeverExecuteSectionDefinition.js',
     target: 'api/model-decision/sections/NeverExecuteSectionDefinition.md',
     id: 'NeverExecuteSectionDefinition',
     title: 'Never Execute Section Definition',
     sidebar_label: 'Never Execute Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/MultiplicitySectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/MultiplicitySectionDefinition.js',
     target: 'api/model-decision/sections/MultiplicitySectionDefinition.md',
     id: 'MultiplicitySectionDefinition',
     title: 'Multiplicity Section Definition',
     sidebar_label: 'Multiplicity Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/SummarySectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/SummarySectionDefinition.js',
     target: 'api/model-decision/sections/SummarySectionDefinition.md',
     id: 'SummarySectionDefinition',
     title: 'Summary Section Definition',
     sidebar_label: 'Summary Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/FieldSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/FieldSectionDefinition.js',
     target: 'api/model-decision/sections/FieldSectionDefinition.md',
     id: 'FieldSectionDefinition',
     title: 'Field Section Definition',
     sidebar_label: 'Field Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/FieldSubSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/FieldSubSectionDefinition.js',
     target: 'api/model-decision/sections/FieldSubSectionDefinition.md',
     id: 'FieldSubSectionDefinition',
     title: 'Field Sub Section Definition',
@@ -290,8 +276,7 @@ const INPUT = [
   },
 
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/MultiRowSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/MultiRowSectionDefinition.js',
     target: 'api/model-decision/sections/MultiRowSectionDefinition.md',
     id: 'MultiRowSectionDefinition',
     title: 'Multi Row Section Definition',
@@ -305,16 +290,14 @@ const INPUT = [
     sidebar_label: 'Tag Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/FilterSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/FilterSectionDefinition.js',
     target: 'api/model-decision/sections/FilterSectionDefinition.md',
     id: 'FilterSectionDefinition',
     title: 'Filter Section Definition',
     sidebar_label: 'Filter Section Definition',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/GeneratorSwitchSectionDefinition.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/GeneratorSwitchSectionDefinition.js',
     target: 'api/model-decision/sections/GeneratorSwitchSectionDefinition.md',
     id: 'GeneratorSwitchSectionDefinition',
     title: 'Generator Switch Section Definition',
@@ -322,8 +305,7 @@ const INPUT = [
   },
   // Other ---------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/TestcaseDefinitionDecision.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/TestcaseDefinitionDecision.js',
     target: 'api/model-decision/TestcaseDefinitionDecision.md',
     id: 'TestcaseDefinitionDecision',
     title: 'Testcase Definition Decision',
@@ -337,8 +319,7 @@ const INPUT = [
     sidebar_label: 'Table Decision',
   },
   {
-    src:
-      'node_modules/@xhubiotable/model-decision/src/constants/sectionTypes.js',
+    src: 'node_modules/@xhubiotable/model-decision/src/constants/sectionTypes.js',
     target: 'api/model-decision/sectionTypes.md',
     id: 'sectionTypes',
     title: 'Section Types',
@@ -371,8 +352,7 @@ const INPUT = [
   // - model matrix
   // ---------------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/model-matrix/src/TestcaseDefinitionMatrix.js',
+    src: 'node_modules/@xhubiotable/model-matrix/src/TestcaseDefinitionMatrix.js',
     target: 'api/model-matrix/TestcaseDefinitionMatrix.md',
     id: 'TestcaseDefinitionMatrix',
     title: 'Testcase Definition Matrix',
@@ -457,24 +437,21 @@ const INPUT = [
 
   // filter --------------------------------------
   {
-    src:
-      'node_modules/@xhubiotable/processor/src/filter/FilterProcessorInterface.js',
+    src: 'node_modules/@xhubiotable/processor/src/filter/FilterProcessorInterface.js',
     target: 'api/processor/filter/FilterProcessorInterface.md',
     id: 'FilterProcessorInterface',
     title: 'Interface Filter',
     sidebar_label: 'Interface Filter',
   },
   {
-    src:
-      'node_modules/@xhubiotable/processor/src/filter/SimpleArrayFilterProcessor.js',
+    src: 'node_modules/@xhubiotable/processor/src/filter/SimpleArrayFilterProcessor.js',
     target: 'api/processor/filter/SimpleArrayFilterProcessor.md',
     id: 'SimpleArrayFilterProcessor',
     title: 'Simple Array Filter',
     sidebar_label: 'Simple Array Filter',
   },
   {
-    src:
-      'node_modules/@xhubiotable/processor/src/filter/SimpleArrayIgnoreFilterProcessor.js',
+    src: 'node_modules/@xhubiotable/processor/src/filter/SimpleArrayIgnoreFilterProcessor.js',
     target: 'api/processor/filter/SimpleArrayIgnoreFilterProcessor.md',
     id: 'SimpleArrayIgnoreFilterProcessor',
     title: 'Simple Array Ignore Filter',
