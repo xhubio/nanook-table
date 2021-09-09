@@ -76,7 +76,7 @@
     "@xhubiotable/model-decision": "2.4.8",
     "@xhubiotable/model-matrix": "2.3.6",
     "@xhubiotable/processor": "2.5.8",
-    "globby": "12.0.0",
+    "globby": "11.0.4",
     "mkdirp": "1.0.4",
     "rimraf": "3.0.2"
   }
