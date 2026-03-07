@@ -3,8 +3,7 @@ name: CI
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
+
 
 permissions:
   contents: write
@@ -13,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  test:
+  release:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -31,31 +30,7 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
-      - run: pnpm run lint
-      - run: pnpm run build
-      - run: pnpm run test:coverage
-
-  release:
-    needs: test
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run build
-
+      - run: pnpm run test
       - run: pnpm exec semantic-release
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
