@@ -12,10 +12,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "build": "tsc -p tsconfig.build.json",
+    "test": "pnpm format && pnpm lint && pnpm build && vitest run --coverage",
     "lint": "eslint \"{src,tests}/**/*.ts\"",
     "format": "prettier --write \"{src,tests}/**/*.ts\"",
     "format:check": "prettier --check \"{src,tests}/**/*.ts\"",

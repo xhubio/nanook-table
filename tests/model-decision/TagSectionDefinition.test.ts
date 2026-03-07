@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { SectionType, TagSectionDefinition } from '../../src/model-decision/index.js'
+import {
+  SectionType,
+  TagSectionDefinition
+} from '../../src/model-decision/index.js'
 
 describe('TagSectionDefinition', () => {
   it('Create instance', () => {

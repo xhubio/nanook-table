@@ -1,7 +1,10 @@
 import path from 'node:path'
 import { test, expect } from 'vitest'
 import { ImporterXlsx } from '../../src/importer-xlsx/index.js'
-import { FileProcessor, ParserDecision } from '../../src/file-processor/index.js'
+import {
+  FileProcessor,
+  ParserDecision
+} from '../../src/file-processor/index.js'
 import { getLoggerMemory } from '../../src/logger/index.js'
 import type { TableDecisionInterface } from '../../src/model-decision/index.js'
 

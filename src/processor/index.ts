@@ -1,9 +1,5 @@
-export {
-  TestcaseProcessor,
-} from './TestcaseProcessor.js'
-export type {
-  TestcaseProcessorOptions
-} from './TestcaseProcessor.js'
+export { TestcaseProcessor } from './TestcaseProcessor.js'
+export type { TestcaseProcessorOptions } from './TestcaseProcessor.js'
 export type { InterfaceWriter } from './InterfaceWriter.js'
 export type { FilterProcessorInterface } from './filter/FilterProcessorInterface.js'
 export { SimpleArrayFilterProcessor } from './filter/SimpleArrayFilterProcessor.js'

@@ -3,9 +3,7 @@ export type {
   DataGeneratorGenerateRequest,
   DataGeneratorInterface
 } from './DataGeneratorInterface.js'
-export {
-  DataGeneratorBase,
-} from './DataGeneratorBase.js'
+export { DataGeneratorBase } from './DataGeneratorBase.js'
 export type {
   DataGeneratorOptions,
   DataGeneratorStore

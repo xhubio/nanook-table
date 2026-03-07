@@ -295,16 +295,25 @@ export class TestcaseDefinitionDecision implements TestcaseDefinitionInterface {
             generatorCmd !== undefined &&
             generatorCmd.toLowerCase().startsWith(PREFIX_GENERATOR)
           ) {
-            const directive = this.createGeneratorDirective(subSection, generatorCmd)
+            const directive = this.createGeneratorDirective(
+              subSection,
+              generatorCmd
+            )
             directives.generator.push(directive)
           } else if (
             generatorCmd !== undefined &&
             generatorCmd.toLowerCase().startsWith(PREFIX_REFERENCE)
           ) {
-            const directive = this.createReferenceDirective(subSection, generatorCmd)
+            const directive = this.createReferenceDirective(
+              subSection,
+              generatorCmd
+            )
             directives.reference.push(directive)
           } else if (generatorCmd !== undefined) {
-            const directive = this.createStaticValueDirective(subSection, generatorCmd)
+            const directive = this.createStaticValueDirective(
+              subSection,
+              generatorCmd
+            )
             directives.static.push(directive)
           } else {
             this.logger.info(

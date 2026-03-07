@@ -1,5 +1,8 @@
 import { DirectiveBase } from './DirectiveBase.js'
-import type { DirectiveBaseInterface, DirectiveBaseOptions } from './DirectiveBase.js'
+import type {
+  DirectiveBaseInterface,
+  DirectiveBaseOptions
+} from './DirectiveBase.js'
 
 /**
  * Represents a directive for invoking a generator.
@@ -59,7 +62,10 @@ export interface GeneratorDirectiveOptions extends DirectiveBaseOptions {
 /**
  * Implementation of a directive for calling a generator.
  */
-export class GeneratorDirective extends DirectiveBase implements GeneratorDirectiveInterface {
+export class GeneratorDirective
+  extends DirectiveBase
+  implements GeneratorDirectiveInterface
+{
   generatorName: string
   config: string
   instanceIdSuffix: string

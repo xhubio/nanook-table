@@ -48,7 +48,7 @@ export default [
       'require-await': 'error',
       '@typescript-eslint/await-thenable': 'error',
       '@typescript-eslint/no-require-imports': 'error',
-      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@typescript-eslint/ban-ts-comment': 'warn',
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/member-delimiter-style': [
@@ -82,7 +82,8 @@ export default [
         },
         {
           selector: ['parameter'],
-          format: ['camelCase']
+          format: ['camelCase'],
+          leadingUnderscore: 'allow'
         },
         {
           selector: ['typeProperty'],

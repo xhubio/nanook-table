@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { MultiRowSectionDefinition, SectionType } from '../../src/model-decision/index.js'
+import {
+  MultiRowSectionDefinition,
+  SectionType
+} from '../../src/model-decision/index.js'
 
 describe('MultiRowSectionDefinition', () => {
   it('Create instance', () => {

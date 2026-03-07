@@ -1,5 +1,8 @@
 import { test, expect } from 'vitest'
-import { TableMatrix, TableMatrixOptions } from '../../src/model-matrix/index.js'
+import {
+  TableMatrix,
+  TableMatrixOptions
+} from '../../src/model-matrix/index.js'
 
 test('Test create Object', () => {
   const table = new TableMatrix({} as TableMatrixOptions)

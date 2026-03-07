@@ -8,8 +8,7 @@ import type { NodeInterface } from './NodeInterface.js'
  * Then the list of directives will be executed until each generator has generated
  * its data.
  */
-export interface NodeGeneratorDirectiveInterface
-  extends GeneratorDirectiveInterface {
+export interface NodeGeneratorDirectiveInterface extends GeneratorDirectiveInterface {
   /** The node this directive is generated from */
   node: NodeInterface
 }

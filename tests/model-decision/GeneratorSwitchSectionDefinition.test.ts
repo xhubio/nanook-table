@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { GeneratorSwitchSectionDefinition, SectionType } from '../../src/model-decision/index.js'
+import {
+  GeneratorSwitchSectionDefinition,
+  SectionType
+} from '../../src/model-decision/index.js'
 
 describe('GeneratorSwitchSectionDefinition', () => {
   it('Create instance', () => {

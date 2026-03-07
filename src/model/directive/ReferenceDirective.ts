@@ -1,5 +1,8 @@
 import { DirectiveBase } from './DirectiveBase.js'
-import type { DirectiveBaseInterface, DirectiveBaseOptions } from './DirectiveBase.js'
+import type {
+  DirectiveBaseInterface,
+  DirectiveBaseOptions
+} from './DirectiveBase.js'
 
 /**
  * Represents a directive for a reference.
@@ -43,7 +46,10 @@ export interface ReferenceDirectiveOptions extends DirectiveBaseOptions {
 /**
  * Implementation of a directive for a reference.
  */
-export class ReferenceDirective extends DirectiveBase implements ReferenceDirectiveInterface {
+export class ReferenceDirective
+  extends DirectiveBase
+  implements ReferenceDirectiveInterface
+{
   targetTableName: string
   targetFieldName: string
   targetTestcaseName: string

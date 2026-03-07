@@ -1,7 +1,10 @@
 import { FieldSectionDefinition } from '../sections/FieldSectionDefinition.js'
 import { SectionType } from '../sections/SectionTypeEnum.js'
 import { TableDecision } from '../TableDecision.js'
-import { ValidateRowModel, ValidateRowModelRow } from './validateModelInterface.js'
+import {
+  ValidateRowModel,
+  ValidateRowModelRow
+} from './validateModelInterface.js'
 
 /**
  * Constructs a validation row model from a given decision table.

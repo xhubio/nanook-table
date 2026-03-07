@@ -8,8 +8,7 @@ import { SectionType } from './SectionTypeEnum.js'
 /**
  * Options for initializing a FieldSectionDefinition.
  */
-export interface FieldSectionDefinitionOptions
-  extends BaseSectionDefinitionOptions {
+export interface FieldSectionDefinitionOptions extends BaseSectionDefinitionOptions {
   /**
    * Indicates if the data generator (tdg) column is mandatory.
    * Default is false.

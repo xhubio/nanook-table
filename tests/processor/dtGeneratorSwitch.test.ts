@@ -1,4 +1,4 @@
-import { test, expect } from 'vitest'
+import { expect } from 'vitest'
 import { executeTest } from './decisionTestcaseProcessor.js'
 
 /**

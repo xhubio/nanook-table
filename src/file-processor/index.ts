@@ -4,8 +4,14 @@ export { ParserBase } from './parser/ParserBase.js'
 export type { ParserBaseOptions } from './parser/ParserBase.js'
 export { ParserMatrix } from './parser/ParserMatrix.js'
 export { ParserDecision } from './parser/ParserDecision.js'
-export { ParserSpecification, SpecificationModel } from './parser/ParserSpecification.js'
-export type { ParserInterface, ParserParseRequest } from './parser/ParserInterface.js'
+export {
+  ParserSpecification,
+  SpecificationModel
+} from './parser/ParserSpecification.js'
+export type {
+  ParserInterface,
+  ParserParseRequest
+} from './parser/ParserInterface.js'
 export type {
   SpecificationInterface,
   SpecificationFieldInterface,

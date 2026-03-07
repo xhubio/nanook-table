@@ -176,14 +176,26 @@ export class TestcaseDefinitionMatrix implements TestcaseDefinitionInterface {
 
       if (generatorCmd !== undefined) {
         if (generatorCmd.toLowerCase().startsWith(PREFIX_GENERATOR)) {
-          const directive = self.createGeneratorDirective(generatorCmd, type, meta)
+          const directive = self.createGeneratorDirective(
+            generatorCmd,
+            type,
+            meta
+          )
           directives.generator.push(directive)
         } else if (generatorCmd.toLowerCase().startsWith(PREFIX_REFERENCE)) {
-          const directive = self.createReferenceDirective(generatorCmd, type, meta)
+          const directive = self.createReferenceDirective(
+            generatorCmd,
+            type,
+            meta
+          )
           directives.reference.push(directive)
         }
       } else {
-        const directive = self.createStaticValueDirective(generatorCmd, type, meta)
+        const directive = self.createStaticValueDirective(
+          generatorCmd,
+          type,
+          meta
+        )
         directives.static.push(directive)
       }
     }

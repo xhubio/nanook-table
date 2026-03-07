@@ -8,7 +8,10 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { test, expect, beforeAll } from 'vitest'
 import { ImporterXlsx } from '../../src/importer-xlsx/index.js'
-import { ParserDecision, FileProcessor } from '../../src/file-processor/index.js'
+import {
+  ParserDecision,
+  FileProcessor
+} from '../../src/file-processor/index.js'
 import { getLoggerMemory } from '../../src/logger/index.js'
 import { TableDecision } from '../../src/model-decision/index.js'
 

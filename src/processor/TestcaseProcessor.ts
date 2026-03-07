@@ -14,7 +14,10 @@ import { LoggerMemory } from '../logger/index.js'
 import type { LoggerInterface } from '../logger/index.js'
 import type { DataGeneratorRegistry } from '../data-generator/index.js'
 import type { InterfaceWriter } from './InterfaceWriter.js'
-import type { TableInterface, TestcaseDefinitionInterface } from '../model/index.js'
+import type {
+  TableInterface,
+  TestcaseDefinitionInterface
+} from '../model/index.js'
 import type { CallTreeInterface } from './CallTreeInterface.js'
 import type { NodeInterface } from './NodeInterface.js'
 import type { NodeGeneratorDirectiveInterface } from './NodeGeneratorDirectiveInterface.js'
@@ -479,8 +482,7 @@ export class TestcaseProcessor implements InterfaceProcessor {
 
     // filter for generators which are switched off
     let generatorDirectives = node.generatorDirectives.filter(
-      (genDirective) =>
-        !generatorSwitches.includes(genDirective.generatorName)
+      (genDirective) => !generatorSwitches.includes(genDirective.generatorName)
     )
 
     this.writeStaticData(testcaseData, staticDirectives)
@@ -604,12 +606,11 @@ export class TestcaseProcessor implements InterfaceProcessor {
 
         let postProcessDirectives
         try {
-          postProcessDirectives =
-            await generator.createPostProcessDirectives({
-              instanceId,
-              testcaseData,
-              generatorDirective: directive
-            })
+          postProcessDirectives = await generator.createPostProcessDirectives({
+            instanceId,
+            testcaseData,
+            generatorDirective: directive
+          })
         } catch (e) {
           if (e instanceof Error) {
             this.logger.error({
@@ -680,8 +681,7 @@ export class TestcaseProcessor implements InterfaceProcessor {
           changeCount++
 
           // ok, the data was created
-          const parentTableName =
-            nodeReferenceDirective.testcaseMeta.tableName
+          const parentTableName = nodeReferenceDirective.testcaseMeta.tableName
           const parentFieldName = nodeReferenceDirective.fieldName
           const parentNode = nodeReferenceDirective.parentNode
           const instanceId = parentNode.instanceId

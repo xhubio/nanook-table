@@ -3,7 +3,10 @@ import { test, expect, beforeAll } from 'vitest'
 
 import { ImporterXlsx } from '../../src/importer-xlsx/index.js'
 
-const FILE_NAME = path.join(import.meta.dirname, 'fixtures/descision_table_mini.xlsx')
+const FILE_NAME = path.join(
+  import.meta.dirname,
+  'fixtures/descision_table_mini.xlsx'
+)
 const SHEET_NAME_COLUMN = 'manyColumns'
 const SHEET_NAME_ROW = 'manyRows'
 const SHEET_NAME_PERSON = 'Person_with_friend'

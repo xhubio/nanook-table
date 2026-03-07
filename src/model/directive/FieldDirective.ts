@@ -1,5 +1,8 @@
 import { DirectiveBase } from './DirectiveBase.js'
-import type { DirectiveBaseInterface, DirectiveBaseOptions } from './DirectiveBase.js'
+import type {
+  DirectiveBaseInterface,
+  DirectiveBaseOptions
+} from './DirectiveBase.js'
 
 /**
  * Represents a directive for handling field metadata values.
@@ -50,7 +53,10 @@ export interface FieldDirectiveOptions extends DirectiveBaseOptions {
  * This class extends the basic directive functionality and includes
  * properties for the "key", "comment", and "other" columns.
  */
-export class FieldDirective extends DirectiveBase implements FieldDirectiveInterface {
+export class FieldDirective
+  extends DirectiveBase
+  implements FieldDirectiveInterface
+{
   key: string
   comment: string
   other: string

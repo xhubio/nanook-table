@@ -1,6 +1,9 @@
 import { execStringFunction } from './execStringFunction.js'
 import { faker } from '@faker-js/faker'
-import { DataGeneratorOptions, DataGeneratorBase } from '../DataGeneratorBase.js'
+import {
+  DataGeneratorOptions,
+  DataGeneratorBase
+} from '../DataGeneratorBase.js'
 import { DataGeneratorGenerateRequest } from '../DataGeneratorInterface.js'
 
 /**
@@ -26,7 +29,10 @@ export class GeneratorFaker extends DataGeneratorBase {
   public async generate(request: DataGeneratorGenerateRequest): Promise<any> {
     const { instanceId, testcaseData, generatorDirective } = request
 
-    if (generatorDirective?.config === undefined || generatorDirective.config === '') {
+    if (
+      generatorDirective?.config === undefined ||
+      generatorDirective.config === ''
+    ) {
       throw new Error(
         'No Arguments given for Generator Faker. The argument defines which faker function to call'
       )

@@ -26,9 +26,7 @@ export interface SimpleArrayIgnoreFilterProcessorOptions {
  * the specified delimiter. If any token is found in the test case's tags, the test case
  * is filtered out (i.e., the filter returns false). Otherwise, it returns true.
  */
-export class SimpleArrayIgnoreFilterProcessor
-  implements FilterProcessorInterface
-{
+export class SimpleArrayIgnoreFilterProcessor implements FilterProcessorInterface {
   /**
    * The name of this filter processor.
    */

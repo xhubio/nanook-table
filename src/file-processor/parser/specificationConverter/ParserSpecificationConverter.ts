@@ -183,7 +183,9 @@ export class ParserSpecificationConverter {
   private getClassesForRules(request: {
     specification: SpecificationInterface
     fieldRules: FieldRules
-    fieldData: { rules: { ruleName: string; value: string; severity: string }[] }
+    fieldData: {
+      rules: { ruleName: string; value: string; severity: string }[]
+    }
   }) {
     const { specification, fieldRules, fieldData } = request
 

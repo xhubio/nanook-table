@@ -1,5 +1,8 @@
 import { DirectiveBase } from './DirectiveBase.js'
-import type { DirectiveBaseInterface, DirectiveBaseOptions } from './DirectiveBase.js'
+import type {
+  DirectiveBaseInterface,
+  DirectiveBaseOptions
+} from './DirectiveBase.js'
 
 /**
  * Represents a directive for handling static values.
@@ -24,7 +27,10 @@ export interface StaticDirectiveOptions extends DirectiveBaseOptions {
 /**
  * Implementation of a directive for static values.
  */
-export class StaticDirective extends DirectiveBase implements StaticDirectiveInterface {
+export class StaticDirective
+  extends DirectiveBase
+  implements StaticDirectiveInterface
+{
   value: string
 
   constructor(opts: StaticDirectiveOptions) {

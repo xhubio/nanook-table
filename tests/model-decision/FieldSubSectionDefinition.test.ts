@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { FieldSubSectionDefinition, SectionType } from '../../src/model-decision/index.js'
+import {
+  FieldSubSectionDefinition,
+  SectionType
+} from '../../src/model-decision/index.js'
 
 describe('FieldSubSectionDefinition', () => {
   it('Create instance', () => {
