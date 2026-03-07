@@ -1,12 +1,6 @@
-lib
-node_modules
-coverage
-jsdoc
-npm-debug.log
+node_modules/
+dist/
+coverage/
+tests/**/volatile/
+*.tsbuildinfo
 package-lock.json
-yarn.lock
-tests/volatile
-build
-yarn-error.log
-.idea
-*.iml

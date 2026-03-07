@@ -1,35 +1,62 @@
 name: CI
-'on': push
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
 jobs:
-  test_and_release:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version:
-          - 14.15.0
+        node-version: [22]
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
         with:
-          path: ~/.npm
-          key: >-
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{
-            hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: 'Build / Test Node ${{ matrix.node-version }}'
-        uses: actions/setup-node@v1
+          version: 10
+
+      - uses: actions/setup-node@v4
         with:
-          node-version: '${{ matrix.node-version }}'
-      - run: npm install
-      - run: npm test
-      - run: npx semantic-release
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run build
+      - run: pnpm run test:coverage
+
+  release:
+    needs: test
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+
+      - run: pnpm exec semantic-release
         env:
-          CI: 'true'
-          NPM_TOKEN: '${{ secrets.NPM_TOKEN }}'
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,278 @@
+{
+  "tableType": "decision-table",
+  "fileName": "myFile.xlsx",
+  "tableName": "descisionTableSingleRow",
+  "testcaseOrder": [
+    "b856e519-907e-4887-a85e-bac8e29a0f28",
+    "37592c81-1470-4332-a0b8-96a98a294a9e",
+    "9bb41b21-2110-4474-b092-6fcfb670a235"
+  ],
+  "testcases": {
+    "b856e519-907e-4887-a85e-bac8e29a0f28": {
+        "testcaseName": "1"
+      ,
+      "tableMeta": {
+        "tableType": "decision-table",
+        "fileName": "myFile.xlsx",
+        "tableName": "descisionTableMini"
+      },
+      "isPartOfCompletion": true,
+      "execute": true,
+      "multiplicity": 1,
+      "data": {
+        "a3597b85-570d-4994-b24d-47d64e50d732": "T",
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "x",
+        "3fc16ef9-b168-4382-863d-a880517c2a0a": "x",
+        "64ed2d32-7b65-4238-8b81-d90c48cc938a": "a",
+        "c558f608-81e4-425e-9739-f3a23361e810": "e",
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250": "x",
+        "574b9a96-bead-48b9-acc4-5bb699369f73": 2,
+        "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0": 1,
+        "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f": 2,
+        "00055fde-6812-4faf-b5f5-5245b25a6633": 2
+      },
+      "id": "b856e519-907e-4887-a85e-bac8e29a0f28"
+    },
+    "37592c81-1470-4332-a0b8-96a98a294a9e": {
+        "testcaseName": "2"
+      ,
+      "tableMeta": {
+        "tableType": "decision-table",
+        "fileName": "myFile.xlsx",
+        "tableName": "descisionTableMini"
+      },
+      "isPartOfCompletion": true,
+      "execute": true,
+      "multiplicity": 3,
+      "data": {
+        "a3597b85-570d-4994-b24d-47d64e50d732": "T",
+        "e6b80f79-036c-429d-9367-5eeae1d0bc4f": 3,
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "x",
+        "c864dffb-f5bf-4abe-9b24-944126dc5363": "x",
+        "64ed2d32-7b65-4238-8b81-d90c48cc938a": "e",
+        "c558f608-81e4-425e-9739-f3a23361e810": "e",
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250": "x",
+        "574b9a96-bead-48b9-acc4-5bb699369f73": 2,
+        "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0": 1,
+        "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f": 2,
+        "00055fde-6812-4faf-b5f5-5245b25a6633": 2
+      },
+      "id": "37592c81-1470-4332-a0b8-96a98a294a9e"
+    },
+    "9bb41b21-2110-4474-b092-6fcfb670a235": {
+        "testcaseName": "3"
+      ,
+      "tableMeta": {
+        "tableType": "decision-table",
+        "fileName": "myFile.xlsx",
+        "tableName": "descisionTableMini"
+      },
+      "isPartOfCompletion": true,
+      "execute": false,
+      "multiplicity": 1,
+      "data": {
+        "a3597b85-570d-4994-b24d-47d64e50d732": "F",
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "x",
+        "3fc16ef9-b168-4382-863d-a880517c2a0a": "x",
+        "64ed2d32-7b65-4238-8b81-d90c48cc938a": "e",
+        "c558f608-81e4-425e-9739-f3a23361e810": "e",
+        "77f20a08-3c92-431a-ae05-e5153d91869a": "x",
+        "574b9a96-bead-48b9-acc4-5bb699369f73": 2,
+        "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0": 1,
+        "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f": 2,
+        "00055fde-6812-4faf-b5f5-5245b25a6633": 2
+      },
+      "id": "9bb41b21-2110-4474-b092-6fcfb670a235"
+    }
+  },
+  "sections": {
+    "a3597b85-570d-4994-b24d-47d64e50d732": {
+      "sectionType": "ExecuteSection",
+      "name": "Execute",
+      "mandatory": false,
+      "multiple": false,
+      "headerRow": "a3597b85-570d-4994-b24d-47d64e50d732",
+      "multiInstancesAllowed": false
+    },
+    "e6b80f79-036c-429d-9367-5eeae1d0bc4f": {
+      "sectionType": "MultiplicitySection",
+      "name": "Multiply",
+      "mandatory": false,
+      "multiple": false,
+      "headerRow": "e6b80f79-036c-429d-9367-5eeae1d0bc4f",
+      "multiInstancesAllowed": false
+    },
+    "8de99638-6550-413b-8720-fd6c13e972f5": {
+      "sectionType": "MultiRowSection",
+      "name": "Execute",
+      "mandatory": false,
+      "multiple": true,
+      "headerRow": "8de99638-6550-413b-8720-fd6c13e972f5",
+      "_dataRows": [
+        "641b4352-3438-4f99-9ea4-6210454b6b8f",
+        "b792dabc-d41f-4295-a975-db9ac13baa33"
+      ],
+      "multiInstancesAllowed": true,
+      "keys": {
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "Yes",
+        "b792dabc-d41f-4295-a975-db9ac13baa33": "No"
+      },
+      "comments": {
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "any comment 1",
+        "b792dabc-d41f-4295-a975-db9ac13baa33": "any comment 2"
+      },
+      "others": {
+        "641b4352-3438-4f99-9ea4-6210454b6b8f": "any value 1",
+        "b792dabc-d41f-4295-a975-db9ac13baa33": "any value 2"
+      }
+    },
+    "574b9a96-bead-48b9-acc4-5bb699369f73": {
+      "sectionType": "FieldSection",
+      "name": "Primary data",
+      "mandatory": true,
+      "multiple": true,
+      "headerRow": "574b9a96-bead-48b9-acc4-5bb699369f73",
+      "_dataRows": [
+        "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0",
+        "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f"
+      ],
+      "multiInstancesAllowed": true,
+      "subSections": {
+        "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0": {
+          "sectionType": "FieldSubSection",
+          "name": "first-name",
+          "mandatory": true,
+          "multiple": true,
+          "headerRow": "2c352ec9-4f61-4f26-a7c0-9f4ee504e3b0",
+          "_dataRows": [
+            "c864dffb-f5bf-4abe-9b24-944126dc5363",
+            "3fc16ef9-b168-4382-863d-a880517c2a0a"
+          ],
+          "multiInstancesAllowed": true,
+          "equivalenceClasses": {
+            "c864dffb-f5bf-4abe-9b24-944126dc5363": "valid",
+            "3fc16ef9-b168-4382-863d-a880517c2a0a": "empty"
+          },
+          "comments": {
+            "c864dffb-f5bf-4abe-9b24-944126dc5363": "A valid first name",
+            "3fc16ef9-b168-4382-863d-a880517c2a0a": "No value given"
+          },
+          "tdgs": {
+            "c864dffb-f5bf-4abe-9b24-944126dc5363": "gen_func 1",
+            "3fc16ef9-b168-4382-863d-a880517c2a0a": "gen_func 2"
+          },
+          "tdgMandatory": false,
+          "parent": "574b9a96-bead-48b9-acc4-5bb699369f73"
+        },
+        "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f": {
+          "sectionType": "FieldSubSection",
+          "name": "last-name",
+          "mandatory": true,
+          "multiple": true,
+          "headerRow": "c8f2bde8-7cb3-49e8-acd3-4d2affd1800f",
+          "_dataRows": [
+            "64ed2d32-7b65-4238-8b81-d90c48cc938a",
+            "c558f608-81e4-425e-9739-f3a23361e810"
+          ],
+          "multiInstancesAllowed": true,
+          "equivalenceClasses": {
+            "64ed2d32-7b65-4238-8b81-d90c48cc938a": "valid",
+            "c558f608-81e4-425e-9739-f3a23361e810": "empty"
+          },
+          "comments": {
+            "64ed2d32-7b65-4238-8b81-d90c48cc938a": "A valid last name",
+            "c558f608-81e4-425e-9739-f3a23361e810": "No value given"
+          },
+          "tdgs": {
+            "64ed2d32-7b65-4238-8b81-d90c48cc938a": "gen_func 3",
+            "c558f608-81e4-425e-9739-f3a23361e810": "gen_func 4"
+          },
+          "tdgMandatory": false,
+          "parent": "574b9a96-bead-48b9-acc4-5bb699369f73"
+        }
+      },
+      "tdgMandatory": false
+    },
+    "00055fde-6812-4faf-b5f5-5245b25a6633": {
+      "sectionType": "SummarySection",
+      "name": "Summary",
+      "multiple": true,
+      "headerRow": "00055fde-6812-4faf-b5f5-5245b25a6633",
+      "_dataRows": [],
+      "multiInstancesAllowed": false,
+      "total": 4,
+      "done": 6,
+      "percent": 150
+    },
+    "b3d60ba4-9861-4d38-b618-ad52bcfb06d6": {
+      "sectionType": "MultiRowSection",
+      "name": "Effect",
+      "mandatory": false,
+      "multiple": true,
+      "headerRow": "b3d60ba4-9861-4d38-b618-ad52bcfb06d6",
+      "_dataRows": [
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250",
+        "77f20a08-3c92-431a-ae05-e5153d91869a"
+      ],
+      "multiInstancesAllowed": true,
+      "keys": {
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250": "Abort action",
+        "77f20a08-3c92-431a-ae05-e5153d91869a": "Create new Person record"
+      },
+      "comments": {
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250": "a comment 1",
+        "77f20a08-3c92-431a-ae05-e5153d91869a": "a comment 2"
+      },
+      "others": {
+        "26e86ac7-0f03-4d30-9dd2-1bfcb6249250": "other effect 1",
+        "77f20a08-3c92-431a-ae05-e5153d91869a": "other effect 2"
+      }
+    }
+  },
+  "sectionOrder": [
+    "a3597b85-570d-4994-b24d-47d64e50d732",
+    "e6b80f79-036c-429d-9367-5eeae1d0bc4f",
+    "8de99638-6550-413b-8720-fd6c13e972f5",
+    "574b9a96-bead-48b9-acc4-5bb699369f73",
+    "00055fde-6812-4faf-b5f5-5245b25a6633",
+    "b3d60ba4-9861-4d38-b618-ad52bcfb06d6"
+  ],
+  "singleCheck": [
+    [
+      "ExecuteSection",
+      {
+        "sectionType": "ExecuteSection",
+        "name": "Execute",
+        "mandatory": false,
+        "multiple": false,
+        "headerRow": "a3597b85-570d-4994-b24d-47d64e50d732",
+        "multiInstancesAllowed": false
+      }
+    ],
+    [
+      "MultiplicitySection",
+      {
+        "sectionType": "MultiplicitySection",
+        "name": "Multiply",
+        "mandatory": false,
+        "multiple": false,
+        "headerRow": "e6b80f79-036c-429d-9367-5eeae1d0bc4f",
+        "multiInstancesAllowed": false
+      }
+    ],
+    [
+      "SummarySection",
+      {
+        "sectionType": "SummarySection",
+        "name": "Summary",
+        "multiple": true,
+        "headerRow": "00055fde-6812-4faf-b5f5-5245b25a6633",
+        "_dataRows": [],
+        "multiInstancesAllowed": false,
+        "total": 4,
+        "done": 6,
+        "percent": 150
+      }
+    ]
+  ]
+}

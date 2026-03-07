@@ -1,0 +1,9 @@
+{
+	"uniqueSet": ["Torsten", "Herbert", "John", "Amadir"],
+	"instanceData": [
+		["T", "Torsten"],
+		["H", "Herbert"],
+		["J", "John"],
+		["A", "Amadir"]
+	]
+}

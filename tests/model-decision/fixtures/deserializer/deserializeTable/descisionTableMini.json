@@ -1,0 +1,183 @@
+{
+  "tableType": "decision-table",
+  "fileName": "myFile.xlsx",
+  "tableName": "descisionTableMini",
+  "testcaseOrder": [
+    "f4fc8e6a-0547-4df0-b8a0-d49ab99aad37",
+    "afb58c1f-bb1b-418a-a40b-2c0152545c3d",
+    "66065dda-41e8-4d80-91c1-c4e5111d5b4c"
+  ],
+  "testcases": {
+    "f4fc8e6a-0547-4df0-b8a0-d49ab99aad37": {
+      "testcaseName": "1",
+      "isPartOfCompletion": true,
+      "data": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "x",
+        "a2c01ec6-1fd7-493a-adb3-0b89cf75763a": "x",
+        "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "a",
+        "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "e",
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669": "x"
+      },
+      "id": "f4fc8e6a-0547-4df0-b8a0-d49ab99aad37"
+    },
+    "afb58c1f-bb1b-418a-a40b-2c0152545c3d": {
+      "testcaseName": "2",
+      "tableMeta": {
+        "tableType": "decision-table",
+        "fileName": "myFile.xlsx",
+        "tableName": "descisionTableMini"
+      },
+      "isPartOfCompletion": true,
+      "data": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "x",
+        "70cb48fc-d105-41ec-8891-d75d722c4fed": "x",
+        "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "e",
+        "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "e",
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669": "x"
+      },
+      "id": "afb58c1f-bb1b-418a-a40b-2c0152545c3d"
+    },
+    "66065dda-41e8-4d80-91c1-c4e5111d5b4c": {
+      "testcaseName": "3",
+      "tableMeta": {
+        "tableType": "decision-table",
+        "fileName": "myFile.xlsx",
+        "tableName": "descisionTableMini"
+      },
+      "isPartOfCompletion": true,
+      "data": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "x",
+        "a2c01ec6-1fd7-493a-adb3-0b89cf75763a": "x",
+        "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "e",
+        "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "e",
+        "c89f4265-4290-4655-8eb5-d3e0df7cd39b": "x"
+      },
+      "id": "66065dda-41e8-4d80-91c1-c4e5111d5b4c"
+    }
+  },
+  "sections": {
+    "db14bc27-4884-48a0-a6d9-7ebbeaff89fe": {
+      "sectionType": "MultiRowSection",
+      "name": "Execute",
+      "mandatory": false,
+      "multiple": true,
+      "headerRow": "db14bc27-4884-48a0-a6d9-7ebbeaff89fe",
+      "_dataRows": [
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3",
+        "845d19a8-bc35-45ef-bef7-86a8ae6de833"
+      ],
+      "keys": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "Yes",
+        "845d19a8-bc35-45ef-bef7-86a8ae6de833": "No "
+      },
+      "comments": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "any comment 1",
+        "845d19a8-bc35-45ef-bef7-86a8ae6de833": "any comment 2"
+      },
+      "others": {
+        "54a9c356-c847-47a3-8f98-f83f9d12f9a3": "any value 1",
+        "845d19a8-bc35-45ef-bef7-86a8ae6de833": "any value 2"
+      }
+    },
+    "aa7045ff-00dd-44b5-beac-209d307ded4a": {
+      "sectionType": "FieldSection",
+      "name": "Primary data",
+      "mandatory": true,
+      "multiple": true,
+      "headerRow": "aa7045ff-00dd-44b5-beac-209d307ded4a",
+      "_dataRows": [
+        "b821f001-4700-42bb-8d3e-13237cabd951",
+        "4a8d876f-af3d-4c25-869c-7211061ff6f6"
+      ],
+      "subSections": {
+        "b821f001-4700-42bb-8d3e-13237cabd951": {
+          "sectionType": "FieldSubSection",
+          "name": "first-name",
+          "mandatory": true,
+          "multiple": true,
+          "headerRow": "b821f001-4700-42bb-8d3e-13237cabd951",
+          "_dataRows": [
+            "70cb48fc-d105-41ec-8891-d75d722c4fed",
+            "a2c01ec6-1fd7-493a-adb3-0b89cf75763a"
+          ],
+          "equivalenceClasses": {
+            "70cb48fc-d105-41ec-8891-d75d722c4fed": "valid",
+            "a2c01ec6-1fd7-493a-adb3-0b89cf75763a": "empty"
+          },
+          "comments": {
+            "70cb48fc-d105-41ec-8891-d75d722c4fed": "A valid first name",
+            "a2c01ec6-1fd7-493a-adb3-0b89cf75763a": "No value given"
+          },
+          "tdgs": {
+            "70cb48fc-d105-41ec-8891-d75d722c4fed": "gen_func 1",
+            "a2c01ec6-1fd7-493a-adb3-0b89cf75763a": "gen_func 2"
+          },
+          "tdgMandatory": false,
+          "parent": "aa7045ff-00dd-44b5-beac-209d307ded4a"
+        },
+        "4a8d876f-af3d-4c25-869c-7211061ff6f6": {
+          "sectionType": "FieldSubSection",
+          "name": "last-name",
+          "mandatory": true,
+          "multiple": true,
+          "headerRow": "4a8d876f-af3d-4c25-869c-7211061ff6f6",
+          "_dataRows": [
+            "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b",
+            "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa"
+          ],
+          "equivalenceClasses": {
+            "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "valid",
+            "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "empty"
+          },
+          "comments": {
+            "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "A valid last name",
+            "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "No value given"
+          },
+          "tdgs": {
+            "e90cf1e3-70c8-426a-bfa5-7f6cf2dc4a5b": "gen_func 3",
+            "21d99a7f-b9c9-4ec8-ae7c-971f5e90fafa": "gen_func 4"
+          },
+          "tdgMandatory": false,
+          "parent": "aa7045ff-00dd-44b5-beac-209d307ded4a"
+        }
+      },
+      "tdgMandatory": false
+    },
+    "18a50921-5c38-44df-96de-d445af2caf89": {
+      "sectionType": "SummarySection",
+      "name": "Summary",
+      "multiple": true,
+      "headerRow": "18a50921-5c38-44df-96de-d445af2caf89",
+      "_dataRows": []
+    },
+    "22da7a72-1530-41f8-bf94-ea3eee947f9d": {
+      "sectionType": "MultiRowSection",
+      "name": "Effect",
+      "mandatory": false,
+      "multiple": true,
+      "headerRow": "22da7a72-1530-41f8-bf94-ea3eee947f9d",
+      "_dataRows": [
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669",
+        "c89f4265-4290-4655-8eb5-d3e0df7cd39b"
+      ],
+      "keys": {
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669": "Abort action",
+        "c89f4265-4290-4655-8eb5-d3e0df7cd39b": "Create new Person record"
+      },
+      "comments": {
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669": "a comment 1",
+        "c89f4265-4290-4655-8eb5-d3e0df7cd39b": "a comment 2"
+      },
+      "others": {
+        "428415a8-d19e-40d9-b46c-03eb3f5dc669": "other effect 1",
+        "c89f4265-4290-4655-8eb5-d3e0df7cd39b": "other effect 2"
+      }
+    }
+  },
+  "sectionOrder": [
+    "db14bc27-4884-48a0-a6d9-7ebbeaff89fe",
+    "aa7045ff-00dd-44b5-beac-209d307ded4a",
+    "18a50921-5c38-44df-96de-d445af2caf89",
+    "22da7a72-1530-41f8-bf94-ea3eee947f9d"
+  ]
+}

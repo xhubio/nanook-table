@@ -1,6 +1,0 @@
-
-== Nanook-Table Overview
-
-include::details/nanookTableOverview.adoc[]
-
-include::details/nanookTableComponents.adoc[]

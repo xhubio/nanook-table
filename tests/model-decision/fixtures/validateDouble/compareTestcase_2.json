@@ -1,0 +1,124 @@
+{
+	"id": "tc3",
+	"data": {
+		"person": {
+			"rows": [
+				"person exists",
+				"person new"
+			],
+			"val": 3,
+			"valStr": "11"
+		},
+		"first-name": {
+			"rows": [
+				"valid",
+				"empty",
+				"too short",
+				"too long",
+				"too number",
+				"date",
+				"boolean"
+			],
+			"val": 1,
+			"valStr": "0000001"
+		},
+		"last-name": {
+			"rows": [
+				"2745f3d0-89e1-4a45-b0cf-fba979ca50e4",
+				"e446698d-5faf-43ce-a51b-5ee1d5103466",
+				"7fd4d808-0488-4b66-9ef2-3d338410ffc1",
+				"0022de60-55cf-40db-b6fa-adc7a276cc61",
+				"6ef4bdaf-eeea-4e4a-bcbf-fd9fb6936345",
+				"66afd627-3b67-4779-9507-84528db3b950",
+				"4586a3b2-800a-4eb8-bf8d-e39392360dbb",
+				"ca76259c-25c8-4a0c-8fa1-dadd77e8befb",
+				"3c6d1e17-eccc-4840-b561-393b1117cd80",
+				"b750feed-b3f7-42e3-bc48-d0aee329d275",
+				"d39519be-64d5-406e-8eb0-c931686c76fc",
+				"ebc5aa08-be92-4f46-bcae-1c55bd00c74f",
+				"26133f38-351a-46b9-96f4-3375c7968d24",
+				"fe407e67-ef9c-44c1-a04f-81207304372a",
+				"a036843e-883c-4f65-835a-511faf00d4dd",
+				"a6fab8c2-4271-4716-9f7b-1fca50530a7a",
+				"69f23852-7b17-400a-b70f-6af0c6973e3e",
+				"9d101b08-f3ea-4e5f-a8d7-06d8ea2bf374",
+				"11f65b74-fb01-4dc4-8fe8-91ef2be228b7",
+				"87508ca2-93be-41f8-a2f3-a8e05dc54b20",
+				"fb90f800-532a-42ac-a9b4-0b01f8dd688b",
+				"641aa71a-0f59-4d56-a4f9-4eb64ebdb18f",
+				"938d99f0-5659-4620-b2f4-bf1bcd5928ba",
+				"cc768e12-a5d6-4045-b624-035d165d87e3",
+				"69f70bf1-511c-49ca-b87c-813062c17be5",
+				"3dbbd738-3e2a-45e7-bfd7-7d6799f23fef",
+				"3a15bf7a-780d-4f34-ad8b-a52ea5e57ea4",
+				"ac0a1386-10b9-4d7f-b3c8-1b117e56fca6",
+				"70d65a55-288f-4d6a-9e31-b05cfd2aa3be",
+				"c07cd39d-3845-4598-86eb-d09c36ec395d",
+				"f599ebae-7e49-4775-b71f-7cc387952af1",
+				"a18873d6-84dd-4ac3-9cd2-106c7a0acae3",
+				"9279f61d-8128-472c-a7d6-29b9462ff697",
+				"615c634e-1236-4540-bdfa-81f7a93059dc",
+				"c9ed2b57-7c94-4a62-8231-c3daf2ab75da",
+				"8ed86a09-66ed-43e3-8123-e08902a9ef93",
+				"f9a7ac9a-26a6-4553-81d7-6d66cbd57b70",
+				"feb5f867-a922-4987-bdc6-f3595f5e871f",
+				"4c1db184-8f81-4e79-827d-09a203333573",
+				"1da895cd-8ec3-4dd4-a1a6-769f995a9a34",
+				"b4f3c950-6cd4-4f56-9a71-2a98e91e12de",
+				"f94b1759-861a-4125-8835-0f7e6d7e691c",
+				"575243f8-0650-424b-b4e9-eea53e5b333e",
+				"fa68becf-0bd7-4ded-9eeb-b4c0030ae316",
+				"4a135476-7375-4d54-98d9-974caeb447d7",
+				"4633ad7e-0b8b-4fa2-8b1d-b21866ce2dcd",
+				"4bfe7983-562a-4aba-914c-126b780137cf",
+				"cbe2a193-bec3-4a27-8fc0-c5d0c35456ed",
+				"6cfcf15f-617a-4abb-a9c6-b2e88246f302",
+				"3f47aa0c-b7c3-4ea1-9b27-253b24680b5a",
+				"a3ccb352-6ce7-43f8-adac-d2d01443309c",
+				"1bb58a15-9b54-453b-9c05-b160249ed0fb",
+				"2b47329e-5c0c-44c9-b6b1-8a0aa90c281a",
+				"a03fa5e8-815d-4e68-961d-71e96553116f",
+				"506f890a-19ea-4523-8380-8b66ec6f3e0a",
+				"420392e9-9afa-4d1a-a7b2-0de39dfd28fb",
+				"9637f464-3811-4bb9-bc50-8512b5fdc21e",
+				"4eace48f-b427-41fb-90cc-532a7967748b",
+				"e7216849-18dc-4477-938a-53b01fab4bc7",
+				"e5bc48be-0dc7-44ce-8566-2cfef8e1f759",
+				"7df37700-e2f9-42c2-b623-244f24f38533",
+				"be56284a-494c-41c8-b033-0c9d3dd6ef76",
+				"6ac8fdf1-2929-4450-b3dc-abc718beae89",
+				"bb1c1610-3ddf-424f-8292-d79226efa8ce",
+				"c92c7871-d192-4123-8576-9dc489a52065",
+				"d4dde1e4-873d-4843-9037-b8e1094d857c",
+				"766adeb2-0e32-4d8f-9cbd-54cda5b02d4a",
+				"61ac9b7d-ac28-4743-84d6-fec49c2d679c",
+				"b4b34917-1091-416d-ac98-7055bbd0d05c",
+				"1dc2c855-41bf-415e-98c0-a60b9d6f8a29",
+				"7d9038c3-dbc7-4d33-8f64-6ed21d944f02",
+				"c6afd9fa-49bf-47f5-9b2e-9334398caded",
+				"18f2abda-f843-4934-84da-22684600340d",
+				"5804e8e1-a774-4767-b7e6-93dc1ca615fc"
+			],
+			"val": [
+				0,
+				0,
+				2
+			],
+			"valStr": [
+				"000000000000000000000000000000",
+				"000000000000000000000000000000",
+				"00000000000010"
+			]
+		},
+		"email": {
+			"rows": [
+				"valid",
+				"empty",
+				"too long",
+				"not an email"
+			],
+			"val": 15,
+			"valStr": "1111"
+		}
+	}
+}
