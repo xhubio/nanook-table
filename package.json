@@ -44,7 +44,7 @@
     "vitest": "4.0.18"
   },
   "dependencies": {
-    "@faker-js/faker": "10.3.0",
+    "@faker-js/faker": "10.4.0",
     "clone": "2.1.2",
     "spreadsheet-column": "1.1.1",
     "sprintf-js": "1.1.3",
