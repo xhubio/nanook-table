@@ -1,0 +1,13 @@
+; For full project documentation, architecture, and conventions see AGENTS.md in the repository root.
+;
+; Quick rules:
+; - ESM TypeScript project (@xhubio/nanook-table), Node >= 22
+; - No semicolons (Prettier removes them)
+; - Single quotes, no trailing commas
+; - PascalCase classes, camelCase functions/properties
+; - Max 3 function parameters
+; - No namespace imports — import only what you need
+; - Use .js extension in relative ESM imports
+; - xlsx: use default import (import XLSX from 'xlsx'), NOT namespace import
+; - Tests: Vitest, in tests/ directory, pattern *.test.ts
+; - Build: npm run build | Test: npm test | Lint: npm run lint
