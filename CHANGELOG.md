@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/xhubio/nanook-table/compare/v2.1.0...v2.1.1) (2026-03-29)
+
+
+### Bug Fixes
+
+* add more claude stuff ([f5e2ea2](https://github.com/xhubio/nanook-table/commit/f5e2ea23864a00d14b060e2fe5afd28a2115e93f))
+
 # [2.1.0](https://github.com/xhubio/nanook-table/compare/v2.0.0...v2.1.0) (2026-03-29)
 
 
