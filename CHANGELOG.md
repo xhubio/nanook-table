@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/xhubio/nanook-table/compare/v2.0.0...v2.1.0) (2026-03-29)
+
+
+### Features
+
+* add a skill and commnd for claude ([b017778](https://github.com/xhubio/nanook-table/commit/b01777883a47fef318eff324ff353abced14c3e4))
+
 # [2.0.0](https://github.com/xhubio/nanook-table/compare/v1.1.7...v2.0.0) (2026-03-07)
 
 
