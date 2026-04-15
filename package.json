@@ -29,7 +29,7 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@types/clone": "2.1.4",
-    "@types/node": "25.3.5",
+    "@types/node": "25.6.0",
     "@types/sprintf-js": "1.1.4",
     "@typescript-eslint/eslint-plugin": "8.56.1",
     "@typescript-eslint/parser": "8.56.1",
