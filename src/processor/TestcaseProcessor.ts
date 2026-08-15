@@ -673,10 +673,16 @@ export class TestcaseProcessor implements InterfaceProcessor {
       } else {
         const refInstanceId = nodeReferenceDirective.targetNode.instanceId
 
+        // The instance is checked as well, not only the table. A referenced
+        // table may already exist while the instance holding the field has not
+        // been generated yet. In that case the directive belongs into
+        // 'openReferenceDirectives' to be retried, which is what the else
+        // branch below does. Without the instance check this threw
+        // 'Cannot read properties of undefined'.
         if (
-          testcaseData.data[targetTableName] !== undefined &&
-          testcaseData.data[targetTableName][refInstanceId][targetFieldName] !==
-            undefined
+          testcaseData.data[targetTableName]?.[refInstanceId]?.[
+            targetFieldName
+          ] !== undefined
         ) {
           changeCount++
 

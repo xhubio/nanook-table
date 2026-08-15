@@ -265,7 +265,14 @@ export class Node implements NodeInterface {
             )
           }
           for (const directive of target.referenceDirectives) {
-            directive.targetNode = this
+            // A self reference points at its own node, which is exactly what
+            // 'targetNode === parentNode' means here. Re-pointing it at the
+            // aggregating node made it resolve against an instance that never
+            // receives the referenced field, so the field stayed empty without
+            // any error. Only inherited non-self references get re-parented.
+            if (directive.targetNode !== directive.parentNode) {
+              directive.targetNode = this
+            }
             this.tmpDirectives.reference.push(directive)
           }
           for (const directive of target.generatorDirectives) {
