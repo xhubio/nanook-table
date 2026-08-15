@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/xhubio/nanook-table/compare/v2.1.2...v2.1.3) (2026-08-15)
+
+
+### Bug Fixes
+
+* declare the repository so provenance can be verified ([90bc948](https://github.com/xhubio/nanook-table/commit/90bc94856706d71b3a8919c5e7bb76cbe5cbcdc4))
+
 ## [2.1.2](https://github.com/xhubio/nanook-table/compare/v2.1.1...v2.1.2) (2026-08-15)
 
 
