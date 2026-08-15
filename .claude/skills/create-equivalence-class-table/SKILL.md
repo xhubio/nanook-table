@@ -763,6 +763,86 @@ Im echten Lauf zog faker 19 verschiedene Namen — die Eindeutigkeits-Logik lief
 einziges Mal. Der Test dafuer muss die Kollision **erzwingen** (feste Namen, drei Aufrufe,
 drei verschiedene Ergebnisse).
 
+### Drei Ebenen, nicht zwei — die Ausfuehrung bekommt ein eigenes Blatt
+
+(Festlegung Torsten, 2026-08-15, beim Aufbau der Firmenanlage.)
+
+Datentabelle und Testfall-Tabelle reichen, solange eine Entitaet **einen** Ablauf
+hat. Sobald es zwei werden (Anlegen *und* Bearbeiten), traegt die Aufteilung
+nicht mehr — und man merkt es zu spaet:
+
+| Blatt | `Execute` | beschreibt |
+|---|---|---|
+| `CompanyCommon` | `F` | was in **jedem** Land gleich ist |
+| `CompanyDE` · `CompanyES` | `F` | die Felder **eines Landes**, samt seiner Rechtsfolgen |
+| `FirmaAnlegenDE` · `…ES` | `T` | die **Ausfuehrung**: Basiszustand und Faelle |
+
+🔴 **Der Basiszustand gehoert NICHT in die Feldtabelle**, auch wenn er fuer jeden
+Fall derselbe ist. Wer ihn dort hinschreibt, bindet die **Entitaet** an einen
+**Ablauf** — und beim zweiten Ablauf faengt jemand von vorne an. Das Ausfuehrungs-
+Blatt ist dagegen billig: Basiszustand, zwei bis drei Faelle, der Rest per
+Referenz.
+
+🔵 Eine Datentabelle darf dabei eine **andere Datentabelle** referenzieren:
+`CompanyDE` holt sich die gemeinsamen Stammdaten aus `CompanyCommon`, und
+`FirmaAnlegenDE` holt sich `CompanyDE`. Die Kette ist beliebig tief — nur oben
+steht genau ein Blatt mit `Execute = T`.
+
+### Wo die Trennlinie zwischen Laendern verlaeuft
+
+Nicht „Stammdaten gegen Laenderdaten", sondern: **sind die Aequivalenzklassen
+dieselben?**
+
+Deshalb wandern `postalCode` und `timezone` ins Land, obwohl sie wie Stammdaten
+aussehen — ihre Klassen sind gleich (`valid`/`empty`/`wrongFormat`/…), ihre
+**gueltigen Werte** nicht. Und `phone` bleibt gemeinsam, obwohl die Vorwahl
+landesabhaengig ist: sie wird nicht geprueft, also unterscheidet sich nichts.
+
+💡 **Der Prueffall, an dem sich die Aufteilung lohnt**: das gemessene Beispiel
+hatte 45 Spalten fuer ein Land. Nach der Trennung: 20 gemeinsame + 22 deutsche +
+19 spanische — und das zweite Land kostete danach fast nichts.
+
+### Rechtsfolgen gehoeren in die Wirkungs-Sektion, nicht in die Felder
+
+Der eigentliche Grund, warum Laender getrennte Tabellen brauchen, ist **nicht**
+die Werteliste von `businessType`. Es ist, was aus der Wahl **folgt**:
+
+```
+DE   Rechtsform × § 19          →  Buchfuehrungsart UND Belegform (2×2-Matrix)
+ES   kein § 19 (es gibt keins)  →  stattdessen: wem gehoert die Steuerkennung?
+```
+
+Spanien hat **kein** Kleinunternehmer-Regime — die deutsche Achse existiert dort
+gar nicht. Dafuer eine, die DE nicht hat: eine Gesellschaft fuehrt eine eigene
+Kennung, ein Einzelunternehmer seine persoenliche (die auslaendisch sein kann).
+
+⚪ Solche Faelle bekommen **eigene Spalten am Ende**, ausserhalb der
+Deckungssumme: sie pruefen kein weiteres Feld, sondern ein Zusammentreffen.
+
+### 🔴 Ein abgeleitetes Feld ist keine Eingabe
+
+Traegt die Anwendung einen Wert selbst zusammen, gehoert er in die **Erwartung**,
+nicht in die Primaerdaten — sonst beschreibt die Tabelle eine Eingabe, die es
+nicht gibt.
+
+Gemessenes Beispiel: die spanische USt-IdNr ist `ES` + NIF/CIF, wird berechnet
+und ist im Formular `readOnly`. Zwei Felder mit eigenen Klassen waeren dort
+schlicht falsch. **Deutschland ist der Sonderfall**, nicht die Norm: dort sind
+USt-IdNr und Steuernummer zwei verschiedene Nummern von zwei Behoerden.
+
+💡 Die Frage, die das entscheidet: *Kann ein Mensch diesen Wert eintippen?* Wenn
+nicht, ist es eine Wirkung.
+
+### 🔴 Klassen nach NAMEN suchen, nie nach Index
+
+Ein Erzeuger, der `klassen[1]` nimmt, bricht in dem Moment, in dem jemand eine
+Klasse davor einfuegt — und zwar **lautlos**: die Referenz zeigt auf die falsche
+Klasse, die Bereichsreferenz verschwindet, und aus 32 Testfaellen werden 18, ohne
+dass etwas rot wird. Real passiert am 2026-08-15, zweimal am selben Tag.
+
+Wer nach Namen sucht, bekommt beim Umbenennen eine Meldung statt eines stillen
+Datenverlusts.
+
 ### Reihenfolge beim Aufbau
 
 1. **Datentabellen zuerst** (`Execute = F`) — die Entitaeten, die der Ablauf braucht.

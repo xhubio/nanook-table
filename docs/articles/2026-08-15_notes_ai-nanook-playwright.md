@@ -372,6 +372,44 @@ the author had written ten minutes earlier.
 **Also worth the article**: the same checker caught the author's own regression two minutes later.
 That is the real argument for small, sharp tools over big coverage dashboards.
 
+---
+
+## Later still — the two additions that sharpen the thesis
+
+### "Write me the tests" versus knowing which button exists
+
+Building the page function for the company form meant reading every test id out of the
+component. It turned out the form uses **two naming conventions at once**: five ids as
+`org-form-*`, twenty-five as `organization-form-*`. The company name is `org-form-name`;
+`organization-form-input-name` — the one any reasonable person would guess — **does not exist**.
+
+And it had been guessed before: that exact id once sat in a test in this codebase, behind an
+`isVisible()` guard. The test was green and typed nothing.
+
+💡 **This is the sharpest small illustration of the whole thesis.** A model asked to "write a
+test for the company form" will produce `organization-form-input-name` with complete confidence,
+because it is the *consistent* name — the one the convention implies. The application is
+inconsistent, and only looking finds that. Generating the test was never the hard part.
+
+### The base state is where the honesty happens
+
+Logging in for a test looked like two API calls. It is three, and the middle one is not
+optional: this stack requires email verification, so sign-up returns no session token and
+sign-in answers `403 EMAIL_NOT_VERIFIED`. The base state has to fetch the confirmation link out
+of the mock mailbox and follow it — the same thing a user does.
+
+Two further stumbles, both the same shape as the cookie banner earlier:
+
+- the mail mock was **not** on the port everyone assumes: fourteen mails sat on `:4000` and the
+  wanted one on `:50518`, because a QA run starts its own mock on a free port
+- the mock's response is `{ data, total, limit, offset }`; the first implementation read
+  `emails` and reported "0 mails" while the same URL returned 28
+
+Neither is interesting on its own. Together they make the point: **the base state is the part of
+a test that lies most convincingly**, because when it fails silently, everything above it fails
+in ways that look like application defects. That is why it now verifies itself — and why the
+verification was checked against a *missing* session first, to prove it can fail.
+
 ## Open / to add before writing
 
 - [ ] Screenshot of the registration table (small, readable — the 100 % row visible)
