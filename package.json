@@ -3,6 +3,14 @@
   "version": "2.1.2",
   "type": "module",
   "description": "Toolkit for test case and test data creation",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xhubio/nanook-table.git"
+  },
+  "homepage": "https://github.com/xhubio/nanook-table#readme",
+  "bugs": {
+    "url": "https://github.com/xhubio/nanook-table/issues"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
