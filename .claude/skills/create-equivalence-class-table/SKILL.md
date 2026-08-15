@@ -154,7 +154,7 @@ Lauf wirklich variiert, ist ungeprueft — und ein Test, der bei jedem Lauf ande
 Daten nimmt, **reproduziert einen Fehlschlag nicht mehr**. Das ist der Preis, den
 man dabei bezahlt, und er ist selten die Deckungszahl wert.
 
-### 🔴 100 % sind nicht immer erreichbar — und das ist kein Mangel
+### 🔴 100 % sind IMMER erreichbar — die Kaskade ist nur nicht immer der Weg dahin
 
 Die Teleskop-Identitaet `Σ_i (n_i − 1)·Π_{j>i} n_j = C − 1` setzt voraus, dass
 **jede** Klasse ausser der bevorzugten ein Fehler-Ziel ist. Nur eine Fehlerspalte
@@ -167,12 +167,25 @@ darf nur die gueltigen Klassen oeffnen, nie die fehlerhaften — sonst behauptet
 sie, ein ungueltiger Wert fuehre zum guten Ergebnis. Ihr Beitrag ist damit
 kleiner als das volle Produkt, und die Summe bleibt unter 100 %.
 
-⚪ Gemessen: `CompanyDE` steht bei 66,85 %, und die Tabelle ist trotzdem
-richtig. Die Zahl misst **Kombinationen**, nicht Vollstaendigkeit.
+🔴 **Daraus folgt NICHT, dass 100 % unerreichbar waeren** (Klarstellung Torsten,
+2026-08-15 — ich hatte hier zuerst das Gegenteil geschrieben). Was versagt, ist
+die **Abkuerzung**, nicht das Ziel. Die Deckung bleibt erreichbar, man bezahlt sie
+nur mit **Spalten** statt mit einer Identitaet:
 
-> 💡 **Die bessere Frage ist nicht „wie viel Prozent", sondern „hat jede Klasse
-> einen eigenen Testfall".** Dafuer gibt es `check-klassen` — es zaehlt nur `x`,
-> weil `a`/`e` eine Auswahl sind und keine Zusicherung.
+| Weg | Kosten |
+|---|---|
+| Kaskade | (n−1) Spalten je Feld — billig, aber nur wenn jede Alternative ein Fehler-Ziel ist |
+| Feldreihenfolge | Felder mit gueltigen Alternativen nach HINTEN; steht so ein Feld zuletzt, ist Π der Nachfolger = 1 und die Gutfall-Spalte traegt wieder voll |
+| Aufzaehlen | die fehlenden Kombinationen als eigene Spalten — im Grenzfall eine je Kombination. Immer moeglich, manchmal viel Arbeit |
+
+⚪ Gemessen: `CompanyDE` steht bei 66,85 %. Das ist eine **Entscheidung ueber den
+Aufwand**, keine Grenze der Methode — und sie gehoert bewusst getroffen, nicht
+aus Versehen.
+
+> 💡 **Solange nicht aufgezaehlt wird, ist die bessere Frage nicht „wie viel
+> Prozent", sondern „hat jede Klasse einen eigenen Testfall".** Dafuer gibt es
+> `check-klassen` — es zaehlt nur `x`, weil `a`/`e` eine Auswahl sind und keine
+> Zusicherung.
 
 ### Marker-Regeln nach Testfall-Typ
 

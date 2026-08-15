@@ -350,11 +350,20 @@ Then the attempt to reach 100 % by opening the happy path the same way. It faile
 | coverage rises to 100 % | +0.2 points |
 | no downside | four classes lost their own test case immediately |
 
-And the structural reason it can't work: only an *error* column may open all following fields —
-it may, because something upstream already fails. A *good* column can open only the **valid**
-alternatives; opening an invalid one would claim that a bad value still yields a good result.
-So the moment a field has a legitimate alternative (`logo: none|png|svg`), the arithmetic can no
-longer reach 100 %, and that is correct rather than a defect.
+The structural reason: only an *error* column may open all following fields — it may, because
+something upstream already fails. A *good* column can open only the **valid** alternatives;
+opening an invalid one would claim that a bad value still yields a good result. So the moment a
+field has a legitimate alternative (`logo: none|png|svg`), the cheap arithmetic stops working.
+
+🔴 **And here the author was corrected, which is worth putting in the article rather than hiding.**
+The conclusion drawn from that was "100 % is therefore not always reachable". Wrong. What stops
+working is the *shortcut*, not the goal. Full coverage stays reachable — you simply pay in
+**columns** instead of in an identity: reorder so fields with valid alternatives come last, or
+enumerate the missing combinations outright. Always possible, sometimes a lot of work.
+
+That distinction matters for the article's thesis: the arithmetic tells you what a table costs.
+It does not tell you what is possible — and mistaking the first for the second is how a tool
+starts making decisions that belong to a person.
 
 💡 **The replacement question**: *does every class have its own test case?* That one produces an
 action. A twenty-line checker answers it — and on its very first run it found a gap in the table
