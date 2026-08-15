@@ -137,22 +137,37 @@ zuerst — der Test waere rot und pruefte trotzdem nicht, was er behauptet.
 Server**. Beide Meldungen sind wahr, nur die zweite gehoert einer anderen
 Grenze — und sie haette jede Feldmeldung verdeckt.
 
-### 🔴 Der Happy Path bleibt geschlossen — probiert und verworfen
+### `e` im Gutfall heisst „mir egal, was drinsteht" — und das ist erlaubt
 
-Die Idee liegt nahe: auch im Gutfall `a`/`e` setzen, dann waehlt jeder Lauf eine
-andere zulaessige Kombination, und die Deckung steigt auf 100 %. Am 2026-08-15
-gebaut und gemessen — sie scheitert an drei Punkten:
+(Festlegung Torsten, 2026-08-15.) Haengen an einer Seite Eigenschaften, die fuer
+den Pruefgegenstand **unwichtig** sind, gehoeren im Gutfall alle ihre **gueltigen**
+Klassen auf `e`. Die Deckung ist damit erfuellt, und die Tabelle sagt zugleich
+etwas Wahres aus:
+
+> **Nicht „ich habe alle Kombinationen geprueft", sondern „hier ist es mir
+> erklaertermassen gleichgueltig."**
+
+🔵 Das ist der eigentliche Gewinn: die Gleichgueltigkeit steht **geschrieben**.
+Bekommt die Eigenschaft spaeter Bedeutung — ein Feld wandert in ein PDF, in einen
+Export, in eine Rechnung —, sieht man an der Zeile sofort, wo man darauf
+verzichtet hat, und gibt ihr eine eigene Spalte. Eine Tabelle ohne diese Marken
+verschweigt die Entscheidung; man weiss spaeter nicht, ob jemand geprueft oder
+vergessen hat.
+
+🔴 **Niemals auf einer Fehlerklasse.** „Mir egal" gilt fuer zulaessige Werte. Ein
+`e` auf einer Fehlerklasse behauptet, ein ungueltiger Wert fuehre trotzdem zum
+guten Ergebnis.
+
+**Zwei gemessene Randbedingungen** (2026-08-15), damit es nicht schiefgeht:
 
 | | |
 |---|---|
-| **Keine Streuung** | `e` heisst „nur, wenn kein `a` da ist". Mit einem `a` im Feld gewinnt es jedes Mal; zwei Laeufe lieferten identische Werte |
-| **Kaum Deckung** | +0,2 Punkte, nicht 100 % |
-| **Verlorene Testfaelle** | die bevorzugten Klassen verlieren ihr `x` — vier Klassen hatten schlagartig keinen eigenen Fall mehr |
+| **Die bevorzugte Klasse braucht ihr `x` woanders** | Oeffnet man den Happy Path selbst, verliert sie es — bei einem Feld, das ganz hinten steht, bleibt dann gar kein Testfall uebrig. Real: vier Klassen auf einen Schlag, `check-klassen` hat es gemeldet |
+| **`e` erzeugt KEINE Streuung** | `e` heisst „nur, wenn kein `a` da ist" — mit einem `a` im Feld gewinnt es jedes Mal. Zwei Laeufe lieferten identische Werte. Wer wirklich variieren will, braucht ein Feld **ohne** `a`; ob die Bibliothek dann je Lauf wechselt, ist ungeprueft |
 
-Streuung braeuchte ein Feld **ohne** `a`, nur mit `e`. Ob die Bibliothek dann je
-Lauf wirklich variiert, ist ungeprueft — und ein Test, der bei jedem Lauf andere
-Daten nimmt, **reproduziert einen Fehlschlag nicht mehr**. Das ist der Preis, den
-man dabei bezahlt, und er ist selten die Deckungszahl wert.
+⚪ Und falls doch: ein Test, der bei jedem Lauf andere Daten nimmt, reproduziert
+einen Fehlschlag nicht mehr. Streuung ist ein eigener Handel, keine Nebenwirkung
+der Deckung.
 
 ### 🔴 100 % sind IMMER erreichbar — die Kaskade ist nur nicht immer der Weg dahin
 
