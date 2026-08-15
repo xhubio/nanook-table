@@ -29,9 +29,18 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
 
+      # Trusted Publishing (OIDC) needs npm >= 11.5.1. Node 22 still ships
+      # npm 10, which silently falls back to token authentication. Pinned to
+      # the 11 line so a future major cannot outrun this job's Node version.
+      - run: npm install -g npm@11
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm run test
+
+      # No NPM_TOKEN: authentication runs via OIDC against the trusted
+      # publisher configured for @xhubio/nanook-table on npmjs.com
+      # (GitHub Actions, repo xhubio/nanook-table, workflow release.yml).
+      # Provenance attestations are generated automatically.
       - run: pnpm exec semantic-release
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
