@@ -121,6 +121,59 @@ Category             ← TagSection mit "negative"/"valid" Zeilen
 | `i` | Impossible (logisch unmoeglich) | Ja | Wird NICHT verwendet |
 | leer | Nicht markiert | Nein | Wird nicht verwendet |
 
+### Warum bei Fehler-TCs `a` auf der GUELTIGEN Klasse steht
+
+Die naheliegende Lesart ist „egal, oben geht ja schon etwas schief". Sie ist
+falsch herum. Der Grund ist schaerfer:
+
+> **Die uebrigen Felder bekommen `a` auf der gueltigen Klasse, damit die
+> ERWARTETE Fehlermeldung sichtbar wird und nicht von einer anderen ueberdeckt.**
+
+Stuenden dort beliebige Werte, kaeme womoeglich der Fehler eines anderen Feldes
+zuerst — der Test waere rot und pruefte trotzdem nicht, was er behauptet.
+
+🔵 Genau das real gemessen (2026-08-15): ein Testfall erwartete eine Ablehnung
+**am Feld** wegen zu langen Passworts; gekommen ist `Password too long` **vom
+Server**. Beide Meldungen sind wahr, nur die zweite gehoert einer anderen
+Grenze — und sie haette jede Feldmeldung verdeckt.
+
+### 🔴 Der Happy Path bleibt geschlossen — probiert und verworfen
+
+Die Idee liegt nahe: auch im Gutfall `a`/`e` setzen, dann waehlt jeder Lauf eine
+andere zulaessige Kombination, und die Deckung steigt auf 100 %. Am 2026-08-15
+gebaut und gemessen — sie scheitert an drei Punkten:
+
+| | |
+|---|---|
+| **Keine Streuung** | `e` heisst „nur, wenn kein `a` da ist". Mit einem `a` im Feld gewinnt es jedes Mal; zwei Laeufe lieferten identische Werte |
+| **Kaum Deckung** | +0,2 Punkte, nicht 100 % |
+| **Verlorene Testfaelle** | die bevorzugten Klassen verlieren ihr `x` — vier Klassen hatten schlagartig keinen eigenen Fall mehr |
+
+Streuung braeuchte ein Feld **ohne** `a`, nur mit `e`. Ob die Bibliothek dann je
+Lauf wirklich variiert, ist ungeprueft — und ein Test, der bei jedem Lauf andere
+Daten nimmt, **reproduziert einen Fehlschlag nicht mehr**. Das ist der Preis, den
+man dabei bezahlt, und er ist selten die Deckungszahl wert.
+
+### 🔴 100 % sind nicht immer erreichbar — und das ist kein Mangel
+
+Die Teleskop-Identitaet `Σ_i (n_i − 1)·Π_{j>i} n_j = C − 1` setzt voraus, dass
+**jede** Klasse ausser der bevorzugten ein Fehler-Ziel ist. Nur eine Fehlerspalte
+darf ihre Nachfolger auf **allen** Klassen oeffnen — sie darf das, weil oben
+ohnehin schon etwas schiefgeht.
+
+Sobald ein Feld eine **gueltige Alternative** hat (`logo: keins|png|svg`,
+`measurementSystem: metric|imperial`), bricht die Rechnung: eine Gutfall-Spalte
+darf nur die gueltigen Klassen oeffnen, nie die fehlerhaften — sonst behauptete
+sie, ein ungueltiger Wert fuehre zum guten Ergebnis. Ihr Beitrag ist damit
+kleiner als das volle Produkt, und die Summe bleibt unter 100 %.
+
+⚪ Gemessen: `CompanyDE` steht bei 66,85 %, und die Tabelle ist trotzdem
+richtig. Die Zahl misst **Kombinationen**, nicht Vollstaendigkeit.
+
+> 💡 **Die bessere Frage ist nicht „wie viel Prozent", sondern „hat jede Klasse
+> einen eigenen Testfall".** Dafuer gibt es `check-klassen` — es zaehlt nur `x`,
+> weil `a`/`e` eine Auswahl sind und keine Zusicherung.
+
 ### Marker-Regeln nach Testfall-Typ
 
 **1. Zielfeld (das Feld das dieser TC testet):**

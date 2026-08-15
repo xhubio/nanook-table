@@ -330,6 +330,39 @@ moment the project switched to OIDC. Possibly its own short post.
 
 ---
 
+### The coverage number is the wrong question — and chasing it costs a day
+
+Late addition, and it may be the most useful paragraph for anyone who copies this approach.
+
+The tables report a coverage percentage. It is seductive, because it is a number and it goes up.
+It is also, on its own, close to worthless: it counts a class as covered the moment it is marked
+`a` or `e` — "any of these" — even though the generator will then pick the *preferred* one and
+that class is **never produced**.
+
+Measured: one table sat at **99.2 %** with **six classes that had no test case at all**. Among
+them the plain raster logo — the common path. Only SVG, the exception, was being exercised.
+
+Then the attempt to reach 100 % by opening the happy path the same way. It failed three times over:
+
+| expected | measured |
+|---|---|
+| each run picks a different valid value | identical values — `e` means "only if no `a`", and `a` always wins |
+| coverage rises to 100 % | +0.2 points |
+| no downside | four classes lost their own test case immediately |
+
+And the structural reason it can't work: only an *error* column may open all following fields —
+it may, because something upstream already fails. A *good* column can open only the **valid**
+alternatives; opening an invalid one would claim that a bad value still yields a good result.
+So the moment a field has a legitimate alternative (`logo: none|png|svg`), the arithmetic can no
+longer reach 100 %, and that is correct rather than a defect.
+
+💡 **The replacement question**: *does every class have its own test case?* That one produces an
+action. A twenty-line checker answers it — and on its very first run it found a gap in the table
+the author had written ten minutes earlier.
+
+**Also worth the article**: the same checker caught the author's own regression two minutes later.
+That is the real argument for small, sharp tools over big coverage dashboards.
+
 ## Open / to add before writing
 
 - [ ] Screenshot of the registration table (small, readable — the 100 % row visible)
