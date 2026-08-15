@@ -238,6 +238,98 @@ No feature list, no tool comparison.
 
 ---
 
+---
+
+## Added later the same day — the part that turned out to be the real story
+
+Everything above was written before the tests actually ran. What follows happened
+afterwards and is stronger material, because it is about the tests *failing for the
+wrong reasons* — three times in a row.
+
+### The instrument lies, and it lies plausibly
+
+**First browser run: 18 of 18 red.** Including the happy path.
+
+That last detail is the whole lesson. Eighteen red tests look like a damning verdict on the
+application. But if the *valid* case fails too, the verdict is about the measuring
+instrument. The cause: a cookie banner — `role="dialog"`, layered over the page,
+intercepting every click. Twenty minutes of runtime, zero statements about the software.
+
+It happened again twice, in different forms:
+
+| Symptom | Looked like | Actually was |
+|---|---|---|
+| 18/18 red | the app is broken | cookie banner over the page |
+| `firstName` unknown | the table is wrong | the form composes `name`; a real boundary property |
+| unknown path `email` | the runner is broken | the suite carries the generator *value*, not the class *name* |
+
+**The rule that came out of it**: an all-red result is not a finding, it is a suspicion —
+about yourself. This is the single most transferable thing from the whole day, and it
+applies to AI-written tests specifically: a model will happily generate a hundred tests
+that all fail for one shared, invisible reason, and the failure list reads like diligence.
+
+### What a green measurement is worth
+
+After the fix: **10 green, 10 red, 43 seconds.** Now the red ones mean something, and they
+sort into four distinct causes — that separation is the product:
+
+- 5 cases: the form accepts what it should reject (whitespace-only name, no length limits)
+- 3 cases: the server accepts what it should reject — including **the same email address
+  twice**
+- 1 case: `Password too long` — the server rejects it, but the **form** was supposed to.
+  The rule exists; it just lives one layer further back than anyone assumed.
+- 1 case: Apple cannot be reached through the UI at all
+
+That fourth one is worth its own paragraph.
+
+### The finding nobody was looking for
+
+Registration was extended so an existing account can come from three places — password
+registration, Google, or Apple — and the test tries to register *again* over a different
+provider. Expected: rejection. `user.email` is `UNIQUE`, so two accounts on one address
+cannot exist; only "link" or "refuse" are possible outcomes.
+
+Enabling Apple in the backend turned out to be one config entry plus a mock provider. And
+then the test said something nobody had asked:
+
+> `Weg "apple" nicht bedienbar — die Oberflaeche bietet Apple nicht an.
+>  Das Backend kennt Apple, die Maske nicht.`
+
+The backend can do it. There is no button. That is not a bug report a human would have
+filed, because nobody looks for a feature they never saw — it fell out of a table that
+enumerated the possibilities systematically.
+
+### And the one that is genuinely serious
+
+Registering the same email address twice returns **200 twice, with two different user ids**.
+Both boundaries agree — API and browser.
+
+Checked before reporting, because the obvious explanation would have been a missing
+constraint:
+
+| checked | result |
+|---|---|
+| schema definition | `user_email_key UNIQUE (email)` |
+| running database | constraint present in all six schemas |
+| stored data | **no** duplicate addresses, 60 users |
+
+So the row is *not* written twice — but the client is told it succeeded. For a user that is
+indistinguishable from a bug: they believe they have an account.
+
+💡 **For the article**: this is what "the table found it" looks like in practice. Not a
+clever assertion — a cell that says *"an address that is already taken"*, which somebody had
+to fill in, and which no amount of "write me some tests for registration" produces.
+
+### A smaller one, for flavour
+
+Publishing the fix revealed that releases had been failing since June. Three stacked causes,
+and the third is the nice one: trusted publishing signs the building repository and compares
+it against `package.json`. Token publishing generates no provenance, so a **missing
+`repository` field** went unnoticed for years — then surfaced as a *signature* error the
+moment the project switched to OIDC. Possibly its own short post.
+
+---
+
 ## Open / to add before writing
 
 - [ ] Screenshot of the registration table (small, readable — the 100 % row visible)
