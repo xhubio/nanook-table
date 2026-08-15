@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/xhubio/nanook-table/compare/v2.1.1...v2.1.2) (2026-08-15)
+
+
+### Bug Fixes
+
+* resolve a self reference inside a referenced table ([3df6194](https://github.com/xhubio/nanook-table/commit/3df6194a8f9c10fda5f88c6475b782166e2957ed))
+
 ## [2.1.1](https://github.com/xhubio/nanook-table/compare/v2.1.0...v2.1.1) (2026-03-29)
 
 
