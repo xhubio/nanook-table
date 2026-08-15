@@ -1,3 +1,10 @@
+## [2.1.4](https://github.com/xhubio/nanook-table/compare/v2.1.3...v2.1.4) (2026-08-15)
+
+
+### Bug Fixes
+
+* honour the required 'tables' option in the constructor ([8872619](https://github.com/xhubio/nanook-table/commit/88726193c7862e35ed61990ab14da142e9d9fd7b))
+
 ## [2.1.3](https://github.com/xhubio/nanook-table/compare/v2.1.2...v2.1.3) (2026-08-15)
 
 
