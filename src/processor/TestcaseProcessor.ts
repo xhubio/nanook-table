@@ -86,6 +86,16 @@ export class TestcaseProcessor implements InterfaceProcessor {
     this.logger = opts.logger ?? new LoggerMemory()
     this.generatorRegistry = opts.generatorRegistry
     this.writer = opts.writer
+
+    // 'tables' is a required option, so it has to be honoured here. Until now
+    // the constructor dropped it and the property kept its '{}' default, which
+    // meant a caller who passed the tables and did not additionally assign
+    // 'processor.tables' got a processor that could not resolve a single
+    // reference - reported as "The targetTable 'X' does not exists" for a table
+    // that was demonstrably loaded.
+    if (opts.tables) {
+      this.tables = opts.tables
+    }
   }
 
   /**
