@@ -4,3 +4,9 @@ coverage/
 tests/**/volatile/
 *.tsbuildinfo
 package-lock.json
+
+# macOS Finder
+.DS_Store
+
+# Zugangsdaten — gehoeren nie ins Repo
+.npmrc
