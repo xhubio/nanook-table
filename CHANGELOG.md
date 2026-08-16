@@ -1,3 +1,10 @@
+## [2.1.5](https://github.com/xhubio/nanook-table/compare/v2.1.4...v2.1.5) (2026-08-16)
+
+
+### Bug Fixes
+
+* **matrix:** ein statischer Wert wurde verworfen, ein fehlender wurde zu Muell ([25b417c](https://github.com/xhubio/nanook-table/commit/25b417c526ff766427242e4e72fa0c7e7f9ea9a1))
+
 ## [2.1.4](https://github.com/xhubio/nanook-table/compare/v2.1.3...v2.1.4) (2026-08-15)
 
 
