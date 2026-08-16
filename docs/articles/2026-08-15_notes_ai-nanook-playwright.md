@@ -592,3 +592,96 @@ calibrated before its readings mean anything. This last episode extends it one s
 instrument's own specification is also an artefact, and it decays faster than anything else.** The
 tables outlived the model's memory of how to build them. That is not a flaw to engineer around —
 it is the normal condition, and the whole discipline is a response to it.
+
+---
+
+## Nine answers to one question — and the test that made a gap look like a decision
+
+The country tables kept producing findings, and the last one wasn't about a form at all.
+
+Torsten asked whether customers could be in the US, Canada, Australia. Measuring took two minutes
+and returned something worse than "no":
+
+| List | Countries |
+|---|---|
+| Organisation (frontend) | 16 |
+| Customer (frontend) | 14 |
+| Customer (**backend**) | 13 |
+| Supplier (frontend) | 12 |
+| A payment integration | 6 |
+
+Five lists, five different answers to *which countries do we serve*. You could create a Romanian
+customer but not a Romanian supplier. A business could register itself in the United States and
+then not record a single customer in its own country.
+
+Currencies were the same shape with a milder symptom: four lists, all identical, all containing
+`EUR, USD, CHF, GBP`. A Canadian customer silently fell back to US dollars.
+
+### The part that reframes it
+
+The country registry — a package both the backend and the frontend already depend on — has carried
+all sixteen countries for a long time, each with its currency, timezone, tax rate and legal forms.
+Derive the two lists from it and you get sixteen countries and **nine** currencies: BGN, CAD, CHF,
+CZK, EUR, GBP, HUF, PLN, RON, USD.
+
+So `CAD` was never missing from the system. It was missing from four transcripts of it. And five
+more currencies are still missing from those transcripts today — Poland, Czechia, Hungary,
+Bulgaria and Romania are all forced onto the euro, which none of them uses.
+
+The frontend file holding the deprecated copy even carries a comment: *use the country registry
+instead.* It has said so for months.
+
+### A green test that made a gap look like a decision
+
+Adding the two countries broke exactly one test:
+
+```ts
+it('should not render for unsupported country', () => {
+  render(<CountrySpecificFields country="US" … />)
+  expect(container.innerHTML).toBe('')
+})
+```
+
+The United States were "unsupported" only because nobody had added them. The test didn't record a
+decision; it recorded an absence — and then defended it. Green, for as long as the gap existed.
+
+This is the failure mode that suites acquire as they age, and it is invisible from inside: **a test
+that pins current behaviour is indistinguishable from a test that pins intended behaviour.** The
+only thing separating them is why it was written, which the code does not carry. Here the tell was
+the name: *unsupported* is a claim about intent, and the value chosen to demonstrate it was a
+country the product sells to.
+
+The replacement uses a country the system genuinely doesn't know, and two new tests cover US and CA.
+
+### Consolidating: read, don't copy — and prove it's a reading
+
+The obvious fix is to derive both lists from the registry entries. The obvious fix has a flaw:
+derivation gives wide types (`CountryCode[]`), and callers need a narrow union to build their own
+`SupportedCountry`.
+
+So the catalogue is written as literal tuples — and a test compares them against the entries:
+
+```ts
+it('nennt genau die Länder, für die es einen Eintrag gibt', () => {
+  expect([...SUPPORTED_COUNTRIES].sort()).toEqual(builtInCountries().map((c) => c.code).sort())
+})
+```
+
+Without that test the catalogue is simply the **fifth transcript** — better placed, equally prone
+to drift. With it, the literal is a *reading* of the entries that happens to be typed narrowly. A
+new country without a catalogue line turns the build red.
+
+Which is the same principle this whole set of notes keeps arriving at, now applied to a constant
+rather than a test: **the thing that makes a value trustworthy is not where it lives, it's whether
+something independent can contradict it.** Four lists nobody could contradict drifted for months
+without a single failing test. One list with a check behind it cannot.
+
+### What it cost
+
+The consolidation touched five packages: the registry, three frontend packages, one backend
+package. All four consumers already depended on the registry — nothing new had to be wired, only
+eight literal lists deleted and replaced by re-exports. Test chains: 1643 + 799 + 1678 + 244, all
+green; five releases published.
+
+An afternoon, for a class of bug that had produced at least two user-visible defects and would have
+produced more with every new country.
