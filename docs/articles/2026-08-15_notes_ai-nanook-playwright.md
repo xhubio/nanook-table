@@ -854,3 +854,102 @@ The matrix earns its place through its *empty* cells. In a decision table a forb
 has to be written as its own error case — and it can be forgotten without anything looking wrong.
 In a matrix it is a hole in a grid, and a grid is a shape you can check by looking: *nothing leads
 out of `archived`.* Absence becomes visible, which is the one thing a list of cases can never do.
+
+## The suite was green and knew better
+
+I finished the product form runner at twelve of twelve and felt done. Four of those twelve cases
+encoded a *defect* as the expectation: "choosing Inactive returns Active", "an empty price becomes
+0.00", "two rejections stay silent". Each carried a friendly note saying that if it ever went red,
+the bug had been fixed.
+
+Torsten: *"please change it so known defects are red too."* And then, a minute later, promoting it:
+*"that has to be a general rule."*
+
+He's right, and the reason is not about tests. **The suite is the thing people look at every day.**
+A findings file is a thing people open when they already suspect something. Encoding a defect as a
+green expectation moves it from the first place to the second — the information survives, but it
+stops being *seen*. I had optimised for a number that measures nothing.
+
+What makes this worth writing down is how *good* green felt. Twelve of twelve arrived after six of
+my own mistakes had been dug out one at a time; the number was the reward for that work, and I
+protected it without noticing. The rule now says: expect what would be correct, let it fail, and
+put the finding in the failure message — number, measurement with file and line, and *what would
+make it green*, because there is usually more than one right answer. "Empty price becomes zero" is
+fixed either by rejecting the input or by leaving the field empty. Naming both saves an argument
+later.
+
+## `.catch()` that fires too late
+
+Three times in one day, in three different files, I wrote a variant of this:
+
+```ts
+const nativ = await locator.first().evaluate(el => …).catch(() => null)
+```
+
+It reads as defensive. It is the opposite. If the locator matches nothing, `evaluate` **waits the
+full timeout** before rejecting — thirty seconds — and only then does the `catch` do its friendly
+thing. A loop with a fifteen-second budget never completes one iteration. The test dies at the time
+limit, Playwright closes the page, and the error surfaces at the *next* statement as
+`Target page has been closed` — pointing at a line that is fine.
+
+The fix is one call: `if (await locator.count() > 0)`. I had already written that fix earlier the
+same day, in `bediene()`, with a comment explaining why. Twenty minutes later I built the same trap
+in `reaktion()`. Then again in three list page objects, where a filter matching zero rows removes
+the pagination counter and `textContent()` waits for something that will never exist.
+
+**A `catch` next to a call makes the call look handled.** That is the whole mechanism. The error is
+caught; nobody said when. It is now the single most reliable source of bugs in my own test code,
+which is worth stating plainly: the tool that finds defects is full of them, and the only thing
+separating the two is that one of them gets measured.
+
+## The wrong detector that fixed a published finding
+
+Because the "silently stripped field" pattern had appeared four times, I built a small detector: for
+every tRPC call in the frontend, compare the keys sent against the keys the Zod schema accepts.
+
+It was wrong. First run: two hits, both false — a schema name collision across packages. Three
+repairs later: two hits, still both false, this time namespace collisions inside one router file.
+It found **none** of the four known cases, and of 397 calls it could not check 333.
+
+And it was still worth building, for a reason I did not anticipate. It flagged `supplier.list` with
+a *different* explanation than the one I had published that morning. Two accounts of the same
+place, disagreeing. Reading them against each other showed my published finding was wrong: I had
+searched only the shared package and missed an app-local schema extension. Zod accepts `sortBy`
+there; the router drops it while hand-copying eight fields into a filter object, and an `as any`
+silences the compiler.
+
+So the detector's value was not its verdict. It was **producing a second, independent account that
+could contradict the first.** A tool that says the same thing you already believe teaches nothing,
+however correct it is.
+
+One repair inside it deserves its own line. My first parser broke on comments *inside* an object
+literal — the braces and commas in an explanatory comment shifted the depth counter, and the field
+after it vanished. The detector then reported `includeArchived` as stripped, at exactly the spot
+where a comment explains that it is not. **A measuring instrument that trips over comments finds
+defects preferentially where someone took care to explain themselves.** That is the worst possible
+distribution, and it is invisible until you check a hit that you know is wrong.
+
+## Adapting the instrument deletes the defect
+
+Building the customer list table, I hit a status value the UI has no filter for. I removed the case.
+Everything then agreed with everything, and the gap was gone from the measurement.
+
+Torsten asked whether I had recorded it as a finding. I had not.
+
+Tracing it back, this was the fourth encounter in two days. The first time — building the
+registration runner — I had stated the principle explicitly in a commit message: *"if the page
+silently skipped every unknown field, a typo in the table would be indistinguishable from a real
+boundary property."* Twice after that I got it right while **measuring**. Then, twice, I got it
+wrong while **building**.
+
+That split is the finding. Measuring and building are different postures. In the measuring posture,
+"this field does not exist" is obviously a statement about the application. In the building posture,
+the same fact looks like a detail of the specification — you are writing a description of what the
+form can do, and a state with no switch simply does not belong in it. Both readings are internally
+consistent. The second one quietly defines the defect away, and it wins because the role has
+changed while the fact stayed the same.
+
+The rule that came out of it: **if a table shrinks because of the application, a finding is created
+in the same motion.** Not afterwards. The test question at the moment of deletion is *why doesn't
+this work?* — "because the application can't" is a finding; "because it makes no business sense" is
+a correct deletion that still needs a comment, or the next person adds it back.
