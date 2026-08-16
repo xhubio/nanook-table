@@ -798,3 +798,59 @@ So the instruction has to say it outright — *measure, don't transfer; the neig
 evidence* — and the runners have to report their own coverage (`22 of 24 fields read back`, `not in
 this form: …`, `measured: …`). Those annotations are what make someone else's output auditable
 without reading all of it. Without them, delegation trades tokens for trust you haven't earned.
+
+## The table form nobody had used
+
+Chains — draft → finalised → sent → paid → cancelled — are not equivalence classes. An equivalence
+class table describes **what a thing is**; a chain describes **what becomes of it**. Nanook has a
+second table form for exactly that, `<MATRIX_TABLE>`: rows are source states, columns are actions,
+and every filled cell is one test case.
+
+Torsten's instruction was characteristically direct: *check whether it fits, and if nanook has bugs
+there, we just fix them.*
+
+It had one. The probe produced five correctly named cases — `r0:c0`, `r1:c1`, `r1:c2` — with
+uniformly empty `data`. The cause, in `TestcaseDefinitionMatrix`:
+
+```ts
+if (generatorCmd !== undefined) {
+  if (startsWith('gen:'))      → GeneratorDirective
+  else if (startsWith('ref:')) → ReferenceDirective
+  // a plain value: nothing happened
+} else {
+  → createStaticValueDirective(generatorCmd, …)   // called with `undefined`
+}
+```
+
+Both branches were inverted. A value that was there got discarded; a value that was *missing*
+produced a directive holding `undefined`. And the documentation had described the correct behaviour
+the entire time — *"Otherwise, a StaticDirective is created with the value as-is."* The spec was
+never wrong. Nobody had run it.
+
+That is the whole lesson, and it is not about nanook. **A code path nobody exercises has no bugs —
+it has undiscovered ones**, and the two are indistinguishable from the outside. Test coverage
+reports it as covered, review reads it as sensible, the docs describe it as working. Only use tells
+them apart.
+
+### Two causes, stacked
+
+What made this genuinely hard is that my own geometry was wrong at the same time: data starts at
+index **8**, not 7, because there is a blank row between the metadata block and the matrix. So the
+first run produced the wrong number of cases *and* empty data, and the wrong count was mine.
+
+The temptation at that point is to conclude that the whole thing is my misunderstanding — one
+confirmed error is a very persuasive explanation for a second symptom. It's the same reasoning
+error as the all-red suite earlier in these notes, arriving from the opposite direction: there, a
+correct tool was blamed for the failures; here, a real defect was nearly absorbed into a mistake I
+had already admitted to.
+
+The way out is the same both times: **fix the one cause you can prove, then measure again.** The
+count came right, the empty `data` stayed. Two symptoms, two causes, and the second only became
+visible once the first was gone.
+
+### What it's worth
+
+The matrix earns its place through its *empty* cells. In a decision table a forbidden transition
+has to be written as its own error case — and it can be forgotten without anything looking wrong.
+In a matrix it is a hole in a grid, and a grid is a shape you can check by looking: *nothing leads
+out of `archived`.* Absence becomes visible, which is the one thing a list of cases can never do.
