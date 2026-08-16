@@ -685,3 +685,116 @@ green; five releases published.
 
 An afternoon, for a class of bug that had produced at least two user-visible defects and would have
 produced more with every new country.
+
+---
+
+## The list view, and a bug where every layer was right
+
+Forms had been the whole story so far: type something, submit, read it back. Then Torsten pointed
+at a screenshot of the supplier list and said the obvious thing that nobody had said yet — *the
+badges, the rows, the sorting: that's its own table, and it's a pattern we'll need everywhere.*
+
+He was right, and the reason is worth stating precisely: **a list view cannot be tested with one
+record.** On one row every sort order is correct, every filter is unremarkable, and every counter
+reads "1 of 1". The inventory *is* the instrument.
+
+So the base state builds seven suppliers whose values are chosen against the three places list
+sorting habitually breaks:
+
+| Value | what it attacks |
+|---|---|
+| `Ärger GmbH` | umlaut at the start — does it sort before `alpha` or after `Zeta`? |
+| `alpha bau`, `omega Service` | lowercase — does the sort separate case? |
+| `SU-00001`…`SU-00007` | zero-padded, so string order happens to equal numeric order (one classic failure disarmed by the data model itself) |
+
+### The failure that looked exactly like the other failure
+
+First run: seven of eight sorting cases red. Per the rule this notebook keeps rediscovering, an
+almost-entirely-red run is a suspicion about the instrument, so I looked at mine first — and found
+it: I was clicking the table cell, while the actual sort trigger is a button inside it. The clicks
+went nowhere and the list showed its default order.
+
+Fixed that. Ran again. **Still red — with the identical symptom.**
+
+Which is the interesting part. "Not clicked" and "clicked but ineffective" produce the same
+screenshot, the same row order, the same everything. There is no way to tell them apart by looking
+at the result.
+
+The way out was to stop counting actions and start reading state. The table puts `aria-sort` on the
+header cell — `ascending`, `descending`, `none` — so the helper now clicks until the header *says*
+what was intended, and throws if it can't get there:
+
+```ts
+for (let versuch = 0; versuch < 3; versuch++) {
+  await ausloeser.click()
+  if ((await kopf.getAttribute('aria-sort')) === zielZustand) return
+}
+throw new Error(`… lässt sich nicht auf ${zielZustand} bringen`)
+```
+
+Now the two cases separate: if the attribute never reaches the target, the instrument failed; if it
+reaches the target and the rows don't move, the application failed. The second is what happened.
+
+> **The general rule, and it is the same one as always in a new costume:** an instrument that
+> reports *what it did* cannot distinguish a failed action from an ineffective one. It has to report
+> *what became true*.
+
+### Three layers, each defensible, together broken
+
+The API, measured directly with five different sort arguments, returned the same order five times.
+`sortBy` appears exactly once in the whole router — in the input schema. It is validated and
+discarded. (The same shape as a discount-period field found earlier the same day, which is also
+validated and discarded. A zod line for a field nobody handles is perfect camouflage: it proves
+someone thought about it.)
+
+Torsten then asked the question that made the finding solid rather than merely true: *isn't sorting
+done in the frontend anyway?*
+
+It isn't, and checking why is the whole lesson. The table is configured `manualSorting` —
+TanStack's way of saying *the data arrives sorted, don't touch it*. And it has to be, because the
+same table is `manualPagination`: the browser holds one page. Sort locally and you order the ten
+rows you happen to have; the alphabetically first supplier sits on page 3 and never moves forward.
+
+So:
+
+| Layer | Behaviour | Correct in isolation? |
+|---|---|---|
+| Table | refuses to sort locally | yes — it must, with paging |
+| Page | sends `sortBy` and `sortDirection` | yes |
+| API | validates both and drops them | **no** |
+
+Every layer reviewed on its own passes. The defect exists only in the seam, and seams are exactly
+what unit tests don't cover and code review doesn't look at.
+
+And the surface is *impeccable*: the arrow flips, `aria-sort` changes, the request carries the
+parameters. Everything except the outcome is right — which is why five sortable columns can be dead
+without anyone noticing. A human clicking a column expects a different order and, on seven rows of
+similar names, does not immediately see that nothing moved. The test computes the expected order and
+compares row by row.
+
+## Should the screens be handed to sub-agents?
+
+Torsten asked whether I should orchestrate — dispatch a sub-agent per screen and collect the
+results. It's the right question at the right moment, and the honest answer has a seam in it too.
+
+**Delegate the measuring.** Reading a screen — every test id, every validation rule with file and
+line, the field list, the submit path, the sortable columns — is mechanical, read-only, token-heavy,
+and parallel. It is most of the tokens and none of the judgement.
+
+**Keep the judging.** Every finding in these notes came from a moment where a measurement
+contradicted an assumption, and the value was entirely in deciding which side was wrong. An
+all-red run is a suspicion about yourself. A form that stays put is not the same as a form that
+saved. A missing `noValidate` was only visible because a neighbouring module had solved and
+documented that exact problem three days earlier — cross-screen memory, which a fan-out of
+independent agents structurally does not have.
+
+There is also a hard precondition: **you can only parallelise a pattern that already exists.** Two
+now do — form-create and list-view — and both were expensive to get right precisely because of the
+mistakes above. Fanning out before that would have multiplied the mistakes instead of the work.
+
+And one safeguard, learned the same day: four of my own errors on the supplier screen came from
+*carrying assumptions over* from the customer screen. A sub-agent doing that has nobody to catch it.
+So the instruction has to say it outright — *measure, don't transfer; the neighbouring screen is not
+evidence* — and the runners have to report their own coverage (`22 of 24 fields read back`, `not in
+this form: …`, `measured: …`). Those annotations are what make someone else's output auditable
+without reading all of it. Without them, delegation trades tokens for trust you haven't earned.
