@@ -536,3 +536,59 @@ and exited **zero**. The summary line said "13 passed", which was true and told 
 the fourteen that never started.
 
 A green exit code is a claim about the process, not about the work.
+
+---
+
+## The one that closes the argument: what the model forgot, the file remembered
+
+Late in the run Torsten opened the spreadsheet and asked two questions that turned out to be the
+same question.
+
+First: *why are there no country sheets in `company-tests.xlsx`?* Because sixteen countries had
+been generated into a **different** workbook — the aggregate — while the file a human opens still
+stopped at two countries. The tests were green on sixteen. The artefact a person works with was
+four weeks behind by lunchtime.
+
+Second: *the tables aren't formatted and have no summary columns.* True, and worse than cosmetic.
+The hand-built `CompanyDE` carries 278 formulas: every field group counts its own marks, and a
+summary row multiplies them. A **0** in a case column means some field has no class — the case is
+incomplete, and you can see it in the spreadsheet without running anything. The generated sheets
+had none of that.
+
+Then the part that matters: **`CompanyDE` was built by the model too.** Same session, one context
+compaction earlier. The formulas, the colours, the widths, the coverage arithmetic — all of it was
+the model's own work, and by the afternoon the model was generating a poorer version of a thing it
+had itself designed that morning.
+
+And the project's own skill file said so all along. Under *Technologie*, first line: **"exceljs
+(nicht xlsx) — wird benötigt für Cell-Styling und Formeln."** It even specified `C=COUNTA-Formel`
+on the field header rows. The generator was written without reading it.
+
+### What this actually says about working with these tools
+
+The failure was not reasoning. Every individual step was sound. The failure was that **the model's
+memory of its own decisions is the least durable artefact in the room** — less durable than the
+spreadsheet, the skill file, or the commit message.
+
+Three consequences, and they are the practical core of the whole piece:
+
+1. **Write the format down where the work happens.** A `README.md` next to the spreadsheets, not
+   in a chat log. The one written afterwards states the direction of data flow, the formula
+   contract, the colour rule, and the reason each exists. It exists because the knowledge was
+   already lost once.
+
+2. **When generating an artefact that already exists, read the existing one first.** Formulas,
+   widths, number formats. What one instance can do, the generated ones must do — otherwise it
+   isn't generation of the same thing, it's a plausible-looking substitute. This is the same
+   discipline as the measuring instrument: the model will happily produce a confident, well-commented
+   version of something subtly poorer, and nothing in its own output will indicate the loss.
+
+3. **A skill file is worth nothing unread.** It contained the answer to a mistake that then took an
+   hour to find and a human to notice. The skill has since gained a section on *generating* tables —
+   because describing the format was not enough; the failure mode was in the act of producing it.
+
+The through-line of these notes has been that a test suite is a measuring instrument and must be
+calibrated before its readings mean anything. This last episode extends it one step: **the
+instrument's own specification is also an artefact, and it decays faster than anything else.** The
+tables outlived the model's memory of how to build them. That is not a flaw to engineer around —
+it is the normal condition, and the whole discipline is a response to it.
