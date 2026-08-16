@@ -953,3 +953,109 @@ The rule that came out of it: **if a table shrinks because of the application, a
 in the same motion.** Not afterwards. The test question at the moment of deletion is *why doesn't
 this work?* — "because the application can't" is a finding; "because it makes no business sense" is
 a correct deletion that still needs a comment, or the next person adds it back.
+
+## Eight suspects, zero findings — a detector that only knows one word
+
+The next morning I wanted to stop opening files one at a time and instead measure something
+structural: which of the backend's 69 mounted routers are unreachable from the browser? A feature
+that exists but has no way in is a real and recurring defect class — the repo has a plan named
+after it.
+
+The measurement was one line of shell: list the router keys, then for each, grep the frontend for
+`trpc.<name>.`. It produced eight orphans. Every one was wrong, and they were wrong in three
+different ways:
+
+| Direction | Case | Why |
+|---|---|---|
+| **too narrow** | "the quote has no delta procedures" | I searched `setItems`; the quote calls them `setPositions`. The whole server side was built and published. |
+| **too narrow, second form** | "`serviceRequest` has no UI" | The client writes `const sr = trpc.serviceRequest` once and then calls `sr.listInbox()`. There is an inbox page, a detail page, and three portal pages. |
+| **wrong level** | "`settingsService` and `transmissionService` are orphaned routers" | My `awk '/^    [a-zA-Z]+:/'` had swept up **constructor arguments** at the same indentation. They are not routers at all. |
+
+Eight suspects, zero findings, three distinct failure modes in about an hour.
+
+The pattern underneath is worth stating on its own, because it is the mirror image of the article's
+central rule. A detector that reports a **presence** carries its own proof: here is the line, go
+look. A detector that reports an **absence** carries nothing. It cannot distinguish "not there"
+from "spelled differently", and it never will, because the evidence for the distinction is exactly
+the thing it failed to find.
+
+So the rule generalises: **a zero from a search is not a measurement until the search has been shown
+capable of a non-zero.** For grep specifically, that has a cheap form — before claiming something is
+absent, run the search again with the bare name and no syntax around it. If that finds files, the
+pattern was wrong, not the application.
+
+What makes this failure mode durable is that it is *pleasant*. Each of my eight orphans read as a
+discovery. Finding nothing feels like failure; finding eight missing features feels like a
+productive morning. The incentive runs the wrong way, and it runs the wrong way for a person and a
+model alike.
+
+## 766 red, and not one of them real
+
+The same day produced the exact opposite error, and it is instructive that it produced the same
+feeling of significance.
+
+I wanted to know where the thirty red tests stood after a day of repairs, so I ran the whole suite:
+783 tests, 766 failures. That is not a result, it is a collapse — and for a few seconds I read it as
+one.
+
+The cause was that I had started Playwright from the directory *above* the one holding
+`playwright.config.ts`. With no config found, it fell back to defaults, `baseURL` was undefined, and
+every UI test died on `page.goto: Cannot navigate to invalid URL`. Sorting the 766 failures by
+message took one command and made it obvious: 756 of them were the same line, and it was a line
+about my invocation, not about the application.
+
+The article's thesis so far has been about zeros: *a zero counts only once the instrument has proven
+it can show something else.* This is the same sentence read from the other end. **A total failure is
+exactly as suspicious as a perfect pass, and for the same reason** — both are the signatures an
+instrument produces when it has stopped measuring the thing you asked about. A suite that reports
+everything broken has told you as little as a suite that reports everything fine.
+
+There is a practical asymmetry, though, and it favours the catastrophe. Nobody investigates green.
+A wall of red is at least *annoying* enough to get looked at, which is why this error cost me ten
+minutes and the eight phantom orphans cost me an hour. If you have to be wrong, be wrong loudly.
+
+The diagnostic that resolved it is worth keeping, because it is one line and it works for both
+extremes:
+
+```bash
+grep -oE "Error: [^:]{0,70}" run.txt | sed 's/[0-9]\{3,\}/N/g' | sort | uniq -c | sort -rn
+```
+
+Group the failures by message shape and count them. Real defects are *diverse* — six findings, six
+different sentences. Infrastructure failures are **monotonous**: one sentence, seven hundred and
+fifty-six times. The shape of the distribution identifies the class of problem before you have read
+a single test.
+
+## The parts that were already right
+
+Three times in a row that day I set out to test something and found there was nothing to find.
+
+The customer portal's feedback channel — the customer strikes a line item and writes a comment —
+worked end to end: the quote stayed untouched, the status moved to `change_requested`, and the
+comments arrived with a reference to the correct position. The design note in the service explains
+the restraint: *"the quote's positions and totals are not touched: this is a message, not an edit."*
+A customer who could delete positions would be editing a document the business is answerable for.
+
+The tender-update path was the same story. A revised bill of quantities is matched against a
+*priced* quote, and the specification is a table of cases sitting in a comment above the function —
+quantity changed, price stays, because it is a unit price; text changed, price stays but is flagged;
+unit changed, **price is cleared**, because a price per piece is not a price per metre. I went
+looking for the gap between the module that decides and the module that applies, since "decided but
+not honoured" is a defect I had already found elsewhere that week. Line 119 of the applying module:
+`unitPrice: change.preisWirdGeleert ? 0 : row.unitPrice`. It was honoured. And the end-to-end tests
+that already existed made exactly my distinction — read the quote back from the database rather than
+trusting the procedure's return value.
+
+This is uncomfortable to write up, because a chapter that ends "and everything was fine" has no
+narrative. But it is the part of the method that is easiest to lose. Three sessions of finding
+defects builds an expectation of defects, and an expectation is a bias: I twice announced an absence
+("the quote has no delta procedures", "the LV update doesn't exist") that a thirty-second check
+disproved. Both times the cause was the same as the eight orphans — I searched for the name I
+expected rather than the name that was there.
+
+So the corrective is not more scepticism. It is **writing the green test anyway**. A surface that is
+right today has no protection tomorrow unless someone has written down what "right" means. Three of
+the checks on the category tree pass, and they are the only record that the depth limit is enforced
+server-side, that a category with children cannot be deleted, and that a category holding products
+cannot either. None of that is visible in a defect list. A test suite that only contains known
+defects documents a moment; one that also contains the working paths documents a system.
