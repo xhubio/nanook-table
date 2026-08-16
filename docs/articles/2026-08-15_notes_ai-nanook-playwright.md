@@ -1059,3 +1059,98 @@ the checks on the category tree pass, and they are the only record that the dept
 server-side, that a category with children cannot be deleted, and that a category holding products
 cannot either. None of that is visible in a defect list. A test suite that only contains known
 defects documents a moment; one that also contains the working paths documents a system.
+
+## The system under test was a ghost
+
+I had spent an afternoon reporting which defects were still open. Six of them, each with a
+finding number and a file:line. Then I checked when the backend process had started.
+
+`Sun Aug 16 00:54:55`. The fix for one of those six had been committed at `04:23` the same
+morning — three and a half hours *after* the server I was measuring came up. Twenty-odd commits
+had landed since, including two that repaired findings I had just re-confirmed as open.
+
+The tests were fine. The instrument was fine. The *system under test* was a day old, and nothing
+in the output said so, because a running server has no reason to mention its own age.
+
+This is a third form of the same failure, and it is the one hardest to see, because it lives
+outside the measurement entirely. The zero-rule and the total-failure rule both ask *does the
+instrument work?* This one asks **what did the instrument point at?** — and the honest answer is
+that a dev server is a snapshot of a moment, not of a repository. It keeps serving that moment
+until someone restarts it.
+
+The cost is asymmetric in the worst direction: stale code produces **false positives**. Every fix
+that landed after the process started reads as an unfixed defect. Reporting a repaired bug as
+broken is worse than missing one — it sends someone back to code that is already correct, and it
+erodes the credibility of every other finding in the same list.
+
+The check is two commands and belongs at the top of any measurement session:
+
+```bash
+ps -eo lstart,command | grep '<the server>'
+git log --since="<that timestamp>" --oneline
+```
+
+If the second command prints anything, the first thing to fix is the process, not the code.
+
+## The procedure that only looked like the one I wanted
+
+The same session produced a subtler version of it. A test had been reporting, for a day, that
+legal terms were not frozen at dispatch: send a quote under version 1, publish version 2, and the
+customer's link shows version 2. A plan had been written from that finding and implemented.
+
+After restarting, the test was still red. The fix was in the tree; I could read it. So I read
+further — and eventually found that the freeze reads a dispatch log, and falls back to the active
+version when there is no entry. There was no entry.
+
+Because my test called `quote.send`, and `quote.send` does not send anything. It flips a status.
+The attachment, the checksums and the dispatch-log row are written by `quote.sendByEmail`. The
+give-away had been in the log the whole time, in plain German:
+
+```
+[LegalDocs] kein Versandprotokoll fuer quote <id> — Anzeige faellt auf die aktive Fassung zurueck
+```
+
+The server had described my own bug to me, and I had gone looking in the validation layer instead.
+The other tell was there too and I walked past it: `quote.send` returned in **3 ms**. No PDF gets
+rendered and no mail gets sent in three milliseconds.
+
+With the correct procedure the test is green. The freeze works.
+
+Two things are worth separating here, because they pull in opposite directions. The **finding** was
+real: the code genuinely resolved the active version instead of the dispatched one, and that was
+genuinely wrong. The **test** could not have proven it, and could not verify the fix. A test that
+happens to produce the right verdict for the wrong reason is not a weaker version of a good test —
+it is a different object entirely, and it fails the moment the world changes around it.
+
+The rule I would write for myself: **when a test asserts something about a side effect, name the
+procedure that produces the side effect and check that it is the one being called.** Two procedures
+with the same prefix are not a family; `send` and `sendByEmail` differ by everything.
+
+## The test that reported a repair as a defect
+
+Third of the same day, and the mirror image of everything above.
+
+The product round-trip — export from one company, import into another, compare field by field —
+started failing on the unit: expected `Stück`, received `H87`. My first reading was loss.
+
+It was the opposite. `H87` is the UN/ECE Recommendation 20 code for *piece*, the code the
+e-invoicing standard requires (BT-130). The application had started normalising units on save:
+`Stück` → `H87`, `Std` → `HUR`. A fix had landed, and my test called it a bug.
+
+The cause was in one line of the assertion. I compared the imported product against **the values I
+had typed into the test table**, not against **what the source company had actually stored**. Those
+had been the same string for as long as the application did nothing to it. The moment it did the
+correct thing, my expectation became a record of the old behaviour — enforced.
+
+That is the trap in a round-trip test specifically: its question is *does A arrive at B unchanged?*
+and it is tempting to write that as *does B equal what I put in?* Those coincide until they don't,
+and when they part, the test defends the past.
+
+Fixed by reading the source company's stored state and comparing against that. The test stays sharp
+for real loss and goes blind to any future correct normalisation — which is exactly the sensitivity
+a round-trip should have.
+
+⚪ And it needs saying plainly, because it cuts against the rule that a test must never be adapted to
+a defect: **adapting a test to a repair is not the same act.** The distinction is not who changed
+last, it is which of the two now describes the specification. Here the application does, and the
+test was the thing standing still.
