@@ -174,23 +174,35 @@ export class TestcaseDefinitionMatrix implements TestcaseDefinitionInterface {
     function doCreateDirectives(type: RowColumn, meta: MetaRowColumn) {
       const generatorCmd = meta.generator
 
-      if (generatorCmd !== undefined) {
-        if (generatorCmd.toLowerCase().startsWith(PREFIX_GENERATOR)) {
-          const directive = self.createGeneratorDirective(
-            generatorCmd,
-            type,
-            meta
-          )
-          directives.generator.push(directive)
-        } else if (generatorCmd.toLowerCase().startsWith(PREFIX_REFERENCE)) {
-          const directive = self.createReferenceDirective(
-            generatorCmd,
-            type,
-            meta
-          )
-          directives.reference.push(directive)
-        }
+      // Ohne Angabe gibt es nichts zu erzeugen.
+      //
+      // 🔴 Hier stand bis 2026-08-16 der `else`-Zweig, der eine StaticDirective
+      // mit `undefined` als Wert baute — und der Zweig fuer einen echten
+      // statischen Wert fehlte ganz. Beide Faelle waren vertauscht: ein
+      // eingetragener Wert wurde verworfen, ein fehlender wurde zu Muell im
+      // Datensatz. Eine Statuswechsel-Matrix erzeugte dadurch Testfaelle mit
+      // durchweg leerem `data`.
+      if (generatorCmd === undefined) {
+        return
+      }
+
+      if (generatorCmd.toLowerCase().startsWith(PREFIX_GENERATOR)) {
+        const directive = self.createGeneratorDirective(
+          generatorCmd,
+          type,
+          meta
+        )
+        directives.generator.push(directive)
+      } else if (generatorCmd.toLowerCase().startsWith(PREFIX_REFERENCE)) {
+        const directive = self.createReferenceDirective(
+          generatorCmd,
+          type,
+          meta
+        )
+        directives.reference.push(directive)
       } else {
+        // Alles andere ist ein statischer Wert, so wie er dasteht — genau das
+        // sagt `docs/guide/matrix-tables.md` seit jeher zu.
         const directive = self.createStaticValueDirective(
           generatorCmd,
           type,
