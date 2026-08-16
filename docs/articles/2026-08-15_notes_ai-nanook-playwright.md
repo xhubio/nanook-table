@@ -417,3 +417,122 @@ verification was checked against a *missing* session first, to prove it can fail
 - [ ] One sentence on where Playwright actually enters: the table produces data, the specs
       are generic functions per page — no generated `.spec.ts`
 - [ ] Check the numbers once more against the repos before publishing
+
+---
+
+## Night of 2026-08-15/16 — four more, and the third one is the article's ending
+
+### An instrument with two states cannot report a third
+
+The company form check knew two answers: *rejected* or *accepted*. It decided by looking for an
+error marker on a field; no marker meant accepted.
+
+That is a lie by omission, and it hid the most serious finding of the whole exercise. Two fields —
+the legal name and the phone number — have length rules in the schema and **no error display at
+all**. Submit is blocked, nothing is shown. The user presses Save and the application does nothing.
+
+To the two-state instrument that is indistinguishable from success. Adding a third outcome —
+`silent` — made it visible on the first run, in every one of the sixteen countries at once,
+because the fields live in a shared component.
+
+The general form: **the set of outcomes your instrument can express is the ceiling on what it can
+tell you.** Not the assertions, not the coverage. If the real world has three behaviours and your
+check has two names for them, one behaviour is invisible, and you will never see which.
+
+This is a nice illustration of what AI is and isn't good for. It wrote the two-state check
+happily, and it wrote a plausible comment explaining why two states were enough. What forced the
+third state was a *result that didn't fit* — eight cases reported "accepted" for inputs that
+obviously should not be. The model didn't doubt itself; the data did.
+
+### "Accepted" is not "saved" — and the read-back costs eight lines
+
+Until this night the browser test proved the form took the input. Whether it reached the database
+was nowhere in the assertion. In a project whose most common defect class is *fields quietly
+falling out of a payload*, that is the wrong thing to leave unmeasured.
+
+The fix is small: after saving, **reload the page**, navigate back to the record, read every field
+and compare. Nineteen fields written, nineteen read back.
+
+It found three things immediately, and all three were faults in my own reading, not in the
+application:
+
+- the time-zone container returned its label *and its help text* instead of its value;
+- numbers are formatted for display (`25.000`) and stored raw (`25000`) — comparing as text would
+  have produced a false finding in every country;
+- a combobox exposes its **label** and nothing else. The selected value `Europe/Berlin` does not
+  exist as a string anywhere in the DOM; the widget keeps it in component state.
+
+The last one is worth sitting with. The read-back has to compare on the label, which is strictly
+weaker than comparing on the value. That weakness is now written down in the code, next to the
+comparison, because a check whose limits are undocumented will eventually be trusted beyond them.
+
+### The same defect, three days apart, one directory away
+
+The organisation form's email field is `type="email"` and its `<form>` has no `noValidate`. So the
+browser blocks submission before the application's validation runs, and shows its own bubble in the
+browser's language. The translated message sits in the bundle and is never rendered.
+
+The customer form in the same application does it correctly — and carries a fifteen-line comment
+explaining exactly this, dated three days earlier, with the measured English string quoted in it.
+
+So the lesson was learned, written down carefully, and travelled nowhere.
+
+A grep across all frontend packages found **sixteen more forms with the same defect, in all five
+products** — four of them the same `ProfileForm.tsx`, copied four times.
+
+This is the sharpest thing I can say about AI-assisted testing, and it cuts both ways:
+
+- The **finding** needed a human-shaped idea: *check whether the message the user sees is the
+  message we wrote.* No amount of "generate tests for this form" produces that.
+- The **scope** needed a machine: from one instance to seventeen across five products in about
+  four seconds, with the exact list of files.
+
+The bug was found by a method. The blast radius was found by a tool. Neither is impressive alone,
+and the pair took under a minute.
+
+The follow-up writes itself and is the real deliverable: this belongs in a lint rule, not in a
+findings document. A `<form>` containing `type="email"` or `type="url"` and lacking `noValidate` is
+mechanically detectable. Once it is a rule, it cannot be relearned a fourth time.
+
+### A borrowed instrument must be re-calibrated where you put it
+
+I reused the company checker for the customer form. On the company form, "the form is gone" means
+"it saved" — the application redirects. On the customer form the form **stays**: the application
+navigates to the new record's detail page, which renders the same component.
+
+So the borrowed instrument reported a successfully created customer as *silently rejected*. Same
+question, same vocabulary of answers, different application behaviour behind it.
+
+There is a matching one in the same session: a `.catch()` on a Playwright locator call catches the
+error but not the **wait**. Every probe in the checker was silently running into its own 30-second
+default; a 15-second budget took 85 seconds and four cases died on the clock. The code read as
+defensive and behaved as a stall.
+
+Both are the same shape as the main thesis. The test suite is a measuring instrument, and an
+instrument that moved to a new bench, or that was assembled from parts with their own timeouts,
+has to be checked against a known signal before its readings mean anything.
+
+### Where the table data comes from decides whether the table can lie
+
+Sixteen countries needed company tables. Writing them by hand would have produced sixteen
+inconsistent sheets, and a wrong VAT rate for Austria would have looked exactly like a right one.
+
+Instead the generator reads `country-specifics-interface` — the same registry the application uses.
+Time zone, currency, VAT rate, retention period, e-invoicing platform and legal forms all come from
+there. Only the sample values a registry doesn't carry (postal codes, tax identifiers) are written
+by hand, and they are marked in the file as *format-correct, check digits not recomputed*, with the
+reason: nothing in the application validates them today.
+
+That last clause is a finding in itself — no tax identifier is checked in any of the sixteen
+countries — but the point for the article is narrower. **A table generated from the system of
+record cannot disagree with it.** A table typed from a spec can, silently, and the test will then
+defend the typo.
+
+### And a small one about long runs
+
+A four-hundred-case browser run was moved to the background by the harness after ten minutes.
+Playwright caught the signal, finished the case in flight, listed the remainder as *did not run* —
+and exited **zero**. The summary line said "13 passed", which was true and told me nothing about
+the fourteen that never started.
+
+A green exit code is a claim about the process, not about the work.
