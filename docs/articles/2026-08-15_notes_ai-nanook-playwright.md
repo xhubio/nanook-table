@@ -1445,3 +1445,97 @@ statement about what is absent, made by something that may be unable to see anyt
 
 The tell, in hindsight, was in the test's own arithmetic: I had chosen 100,000 to be conspicuous, and
 a conspicuous number only helps if something else is there to compare it against.
+
+## The counter that certified its own success
+
+Recurring bookings — rent, leasing, insurance — are the feature a bookkeeper sets up once and never
+wants to touch again. The procedure is called `executeDue`. It takes a `today` parameter, which is
+excellent: the clock is injectable, so the test is deterministic without waiting for a calendar.
+
+`executeDue` does not book anything.
+
+It selects the due templates, checks the end date, computes the next date, increments
+`executionCount`, sets `lastExecutedAt`, and returns the templates as *executed*. There is no
+`insert` into the transactions table anywhere in the method.
+
+The part worth the chapter is the second sentence of that list. **The feature keeps a record of its
+own success, and the record is correct — about everything except the thing that was supposed to
+happen.** After the run:
+
+| Signal | Says |
+|---|---|
+| `executionCount` | 1 |
+| `lastExecutedAt` | now |
+| return value | "1 executed" |
+| `nextExecutionDate` | advanced one month |
+| the books | unchanged |
+
+Every indicator the application maintains about itself agrees that the rent was booked. A dashboard
+built on those fields would be green. A monitoring alert on "recurring executions = 0" would never
+fire. The only way to find this is to ask the *other* system — the ledger — whether the money
+arrived.
+
+💡 This is the instrument-lies theme from earlier in these notes, but inverted. Before, my
+measurement tools were the unreliable ones. Here the **application's own** self-report is the
+unreliable one, and it is unreliable in the direction that keeps everyone calm. A side effect that
+increments a success counter without performing the effect is worse than one that throws: the throw
+gets noticed.
+
+⚪ The operational shape of the damage is quiet, too. The office sets up the rent, watches the
+template tick over month after month, and either types the booking by hand anyway — in which case the
+feature is pure decoration — or trusts it, and closes the year twelve rents short.
+
+## The 31st of February
+
+The same module carries a second bug, and it is the kind every date library exists to prevent:
+
+```ts
+case 'monthly':
+  date.setMonth(date.getMonth() + 1)
+```
+
+From 2026-01-31 that asks for the 31st of February. JavaScript does not reject it; it rolls forward
+to **3 March** (2026 is not a leap year). And because each next date is computed from the *previous*
+one, the day never comes back: 31st → 3rd → 3rd → 3rd. A rent booked on the last of the month
+migrates permanently after one cycle.
+
+What makes this one instructive is the **tell**. The schema carries a `dayOfMonth` column. Somebody
+knew the day needed anchoring — and `calculateNextDate` never receives it; its signature is
+`(current, frequency)`. The intent is in the data model and the implementation cannot see it.
+
+⚪ That is a recognisable shape and worth naming: **the schema remembers a requirement the code
+forgot.** It is the mirror image of a dead field — the field is not decoration, it is a note from a
+previous author that never got wired up. When you find a column nothing reads, the question is not
+only "can this go?" but "was something supposed to use this?"
+
+🔵 The 15th of the month works, verified across three cycles. So the bug is invisible to anyone whose
+test data avoids month ends — which is most test data, because month ends are where the awkward cases
+live and nobody picks awkward numbers by accident.
+
+## A red test is not a filing cabinet
+
+Between those two findings and the previous ones, the domain expert asked a question that landed
+harder than any bug report:
+
+> *"I don't see any new issues in dashandwerk. Are there no more bugs?"*
+
+There were twelve. Four had gone straight into implementation plans, which are visible. **Eight
+existed only inside `🔴 BEFUND` strings in test files and in commit messages.**
+
+I had convinced myself that was fine, because the failure message is genuinely good: it carries the
+mechanism, the file:line, the consequence, and what would make it green. It is arguably a better
+record than a ticket. But it has one fatal property — **it lives inside the thing that will delete
+it.** The moment someone fixes the bug, the test goes green, the message stops being displayed, and
+the finding is gone. What remains is a passing assertion whose reason nobody can reconstruct.
+
+So: the test is the *evidence*. The issue file is the *record*. They are not substitutes, and the
+direction of the dependency matters — a good issue points at the test, not the reverse.
+
+⚪ I also got the process backwards in a way worth admitting: I wrote plans for four findings without
+writing the findings down first. A plan says what to do; it does not say what was observed or how it
+was measured. Whoever implements it gets the instruction without the observation, and at the first
+moment of doubt — *is this really wrong?* — the thing they need is exactly what was skipped.
+
+And a smaller lesson, learned twice in one session: I twice wrote "I'll add that to the issue next".
+**An announced follow-up is not a follow-up.** The finding goes in before the next test starts, or it
+goes in never.
