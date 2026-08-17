@@ -1193,3 +1193,103 @@ known about**: a one-day timezone slack on payment dates, a distinction between 
 and self-healing for entries whose invoice was deleted. Chasing a false finding to its cause is one
 of the more reliable ways to learn what a system actually promises — provided you stop before
 publishing.
+
+## "I can't imagine it goes that fast"
+
+I wrote four tests against the accounting module, found two things, and reported it as *the
+accounting is tested*. The domain expert read one line and replied:
+
+> *"You've tested all the accounting functions already. Including the exports to DATEV and the other
+> systems. And in the different countries. Where we have different charts of accounts. And we have
+> different bookkeeping modes, cash-basis and double-entry. What may be used depends on the chosen
+> company type. I can't imagine it goes that fast."*
+
+He was right, and the correction is worth writing down because the error is not laziness — it is a
+**missing denominator**.
+
+| | Present | Tested |
+|---|---|---|
+| Procedures in the accounting router | **391** | 8 |
+| Export formats (DATEV · SIE · BMD · FEC · JPK · SAF-T · SII · Abacus · Bexio · Exact) | **10** | **0** |
+| Charts of accounts | **27 across 25 countries** | 1 |
+| Bookkeeping modes (cash-basis · double-entry · club) | 3 | 1 |
+
+One of the three rules I had quoted in the test file's own header — the GoBD audit-trail requirement —
+had **no case at all**. I had written it down as a rule and then not tested it, in the same file.
+
+The lesson generalises past this incident. A coverage line that says `module: ✅ tested` is not a
+statement, it is a **feeling**, until the denominator is next to it. Four cases against four
+procedures and four cases against three hundred and ninety-one read *identically* in a report. The
+fix is mechanical: every coverage claim carries the size of the thing it claims to cover, and if that
+size is unknown, the claim is that the size is unknown.
+
+⚪ There is a second-order effect I did not expect. Once the denominator was in the register, the same
+four tests stopped looking like an achievement and started looking like a **sample** — which is what
+they were, and which is a much more useful thing to reason about. The number didn't make the work
+smaller; it made it locatable.
+
+## The question that produced two findings in one minute
+
+The same expert then asked two questions in a row that each took under a minute to answer and each
+turned up something real.
+
+**"Are the balance sheets produced correctly?"** — There are no balance sheets. The reports are
+`euer` (cash-basis annual statement), `trialBalance`, `accountBalances`, `cashReport`, `bwa`. A
+full-text search for `balanceSheet`, `Aktiva`, `Passiva` finds nothing. So the application offers a
+`double_entry` bookkeeping mode and cannot produce the one thing you keep double-entry books *for*.
+
+And the root cause sat one layer below the missing report: the bookkeeping mode is chosen freely per
+fiscal year, defaults to cash-basis, and **the accounting package does not know the company's legal
+form at all** — not one occurrence of `businessType` in the entire package. A GmbH can be set to
+cash-basis accounting, which German law does not permit, and nothing objects.
+
+**"What is there for US and CA?"** — A business in either country can be created and can invoice.
+It cannot keep books: no chart of accounts for either, no export format, no country pack. And
+Canada is **missing entirely** from the accounting country registry, while the US is present with
+`status: "none"` and a properly sourced justification (IRC 6001, *South Dakota v. Wayfair*). A
+country absent from the single source of truth is not *unimplemented* — it is **undecided**, and
+the generated coverage map cannot show a gap it was never told about.
+
+💡 What both questions have in common is worth more than either finding: they were **domain
+questions, not code questions.** "Does the balance sheet come out right" cannot be answered by
+reading a diff, and it is not the kind of question a test suite generates about itself. It came from
+someone who knows that a GmbH owes a balance sheet — and it took one search to convert that knowledge
+into a defect with a file:line.
+
+The methodology point: an agent measuring a system can verify everything the system says about
+itself, and nothing the system has never been asked. **Those gaps are exactly where the domain expert
+is irreplaceable**, and the cheapest way to find them is to let them ask short questions and then go
+measure rather than answer from memory. Four of my own "it doesn't exist" claims that day were wrong;
+none of his three were.
+
+## Then the correction that came back as a smaller plan
+
+I had written a plan for the missing balance sheet with a precondition I was sure of: a
+chart-of-accounts-to-balance-sheet-line mapping, per chart, as master data — 27 charts, no way around
+it, and explicitly "not a heuristic".
+
+His answer: *"We should in any case be able to produce a cash-basis statement from the data we have,
+and also a simple balance sheet."*
+
+So I measured instead of arguing. Every account in every chart already carries a `type` — `asset`,
+`liability`, `equity`, `income`, `expense`. Across all 27 charts in 25 countries: **not one account
+without a type**, and all five types present in every chart. Which means:
+
+```
+Assets      = Σ balances of asset accounts
+Liabilities = Σ liability + Σ equity + result
+P&L         = Σ income − Σ expense
+```
+
+A simple balance sheet is derivable **today**, for every country, with no new master data. My
+precondition was real but it was the precondition for a *different, finer* deliverable — the
+§ 266 HGB line-item breakdown — and I had made it a blocker for the coarse one.
+
+That is a specific failure mode and it deserves its own name: **the correct requirement, attached to
+the wrong deliverable.** It does not look like a mistake from inside, because every sentence of it is
+true. It only shows up when someone asks for the cheaper thing and you have to check whether it is
+actually cheaper.
+
+⚪ The step that was a blocker is now marked "entfällt" in the plan, with the reason written next to
+it — because the next person to read it will otherwise reintroduce it. And the fine breakdown is
+still worth building; it just isn't in the way any more.
