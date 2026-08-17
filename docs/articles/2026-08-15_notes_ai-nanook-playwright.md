@@ -1293,3 +1293,82 @@ actually cheaper.
 ⚪ The step that was a blocker is now marked "entfällt" in the plan, with the reason written next to
 it — because the next person to read it will otherwise reintroduce it. And the fine breakdown is
 still worth building; it just isn't in the way any more.
+
+## Ten formats, one table, and a cast that hid a crash for months
+
+The accounting module exports to ten systems — DATEV for Germany, BMD for Austria, Abacus and bexio
+for Switzerland, Exact for the Netherlands and Belgium, FEC for France, JPK for Poland, SAF-T for six
+countries, SIE for Sweden, SII for Spain. None of them had a single test.
+
+The temptation is ten test files. The right shape is one table, because the question is identical for
+all ten: *is it offered to the right country, does it run, does a file with content come out?* Eleven
+checks total — one for the offering matrix, ten for the runs.
+
+**Three passed.**
+
+What makes the result useful is not the count, it is that the eight failures fall into **four groups
+that need four different repairs**:
+
+| Group | Formats | What it is |
+|---|---|---|
+| **Crash** | BMD, SIE | the format has never worked, at all |
+| **Contradiction** | Exact | the country's own standard chart of accounts does not fit the country's own export format |
+| **Missing input** | FEC, SII, SAF-T, JPK | the export correctly demands a national identifier |
+| **Cosmetic** | bexio | filename convention |
+
+A list of eight red tests is a to-do list. The same eight, triaged, is a plan — and three of the four
+groups need someone to *look something up* rather than write code.
+
+### The cast
+
+The BMD crash is worth the whole chapter. The message is `Unknown encoding: windows-1252`, and the
+line is one:
+
+```ts
+Buffer.from(f.content, (f.encoding as BufferEncoding) || 'utf-8')
+```
+
+Node's `BufferEncoding` is `utf8 | latin1 | ascii | base64 | hex | …`. It does **not** include
+`windows-1252`. Without the assertion, TypeScript rejects this at compile time. With it, the compiler
+is silent and the failure moves to runtime — into a country's only export format, where nobody looked
+because there was no test.
+
+And the correct encoder was already there. `toWindows1252()` sits in the shared package, returns a
+`Buffer`, and has done for as long as DATEV has been correct:
+
+| Adapter | What it does | Result |
+|---|---|---|
+| DATEV | calls `toWindows1252()`, hands back a **Buffer** | ✅ correct CP1252, measured |
+| BMD | hands back a **string** plus `encoding: 'windows-1252'` | ❌ crashes in the service |
+
+Same encoding, same helper, one adapter uses it. This is the pattern that keeps recurring in this
+codebase — *the capability is built, the last connection is missing* — and here the type assertion is
+precisely what kept it invisible.
+
+The repair that matters is therefore not "fix the crash". It is **delete the assertion**, so that the
+next adapter declaring `iso-8859-15` fails the build instead of a customer's export. A fix that leaves
+the cast in place fixes one country and re-arms the trap.
+
+⚪ One design note went into the plan and I want it here too: an unknown encoding must **abort**, not
+fall back to UTF-8. A silent fallback produces a file that looks like a success and arrives at the
+accountant as mojibake — which is strictly worse than no file, because no file gets reported and a
+broken one gets forwarded.
+
+### The direction nobody tests
+
+The offering matrix has two columns, and only one of them is obvious:
+
+```
+DATEV offered to DE ?  ✅  — otherwise the business cannot export at all
+DATEV offered to AT ?  ❌  — otherwise it ships a file its accountant cannot read
+```
+
+The second column is what turns `supportedCountries` from a comment into a **contract**. It also
+happens to be the one that passed for all ten adapters, which is worth saying plainly: the wiring is
+right, the machinery behind it isn't.
+
+⚪ And a small pleasure: the file that measures all this did not compile at first. Its header comment
+contained a shell glob — `lib-accounting-export-*/` — and those last two characters close a block
+comment. The parser reported "Missing semicolon" twelve lines later, in a place that had nothing to do
+with it. A file glob does not belong unescaped inside `/** … */`, and I now have a test file that says
+so in its own header.
