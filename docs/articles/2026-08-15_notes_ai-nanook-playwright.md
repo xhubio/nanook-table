@@ -1372,3 +1372,76 @@ contained a shell glob — `lib-accounting-export-*/` — and those last two cha
 comment. The parser reported "Missing semicolon" twelve lines later, in a place that had nothing to do
 with it. A file glob does not belong unescaped inside `/** … */`, and I now have a test file that says
 so in its own header.
+
+## The empty catch on the record that proves compliance
+
+German bookkeeping law requires an audit trail: every change to an accounting record must be logged
+(GoBD Tz. 8.1). I had listed this rule in the header of my own test file and written no case for it —
+a debt worth naming, because *naming a rule and not testing it reads as coverage.*
+
+So I wrote the case. It is empty. Not "incomplete" — **empty**, and not only for transactions:
+changing an account and creating a cost centre leave no trace either.
+
+What makes it interesting is that six independent checks all say the feature is built:
+
+1. The table exists and is **readable** — the list endpoint answers 200, not 404, not 500.
+2. The service is constructed.
+3. Five services receive it, including the transaction service.
+4. The call sites exist.
+5. The router passes the acting user's id, so the guard `if (auditService && userId)` should pass.
+6. With no filter at all, the list returns zero rows.
+
+Point 6 matters more than it looks. All day I had been wrong about absences, so the unfiltered query
+is the check that separates *"nothing was written"* from *"my filter excluded it"*. It was nothing.
+
+The thing that keeps it invisible is four characters:
+
+```ts
+try {
+  await this.fieldAuditService.recordChange({ … })
+} catch {
+  // best-effort: audit failure must not block update
+}
+```
+
+The write fails, and nobody learns: no log line, no error, no row. And the service being called says
+the opposite in its own docstring — *"Failure to insert audit on a hot-path should fail the
+surrounding update — caller decides via try/catch."* The caller decided, and decided against the
+record.
+
+💡 That decision, not the underlying bug, is the finding. For a compliance record, "best-effort" is
+the wrong trade in a way that is easy to state: **the record is the defence.** A business whose books
+have no change log cannot defend them, independently of whether anything was ever booked wrongly. So
+if the audit insert fails, the change must fail. An empty catch converts a legal requirement into a
+suggestion, silently, and it will keep doing so until someone writes exactly this test.
+
+⚪ There is a general shape here worth extracting: a `catch {}` around a *side effect* is a normal
+engineering trade — the mail didn't go out, the cache didn't warm. A `catch {}` around the *evidence*
+is different in kind, because the evidence is the only thing that would have told you it failed. When
+you see one, ask what it is swallowing, and whether that thing is what someone will ask for later.
+
+## A green test whose only assertion was an upper bound
+
+In the same file, the neighbouring case measured nothing and passed.
+
+The intent was: a *draft* transaction must not appear in the VAT return. So the test books 1000 net,
+adds a draft over 100,000, and asserts the declared base is `< 100000`.
+
+The VAT return was empty. Zero is less than a hundred thousand. **Green.**
+
+The bug in my test is one missing line, and it generalises: an assertion that is only an *upper*
+bound cannot distinguish "the wrong thing was excluded" from "nothing was included". The fix is to
+prove the instrument shows something first:
+
+```ts
+expect(base, 'Self-check: the booked 1000 € MUST appear').toBe(100_000)   // ← added
+expect(base, 'and the draft must NOT').toBeLessThan(10_000_000)
+```
+
+⚪ This is the zero-rule from earlier in these notes, arriving from a new direction. Before, the
+lesson was about instruments that report zero findings. Here the instrument reported a *pass*, and
+the pass was made of the same nothing. **An upper bound alone is not a measurement** — it is a
+statement about what is absent, made by something that may be unable to see anything at all.
+
+The tell, in hindsight, was in the test's own arithmetic: I had chosen 100,000 to be conspicuous, and
+a conspicuous number only helps if something else is there to compare it against.
