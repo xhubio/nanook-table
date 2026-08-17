@@ -1154,3 +1154,42 @@ a round-trip should have.
 a defect: **adapting a test to a repair is not the same act.** The distinction is not who changed
 last, it is which of the two now describes the specification. Here the application does, and the
 test was the thing standing still.
+
+## Four near-misses in one day, and they were all the same shape
+
+Working through five untested modules in a day produced five suites and a dozen findings. It also
+produced four moments where I had already written the finding text before discovering the defect was
+mine. They are worth listing together, because separately each looks like carelessness and together
+they are a category.
+
+| What I asserted | What was actually happening |
+|---|---|
+| "The legal-terms freeze is broken" | I called `quote.send`, which flips a status. `quote.sendByEmail` is the one that mails and writes the dispatch log. No log ⇒ falling back to the current version is *correct*. |
+| "A future payment date is accepted" | My date was *tomorrow* — and tomorrow is the **latest allowed** day. The check leaves one day of slack so a timezone difference can't reject an honest entry. My value was inside the permitted window. |
+| "A settled receipt can still be edited" | `settle` sets `settledAt` and leaves the status at `draft`. It means "closed by other means", not "handed over". I was editing a draft and calling correct behaviour a defect. |
+| "A billed time entry is offered for billing again" | I used `crypto.randomUUID()` as the invoice id. `listUninvoiced` first calls `reclaimOrphanedInvoices()`, which reopens entries whose invoice no longer exists — deliberate tolerance for a deleted draft. My fake id triggered a *feature*. |
+
+The common shape: **the test exercised a path adjacent to the one it named.** Not a wrong assertion —
+a wrong subject. And in every case the wrong subject was *plausible*: `send` next to `sendByEmail`,
+`settle` next to a status change, tomorrow next to the future, a random uuid next to an invoice id.
+
+What makes this class dangerous is the direction of the error. A test that measures nothing usually
+goes **green** and is invisible. These went **red** — they produced confident, well-written,
+file:line-cited findings about defects that did not exist. Two of them I nearly published, and one of
+them I *did* publish earlier in the week; a plan was written from it and implemented. (The plan was
+right anyway, for a different reason, which is luck and not method.)
+
+The corrective that actually works is not "be more careful". It is a question asked before the
+assertion is written:
+
+> **Could this test have gone green if the application were broken?**
+
+If the answer is yes — because a neighbouring rule, a tolerance, a fallback or a differently-named
+procedure would have produced the same reading — the test is not measuring what its name says. For
+the four above the question would have caught all four, and it costs one sentence of thought each.
+
+⚪ There is a pleasant corollary. Three of the four "defects" turned out to be **features I hadn't
+known about**: a one-day timezone slack on payment dates, a distinction between *settled* and *sent*,
+and self-healing for entries whose invoice was deleted. Chasing a false finding to its cause is one
+of the more reliable ways to learn what a system actually promises — provided you stop before
+publishing.
