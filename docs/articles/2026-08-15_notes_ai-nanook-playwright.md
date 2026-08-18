@@ -1996,3 +1996,88 @@ signal that exists.
 
 And I ran the mutation on it, because a green test proves nothing: pointing the reference at
 a table that does exist turns it red. It measures what it claims to.
+
+## The namespace is the thing itself
+
+The flow table needed a place to put what a step produced. My first design gave each column an
+optional handle — `RechtstextEntwurf@vorVersand` — so that a later step could name an earlier one.
+I also added a rule that handles must be unique, and felt good about it.
+
+Torsten read it and said: we do not need `@merken` or `@pruefen`, the function knows that itself.
+
+He is right, and the correction is sharper than it first sounds. A pair of functions that remember
+and check a hash already know each other's names — that is what makes them a pair. The handle I
+invented was a second naming system laid on top of the one that already existed. So the namespace
+became the step itself: the function's own name for `<fn:>`, the table's name for a data column,
+the page class for `<pc:>`. `rememberDocumentHash` writes `ctx.own.hash`; `checkDocumentHash` reads
+`ctx.all.rememberDocumentHash.hash`.
+
+The uniqueness rule fell with it. Three columns on the same table are three writes to one
+namespace, last one wins — like any variable. What needs the earlier value remembers it itself.
+The suffix survives as a **label**, because with the same table three times in one sheet a human
+should not have to count columns; it carries no meaning for the machine.
+
+I keep making this particular mistake: inventing a mechanism for a problem the existing structure
+already solves, then defending it because the mechanism is well built.
+
+## Sixteen thousand renames, and the one that would have been silent
+
+Then: *the code should be English — variables and functions in English.* The tables stay German,
+the comments stay German, the prose in error messages stays German. Only the identifiers move.
+
+That is 110 files and about 24,000 lines. The naive tool is `sed`, and it is wrong, because German
+prose sits in every comment and half the strings: replacing the word `Zeile` would hit forty
+sentences for every variable. So the replacement runs over the **identifier nodes of the TypeScript
+AST**, with the type checker as a filter — rename only what resolves to a symbol declared in our own
+files. Strings and comments are not identifier nodes, so they are untouched for free; `readFileSync`
+and `getByTestId` resolve into `node_modules`, so they are skipped for free too.
+
+That got me 16,400 renames and, after two rounds, a green `tsc` in both projects. Three groups had
+to be excluded by hand, and each one announced itself differently.
+
+**Reserved words.** `fall → case` and `mit → with` produced forty syntax errors instantly. Loud,
+cheap, fixed in a minute — and now the tool checks every *target* name against the reserved list
+before it writes anything. `valueOf` belongs on that list as well, for a subtler reason: it does
+not break the parser, it quietly shadows a prototype method.
+
+**Lookup tables.** `SPALTE[column]`, `TESTID[name]`, `TREIBER[sheet]` — objects whose *keys* are
+data: column names, field names, sheet names. Renaming those keys leaves the code compiling and the
+lookup returning `undefined`. The tool now finds every object literal that is indexed dynamically
+anywhere in its file and locks its keys.
+
+**And the one that would have gone unnoticed.** `common/suite.ts` read `p.sitzung`. That looks like
+an identifier and is not: `sitzung` is a *field name from the spreadsheet*, written by
+`basisProps[v.what] = …`. The rename made the reader ask for `p.session`. The writer still writes
+`sitzung`. No type error — a `Record<string, unknown>` has no fields that can be wrong. No failing
+unit test. The base state would simply have run without a session from then on, and the first
+symptom would have appeared somewhere else entirely, days later.
+
+`tsc` cannot see this class of break. Neither can the unit tests. What sees it is comparing the
+**output**: rebuild all 66 suites, collect their key paths, push the old key paths through the same
+translation table, and diff the two sets. Everything that survives is a place where code and data
+drifted apart. It came to 66/66 identical once nine field names were named as deliberate
+exceptions — named, in a list, because an exception without a name is a discrepancy in hiding.
+
+The values could not be part of that comparison: the generator has no seed, so two runs are never
+character-identical. Only the structure is comparable. That limitation turned out to be the useful
+part — it forced the check to be about shape, which is exactly where the danger was.
+
+### Two findings in my own tooling, both from the same check
+
+The structural comparison caught something before it caught anything about the rename. The first run
+of the new driver reported "66 suites built" and had written **none** of them where they are read.
+`build-suite.ts` computed its target as `<workbook>/../suites`, which was correct while the
+workbooks lay flat in `testdata-definition/`. Since I sorted them into `data/` and `flow/`, that
+expression points one level too deep — so the run cheerfully created a *new*
+`testdata-definition/suites/` and filled it. Success message, 66 files, all of them invisible to
+every test. It now searches upward for the folder instead of computing it.
+
+The second is an absence rather than a bug: there was no driver at all. The 66 suites had been built
+one at a time by hand, and the arguments each one needed — which page, which submit control — lived
+nowhere. I recovered them from the finished suites (`meta.pagename` of the last action, the prop
+carrying `click`) and wrote them down as a script. A format change would have found that out the
+expensive way.
+
+Both are the same shape as the `p.sitzung` break: something that reports success while doing
+nothing, and stays quiet until much later. The rename did not cause either of them. It just gave me
+a reason to compare the output against itself, which is the only thing that ever finds them.
