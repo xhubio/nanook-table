@@ -1539,3 +1539,460 @@ moment of doubt — *is this really wrong?* — the thing they need is exactly w
 And a smaller lesson, learned twice in one session: I twice wrote "I'll add that to the issue next".
 **An announced follow-up is not a follow-up.** The finding goes in before the next test starts, or it
 goes in never.
+
+## The word "not" fell out on the way, and the suite went green
+
+I went back to decision tables after Torsten asked where they had gone. Two sheets — creating a
+quote, creating a receipt — twenty-four cases, generated into a workbook, translated into a suite,
+driven by one spec that reads the suite.
+
+The first run: fifteen green, eight red. Then I looked closer at the green ones and found something
+worse than the red ones.
+
+My table declared six kinds of effect per case. The spec that ran it could measure three. The other
+three were **silently skipped**. `PDF erzeugbar` appeared in four cases and was never once checked.
+`versendbar` appeared in five. Those cases passed. They asserted nothing.
+
+This is the empty `catch` again, except the two halves live in different files. The claim is in a
+spreadsheet; the silence is in TypeScript. Neither file is wrong on its own — the table names an
+expectation, the spec measures what it knows how to measure. The defect exists only in the gap
+between them, and nothing in either artifact points at the gap.
+
+So I gave the spec a list of what it can measure and made it **fail** on anything else:
+
+```ts
+const MESSBAR = new Set([...])
+for (const zeile of wirkung) {
+  expect([...MESSBAR].some((m) => zeile.startsWith(m)),
+    `The table claims the effect "${zeile}", this harness cannot measure it. Either add a ` +
+    `measurement here or remove the row — leaving it means carrying an assurance nobody checks.`
+  ).toBe(true)
+}
+```
+
+An unknown effect is now a red test instead of a silent pass. That is the only version of this that
+survives contact with a future me who adds a row to a spreadsheet and does not think about the
+harness.
+
+Then the second one, one layer down, and this is the one I would have shipped.
+
+The generator marks effects with `x` for "must hold" and `e` for "explicitly must not". The
+translator that turns the workbook into a suite had this line:
+
+```ts
+const wirkung = wirkungen.filter((x) => gekreuzt(x.zeile, c)).map((x) => x.name)
+//                                       ^ only 'x' counts
+```
+
+Only `x` counted. Every `e` was dropped on the floor. Of fourteen effects set across my Angebot
+table, **three were negative** — and all three were the ones describing a finding. "Sending must
+fail." "This document must not leave the company."
+
+The suite came back green with those three cases sitting in it, having checked nothing.
+
+The `x`-only rule was correct where it came from. In a *field* section, `e` means "any of these
+classes" — no concrete state, so a suite builder cannot act on it, and there is a test in the repo
+that pins that decision deliberately. But the effect section has no classes, only assurances, and
+there `e` is the negative assurance. Same character, two meanings, one reader.
+
+**A "not" that falls out is the most expensive kind of data loss, because it looks like success.**
+A dropped value usually produces a crash or an obviously empty field. A dropped negation produces a
+test that passes. The louder the green, the less anybody looks.
+
+## Five of the seven red cases were my table
+
+Here is the part I want to keep, because it cuts against the reflex.
+
+After both repairs, twenty-four cases: twenty-two green, two red. But the *first* run had seven
+meaningful reds, and when I went through them one at a time:
+
+| My case | I expected | What is actually true |
+|---|---|---|
+| Quote number at create | assigned | assigned at `prepareSend` — a draft burns no number |
+| Quote without a customer | rejected | drafts are allowed; the guard is one station later |
+| Line item with quantity 0 | rejected | `nonnegative (not positive): heading rows carry quantity 0` |
+| 25 % VAT in Germany | rejected | free numeric rate by design — a country check would also reject reverse-charge |
+| Validity date in the past | rejected | no guard; ugly, not broken |
+| Quote with no line items, then sent | rejected at create | accepted at create **and sent** ← finding |
+| Receipt with no items | rejected | accepted, and it consumes a receipt number ← finding |
+
+**Five of seven were my expectation. Two were the application.**
+
+A freshly written decision table is a *draft of a domain opinion*, not the truth. Its first run
+measures the table at least as much as the code. Every one of those five had a documented reason
+sitting in a comment right next to the line I was accusing — `heading rows carry quantity 0` was
+written by someone who had thought about exactly my case and decided against me.
+
+If I had gone straight from red to "fix the code", I would have broken heading rows, broken drafts,
+broken reverse-charge, and moved the quote numbering into the draft stage where it tears gaps in a
+legally sequential number circle. Four regressions, from seven red tests, in the name of quality.
+
+So the harness now says it out loud in the failure message itself:
+
+> Before this counts as a finding: is the table's expectation right? A table demanding something
+> that is professionally fine belongs corrected — in the table, not in the test.
+
+And the two real findings survived that filter, which is the point. Filtering is not softening.
+
+## The comment that formulated exactly the rule it was about to break
+
+The receipt finding deserves its own paragraph, because of where it sits.
+
+```ts
+// 🔴 Before assigning the number: a rejected receipt must not consume a receipt
+// number and must not tear a gap in the circle.
+assertReceiptDirection(input.type, input.category ?? 'expense')
+const paidAt = this.resolveCreatePaidAt(input)
+const receiptNumber = await this.numberService.generateNumber(organizationId)
+```
+
+The comment states the rule precisely. The check underneath it covers exactly one violation —
+direction — and then the number goes out. Two other ways to be incomplete walk straight past:
+
+`items: []` is permitted by the create schema (`.default([])`), while the two schemas *directly
+beside it* — append and set — both demand `.min(1)`. You cannot attach zero items to a receipt. You
+can create a receipt made of nothing.
+
+And `issueDate` is stored as `input.issueDate ?? null`, one line below a call named
+`resolveCreatePaidAt` that does for the payment date exactly what nobody did for the issue date.
+The consequence surfaces much later, as `PDF could not be generated — the mail was not sent`, and
+the reason (`Missing required data: issueDate`) appears only in the server log. By then the number
+is already spent.
+
+**A comment stating an invariant is evidence that someone understood it, not evidence that it
+holds.** I have started reading a strong comment as a marker for *where to test*, rather than
+reassurance that testing is unnecessary. The sharper the comment, the more interesting the
+neighbourhood: somebody thought hard here, and thinking hard tends to happen next to something that
+went wrong once.
+
+## Postscript: 299 distinctions nobody drives
+
+While running the toolchain's own tests I hit an unrelated red one: a checker that walks the
+collected workbook and reports equivalence classes with no test case. It expects zero. It found
+**299**, spread across forty sheets.
+
+Not from today's work — both the checker and the workbook were untouched in the tree, so it was red
+before I started. But it is the same shape as my own mistake one floor up, and I want it written
+down next to it: **a class with no case is a distinction nobody checks, and in the spreadsheet it
+looks identical to a checked one.** Same failure mode as the dropped `e`, same failure mode as the
+unmeasured effect. Three times in one afternoon, in three different layers, the artifact that was
+supposed to describe the test quietly described nothing.
+
+The pattern is stable enough to state as a rule: **every layer that carries an expectation needs a
+way to fail when it cannot honour it.** The table needs a checker for empty classes. The translator
+needs to refuse markers it does not understand — or preserve them. The harness needs to refuse
+effects it cannot measure. Without that, each layer defaults to silence, and silence composes into
+green.
+
+## Nine tables later: I broke the measuring instrument eleven times
+
+Torsten pointed at a directory and asked why the tests were still scripts. Over the
+following hours I converted seven of them into decision tables and matrices — quotes,
+receipts, invoices, work orders, bookings, recurring bookings, export-format
+availability, open items, categories. The application produced 32 red cells out of 344.
+
+I produced **eleven** false ones, and they are the more interesting number.
+
+| What I got wrong | What it looked like |
+|---|---|
+| Table carried `gen::text:101`, harness resolved only `marke::` | "the 100-char limit doesn't work" — twice |
+| Same resolver, second runner, `zahl::119` unresolved | "20 cells: setup failed 400" |
+| `accounting.createRecurringTransaction` (real name: `createRecurring`) | "No procedure found" × 12 |
+| `getFixedAssetSchedule({assetId})` (real: `{id}`) | "no depreciation plan" × 5 |
+| Suite filename `firmaanlegende.json` (real: `firmaanlegen-de.json`) | 160 cells "reference broken" |
+| `availableFormats` country code is **optional** — I omitted it | 147 cells "format offered everywhere" |
+| Precondition check was `if (aufbau === betrieb)` | 15 cells "no debit account" on a public endpoint |
+| Readback asserted a stored record for a honeypot case | 1 cell red whose expectation was met |
+| Post-check compared state to the matrix **row name** | 3 correctly-refused operations looked broken |
+| `overdue` reachable only via a dunning run, not a past due date | 5 cells "setup failed" |
+| Field name in the sheet was the *section title*, not `status` | 21 of 25 cells "setup failed" |
+
+Eleven. Against 32 real findings. **A quarter of everything red today was me.**
+
+### The pattern is not carelessness
+
+I want to resist the easy reading, because the easy reading produces no improvement.
+Every one of those eleven was a *plausible* inference from something I had read:
+
+- `RecurringTransactionService` really is the service's name. The procedure is
+  `createRecurring` because the router is flat-mounted through a rename map fifty
+  lines away.
+- `assetId` is what you would name that parameter. The codebase names it `id`.
+- `availableFormats(organizationId, input?.countryCode)` — the second argument is
+  optional, and an optional argument reads like *has a sensible default*. It has no
+  default. Omitting it asks a different question, and the answer to that different
+  question is a perfectly valid list of all formats.
+
+That last one deserves the emphasis. **An optional parameter the caller forgets is not
+a default — it is a different question, answered correctly.** No error, no warning, a
+200 and a list. The only thing that made it visible was that the failures came in a
+suspiciously perfect shape: 13 pass, 147 fail, and 13 was exactly the number of cells
+I had marked as *allowed*. A defect that lines up that neatly with the structure of my
+own expectation is almost never in the code.
+
+### What actually saved me
+
+Not care. Three mechanical things, and they are the transferable part:
+
+**1. The measurement message names the payload.** Every assertion I write now prints
+what was sent and what came back. `2026-01-29 → 2026-03-01 (Tag 29 → 1)` is a finding.
+`Buchungen 0 → 0` is a finding. `no depreciation plan` is not — it is a hole where a
+measurement should be, and it reads differently.
+
+**2. The harness refuses what it cannot honour.** An unknown directive prefix throws.
+An effect the runner cannot measure fails the case. A setup that produced the wrong
+state fails *as a setup error*, in its own words, before any assertion about the
+application runs. Six of the eleven announced themselves that way — the message said
+"Aufbau gescheitert", and an Aufbau failure is never a finding.
+
+**3. Compare old and new, case by case, before deleting anything.** When I replaced
+eleven suite-reading specs with one runner, I ran both and diffed *per case name*. On
+the supplier suite the totals matched — 6 red, 2 green, both ways — and the cases did
+not. Two bugs in my adapter. Totals agree by coincidence more often than anyone
+expects; names do not.
+
+### The inverse error, which is worse
+
+Three times today I built a red case for a defect that did not exist, because a
+permissive Zod schema *looked* like a missing check.
+
+`createTransactionSchema` has `debitAccountId` and `creditAccountId` both
+`.nullable().optional()`, and `netAmount`/`taxAmount` entirely free. I grepped
+`services/` for `throw` near those field names, found nothing, and wrote three error
+cases: booking without accounts, booking with only a debit side, net + tax ≠ gross.
+
+All three are refused. The validation lives a layer down, written in a shape my search
+pattern did not match.
+
+**A search that finds nothing proves nothing.** It is the same sentence I wrote in this
+document three weeks ago about a different search, and I still needed the measurement
+to believe it. The three cases stay in the table — not as findings now, but as
+assurances over checks that exist. They go red the day someone removes the account
+requirement, and that is worth more than the defect I had imagined.
+
+### What the tables found that the scripts could not
+
+The point of all this, stated in numbers rather than principle:
+
+| Area | Scripts checked | Table checks | Findings before → after |
+|---|---|---|---|
+| Work-order transitions | 7 of 25 | 25 | 1 → 9 |
+| Export formats × countries | 20 pairs | 160 | 0 → 0 (fully correct) |
+| Payments on open items | 5 combinations | 20 | 1 → 4 |
+| Category operations | 4 points | 16 | 0 → 0 |
+| Recurring bookings | 5 tests | 16 | 1 → 3 |
+
+Twice the answer is **zero new findings over eight times the coverage** — and those two
+rows are not the boring ones. "The country filter is exactly right across 160
+combinations" and "renaming and moving work in all four category states" are things
+nobody could previously claim. The grid did not find a defect there; it removed a
+question.
+
+And the work-order row is the argument in one line: the matrix is *shorter* than the
+four tests it replaced. The form multiplied the findings, not the effort.
+
+## The last mile: five more tables, and what a matrix is for
+
+After the accounting tables I kept going until every entity whose tests existed only as a script had
+one: the quote lifecycle, time tracking, work protocols, and three small ones — legal texts, rental
+availability, Peppol dispatch. Sixteen decision tables and five matrices, 384 green cells against 39
+red.
+
+Four things came out of it that I did not expect when I started.
+
+### A matrix over a state machine asks a different question
+
+The work order has no state machine — `setStatus` is one line, `return this.update(orgId, id,
+{status})`. Its matrix found nine defects because it asked *is there a check at all*.
+
+The quote does have one: a declared `VALID_TRANSITIONS` map. So its matrix cannot ask that. It can
+only ask *is the check right* — and to ask that, it must not copy the map. A table filled from the
+source it is testing proves that the source equals itself.
+
+So I filled it from domain reasoning and got 19 of 20. The one disagreement turned out to be **mine**,
+and Torsten corrected it in one sentence: *"the idea was that you can reactivate a quote, or make a
+new one based on an existing one."* There is a procedure for that — `revise`, which creates a new
+version with a link back to the original. I had demanded `declined → send`, i.e. re-sending the *old*
+document, which is wrong: a declined quote stays declined; what the customer gets is a new version.
+
+The finding did not disappear. It **moved**, and got sharper:
+
+```ts
+const REVISABLE_STATUSES: readonly QuoteStatus[] = ['sent', 'viewed', 'change_requested']
+```
+
+`revise` excludes exactly `declined` and `expired` — the two states where reviving a quote is the
+everyday case. "A dead end that bothers me" became "the existing revival mechanism excludes the two
+states it exists for", and only the second sentence can be acted on.
+
+**Before writing a missing capability as a finding, look for the intended path.** `revise` was in the
+same router listing I had already read.
+
+### A column must be an action someone can take
+
+My first version of that matrix was 9 × 9 = 81 cells: every status as a row and as a column. Then I
+read the router. There is no generic `setStatus`. The operator has four procedures. Four of the nine
+statuses are set by the **customer portal**, one by the passage of time.
+
+Sixty-one of those 81 cells were undrivable. They would have sat there green, having checked nothing
+— the exact decoy this whole construction exists to prevent. The matrix is 5 × 5 now, and the four
+portal states are **visibly absent from the header** rather than invisibly present in the grid.
+
+### Zero findings is sometimes the finding
+
+Two areas came back completely green, and I nearly under-reported them:
+
+- Export formats × countries: 160 cells, all correct.
+- Category operations: 16 cells, all correct.
+
+The old scripts checked 20 pairs and 4 points respectively. What changed is not the defect count but
+what can be *said*: "measured across 160 combinations, nothing found" instead of "the five cases
+somebody wrote down pass". The grid did not find a defect there. It removed a question, and that is a
+different and durable thing.
+
+### The same question, four times, with one answer written down
+
+Reversed date ranges: an invoice due before it is issued, a service period ending before it starts, a
+recurring template ending before it begins, a rental queried from a later date to an earlier one.
+Four modules, four times accepted.
+
+And **one** place checks it — `quote-backend`, on line items:
+
+```ts
+// „vom 20. bis zum 5." ist kein Zeitraum
+.refine((p) => p.serviceTo == null || p.serviceTo >= p.serviceFrom, …)
+```
+
+The house opinion exists. It is written once, argued once, and applied once. That is the argument for
+a shared `zeitraum(von, bis)` helper rather than four separate repairs — and it is an argument I could
+only make because four tables asked the same question in four modules on the same day. No single
+review would have produced that sentence.
+
+### Postscript: three more of mine, and one in my own test corpus
+
+The eleven false findings became fourteen. Nested router (`rental.asset.create`, not
+`rental.createAsset`), a required field named `label` not `name`, and a runner that demanded a
+readback where the table declared no effect at all — the three small tables check *input validation*,
+not records coming into existence; Peppol has no read procedure and rental availability is itself a
+query.
+
+That last one is worth the sentence: my rule was "no effect declared ⇒ still expect it readable",
+which raised an assurance nobody had asked for. Demanding less was the correct fix. A harness that
+asserts more than the specification is not stricter — it is wrong in a direction that is harder to
+see, because its failures look like findings.
+
+And one in the corpus itself. The protocol table declares an effect "date is set", which reads back
+the value it sent. It went red on a passing case — because `auftrag-doppelabrechnung.spec.ts` sends
+`performedOn` and the schema calls the field `protocolDate`. **Zod drops unknown keys silently.** The
+protocol had been created without a date since the first run, and the test never noticed, because a
+test that only checks "created: yes" cannot distinguish a right field name from a wrong one.
+
+Sixteen tables in, that is the sharpest formulation I have of why the effect rows matter: the
+reaction tells you the call was accepted. Only reading the value back tells you it was *understood*.
+
+## Where the tables live, and why a folder can be load-bearing
+
+Two housekeeping requests turned into two defects, which is becoming the pattern of this
+project: the boring changes are where the interesting failures are.
+
+**First: the sheet nobody could read.** I built the first flow table, wrote it to
+`ablauf-tests.xlsx`, verified the reader parsed it, ran a mutation probe over six guard
+conditions, and committed. Then Torsten asked "did you create an Excel for that?" — so I
+printed the sheet to show him, and the meta labels were wrong. Under `position` sat the
+handle, under `execute` the page name, under `shortName` the literal word `StepSection`.
+
+I had copied the matrix's column labels and put different content underneath them.
+
+A label that names something other than its column is worse than no label. It reads like
+information. Someone who reads `position`, finds `betrieb`, and trusts the header will
+look for the error in themselves. Nothing in my verification chain could have caught it —
+the reader agreed with the writer, because I wrote both, and the mutation probe tested
+semantics, not naming. **Displaying an artifact to a human is a test that no assertion
+replaces.**
+
+**Second, and worse: the file broke every build.** nanook's file processor knows
+`<DECISION_TABLE>` and `<MATRIX_TABLE>`. On `<FLOW_TABLE>` it answers *"There is no parser
+for the table type"* and throws. That was harmless while `generate.ts` loaded one file. It
+had stopped being harmless four hours earlier, when I changed it to load all of them so
+cross-file references would resolve.
+
+One flow workbook in the folder took the entire build down. `Registrierung` produced zero
+cases.
+
+I had thought about this exact hazard in the other direction — when deleting the collected
+workbook I checked every consumer carefully. Adding a file to a globbed folder is the same
+change, and I did not check at all. Removal feels dangerous; addition feels additive. It
+isn't.
+
+My first fix searched the raw bytes for the marker string. An `.xlsx` is a ZIP — the
+marker is compressed. The filter ran without error and filtered nothing: a guard that
+reports success and does no work, which is the same failure mode as everything else in
+this document.
+
+The real fix came from a request that sounded like tidying. Torsten: *"let's make two
+subfolders, `data` and `flow`… I keep getting confused when I look for something."* The
+split does the tidying, but it also **replaces the content sniffing with a path**:
+`generate.ts` loads `data/`, full stop. The exclusion is visible when you put a file
+somewhere, not discovered at the next build.
+
+That is worth stating generally: **a naming or layout convention that also carries a
+mechanical consequence is stronger than a check in code.** The check must be found and
+maintained; the folder cannot be missed.
+
+## The rename that found a green test measuring nothing
+
+Same request, second half: one language. The tables had grown up bilingual — mostly German,
+with `Registration`, `Login`, `User`, and `Company<CC>` in English. The worst was
+`Company<CC>` sitting **next to** `FirmaAnlegen<CC>` in the same workbook: two languages
+for one thing, in one file.
+
+22 sheets renamed, 189 cells of references rewritten. Mechanical. And it surfaced this,
+in a test I had written myself:
+
+```ts
+const alle = await pruefeKlassen(MAPPE, 'Registration')
+expect(alle).toEqual([])
+```
+
+`MAPPE` was the *company* workbook. There has never been a Registration sheet in it. The
+call ran against a sheet that does not exist and dutifully returned `[]` — green, having
+checked nothing.
+
+The test directly below it says, in my own words: *"A sheet that does not exist likewise
+returns nothing — that is the reason the test above is not sufficient on its own."* I wrote
+the warning and then walked into it two lines up.
+
+That is not carelessness in the ordinary sense. It is what happens when a function returns
+the same value for "nothing to report" and "nothing to look at". The lesson is not to be
+more careful; it is that **a query which cannot distinguish "empty result" from "empty
+input" should refuse the second**. `pruefeKlassen` should throw on an unknown sheet.
+
+## Asking the library the same question
+
+Torsten, on hearing that: *"nanook should really throw when a reference cannot be
+resolved. Can you check that."*
+
+So I measured, and the answer has three parts, of which only the third is surprising:
+
+1. `load()` reports nothing — references are not resolved at load time.
+2. `processTable()` writes one error to the logger and returns normally. It does not throw.
+3. **The testcase is emitted anyway.** Complete-looking, minus whatever the reference was
+   supposed to contribute.
+
+Not throwing is a defensible choice for a batch tool. Emitting a partial record that looks
+whole is the trap — a consumer counting results gets the number it expected and no
+indication that some of them are hollow. Our own `generate.ts` survives this only because
+it does `process.exit(1)` when `logger.entries.error` is non-empty, with a comment I wrote
+weeks ago: *"the library catches them and carries on. Whoever reads only the count mistakes
+half a run for a whole one."*
+
+The test I added to nanook-table pins all three facts rather than demanding the third
+change. Changing it to throw is a breaking change for every consumer relying on best-effort
+generation — that is a decision, not a fix, and the test is now the place where the decision
+becomes visible. What it does assert is the contract that actually matters: **the logger is
+not optional.** `TestcaseProcessor` defaults to a fresh `LoggerMemory()` the caller never
+sees. A consumer that does not pass its own and inspect it afterwards has discarded the only
+signal that exists.
+
+And I ran the mutation on it, because a green test proves nothing: pointing the reference at
+a table that does exist turns it red. It measures what it claims to.
