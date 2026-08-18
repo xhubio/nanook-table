@@ -1,3 +1,30 @@
+# [3.0.0](https://github.com/xhubio/nanook-table/compare/v2.1.5...v3.0.0) (2026-08-18)
+
+
+### Tests
+
+* **processor:** pin what a dangling reference actually does ([430bf84](https://github.com/xhubio/nanook-table/commit/430bf845f628b165ebb945071eb5dedc07380403))
+
+
+### BREAKING CHANGES
+
+* **processor:** for every consumer relying on best-effort generation, so that is a
+decision and not a fix. This test is now where the decision becomes visible.
+
+What it does assert is the contract that matters: the logger is not optional.
+`TestcaseProcessor` defaults to a fresh `LoggerMemory()` the caller never sees; a
+consumer that does not pass its own and inspect `logger.entries.error` afterwards has
+discarded the only signal there is.
+
+Mutation-probed: pointing the reference at a table that does exist turns the test red,
+so it measures what it claims to. The fixture is built in the test rather than
+committed as a binary — the sheet contents are then readable as an array.
+
+Full chain green: 48 files, 201 tests.
+
+Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01Cv8sa3iQgSwsxjv9iRPe7R
+
 ## [2.1.5](https://github.com/xhubio/nanook-table/compare/v2.1.4...v2.1.5) (2026-08-16)
 
 
