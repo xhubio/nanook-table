@@ -2081,3 +2081,118 @@ expensive way.
 Both are the same shape as the `p.sitzung` break: something that reports success while doing
 nothing, and stays quiet until much later. The rename did not cause either of them. It just gave me
 a reason to compare the output against itself, which is the only thing that ever finds them.
+
+## Three dead instruments in one afternoon
+
+The flow runner was the plan. What actually happened is that building it forced me to run things
+I had not run in a while, and three separate measuring instruments turned out to have been dead —
+in one case for weeks.
+
+They share a shape worth naming: **each one failed in a way that reads as something else.**
+
+**A selector that no longer exists reports itself as a timeout.** `core-frontend` had unified its
+test ids from `org-form-*` to `organization-form-*`. The company page object followed for 21 of 24
+fields and stopped there — the submit button, the form container, and three inputs kept the old
+names. Every case in the company suite then sat for 90 seconds waiting for a button that was never
+going to appear, and the message said `Test timeout`. A timeout reads like a slow server. It had
+been red the whole time, and a red test filed under "known slow" is worse than a green one that
+measures nothing, because it costs 90 seconds each.
+
+Nothing about that is findable by running tests. What found it was comparing the selectors the page
+objects *use* against the selectors the installed package *contains* — a set difference that takes
+seconds. Sixteen countries times twenty-seven cases, and not one finding underneath, because there
+had been no run.
+
+Twice during that comparison a selector appeared to be missing and existed: `nav-link-organization`
+is built as `` `nav-link-${item.id}` ``, and `organization-form-input-vatId` lives in
+`GermanyFields.tsx`, outside the chunk my first pattern searched. The naked search — no quotes, no
+assumptions about the surrounding syntax — is the counter-check that holds. Third time this month
+it saved me from a confident wrong answer.
+
+**A label that changed reads as a value error.** The product form offers `Stk` and `h`; the table
+says `Stück` and `Stunde`. Every case sets a unit, including `E_nameLeer`, so twelve of twelve
+failed on the same line long before the actual subject came up. The fix belongs in the page object,
+not the table: the table speaks the domain, the page object knows what the widget prints. Put it the
+other way around and the person maintaining the table has to know that the UI abbreviates — and the
+next abbreviation needs another table edit.
+
+**Test data that is German everywhere reads as an application bug.** `createBusiness` wrote
+`10115 / Berlin / Europe/Berlin` for every country. The server validates postal codes per country
+and answered `400 Postal code does not match the format required for country AT`. That message
+arrives in the *base state*, before the subject under test begins, and it looks exactly like a
+defect in the application. Fifteen customer suites, eleven supplier suites, nine export checks —
+all failing at setup.
+
+The second half of that one is more interesting. The customer and supplier tables carried the postal
+code in the **shared** record, so `10115` travelled by reference into every country sheet. I tried
+to override it in the country sheet. It had no effect. I moved the override below the reference,
+reasoning that sheet order decides. Also no effect — and **both attempts failed silently**: the
+generated value simply stayed `10115`, no error, no warning. Only dumping the generator's
+intermediate data showed why: the referenced record is merged *into* the referring table, and
+position in the sheet has nothing to do with it.
+
+The modelling was wrong, not the ordering. A postal code **is** country-dependent. It has no
+business being in a shared record, and once it moved to where the country is known, the problem
+stopped existing rather than getting fixed.
+
+### And one of them was mine, from that morning
+
+Then the worst of the four, because I caused it. The renaming had translated eighteen keys in
+`common/marken.ts` — `heute` became `today`, `positionEine` became `itemOne`. Those keys are
+**data**: the spreadsheets say `marke::heute`.
+
+What saved it from being silent is a guard I had put on the resolver: an unknown marker throws
+(`Unbekannte Marke „heute" — weder im Kontext dieses Laufs noch in common/marken.ts`). Loud,
+specific, unmistakable. But it only speaks at *run* time, and after the rename I had run three
+small specs — none of which use markers. Five suites were sitting at zero green: quotes 0/11,
+receipts 0/14, invoices 0/21, rentals 0/5, protocols 2/12. Across the API runner:
+**103 green before, 153 after; 75 red before, 25 after**, and the remaining 25 are the known
+findings.
+
+The lock I had built into the renamer for exactly this class did not fire, and the reason is
+instructive: it protects the keys of objects that are *dynamically indexed*, and the indexing does
+not happen in `marken.ts` — it happens in the caller
+(`name in fromContext ? … : freeMarkers()[name]`). A lock that looks at one file at a time cannot
+see that. The context markers in the runner, where the `in` sits next to the object, came through
+untouched.
+
+So the rule is not "add another guard". It is: **after a rename, run the suite that actually uses
+the data.** Three green specs prove that three specs do not use markers.
+
+## What a probe may do, and what it may not
+
+Moving the old hand-written specs into tables ran into the same question twice, and the answers
+went different ways.
+
+The depreciation spec asserted five things. Two were already covered. Two more — a low-value asset
+writes off in a single line, a pooled asset runs exactly five years — became declared effects with
+probes that read the plan back, and I checked they can fail before deleting anything: flipping the
+expectation turns both red. The fifth is *disposal*: create an asset, sell it, check the plan stops
+at the sale date. I could have written a probe that sells the asset and then measures. I did not,
+and the reason is the one I keep coming back to: the table would say "create an asset", and what
+got measured would be a sale. A hidden step is exactly the thing nobody finds later.
+
+The recurring-booking spec had a mirror-image case: run `executeDue` twice on the same day and check
+it executes once. That also means a probe performs an extra action — but here the repetition **is**
+the property, and the effect is named `Zweiter Lauf am selben Tag zaehlt nicht`. Same mechanism,
+opposite verdict, and the line between them is short enough to keep: **whatever the probe does must
+be in its name.**
+
+That one also needed a repair before it could measure anything at all. Effects were asserted with a
+hard `expect`, and on that case a *known* defect ("executeDue books nothing") sits before the new
+one. It aborted the case, the second probe never ran, and the report looked as if it did not exist.
+With `expect.soft`, a known defect still turns the case red — but it can no longer leave something
+beside it unmeasured. The probe then delivered immediately: counter 3 after the first run, **4**
+after the second on the same day. The scheduler runs as a cron job; every restart books the rent
+again.
+
+## A number I could not renumber
+
+Small thing, worth writing down because it is the kind of sloppiness that erases work. I numbered a
+batch of findings starting at 45 without checking the highest existing number, which was 38. Six
+numbers now point at nothing.
+
+Renumbering is not available: three commit messages reference 45–54, and a commit is immutable. So
+the gap gets documented instead. A documented gap is harmless; a silent one sends someone looking
+for six lost findings. The rule that should have applied: the next number is the maximum across
+*all* the issue files plus one — not the last number in the file you happen to be typing in.
