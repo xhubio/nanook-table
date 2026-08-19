@@ -2284,3 +2284,80 @@ sentence next to it**. "Covered by the matrix", "checked at the API boundary", "
 file" — three reasons, all plausible, all written by someone who believed them, none of them
 true. Code rots loudly. Justifications rot silently, and they read exactly the same after they
 have rotted.
+
+## The test that was still red about something already fixed
+
+Migrating hand-written specs into flow tables was supposed to be clerical work. It was not. Three
+of the specs I converted turned out to be testing defects that no longer existed — and all three
+still carried a red marker in their title.
+
+The rental one was the clearest. It asserted that a reservation is created as `tentative`, and
+then documented, at length, that nothing in the system could ever move it out of that state: the
+default value was also the terminal value, and the availability calculation only excluded
+`cancelled`. So a reservation meant to be *non-binding* blocked the equipment permanently.
+
+That was true when it was written. It is not true now. A plan shipped the repair: `tentative`
+means "quote open" and no longer occupies stock, a quote position with a service period and a
+product creates the reservation, accepting the quote confirms it, declining releases it.
+
+Which means the old spec had gone from *outdated* to *wrong*. It demanded that
+`reservation.create` return `tentative`. It now returns `confirmed` — and that is correct, because
+a reservation entered by hand *is* binding. Only the quote path means "still deciding". A test
+asserting the old behaviour would now be arguing for the bug.
+
+Two more, in the receipts spec: recording a payment method used to wipe the document reference
+(`paymentInfo` written whole instead of merged), and a receipt's invoice link could be silently
+redirected to a different invoice. Both fixed. Both tests green. Both titles still saying 🔴.
+
+The lesson is not "keep titles current". A test for a known defect is *correctly* red — that is
+the rule, and it is a good rule. The problem is what red does to attention: nobody re-reads a test
+that is supposed to fail, and nobody notices when it starts passing while asking an outdated
+question. These three were caught only because someone touched them for an unrelated reason.
+
+## What replaced them, and the number that made the difference
+
+The replacement flow for the rental case measures the repair end-to-end: send a quote with a
+scaffolding position for a month, and the equipment stays fully available; accept the quote, and
+1000 m² drops to 600.
+
+My first version had a hole in it, and I nearly shipped it. "Availability stays at 1000" is also
+true if **no reservation was created at all** — and the second step cannot catch that, because
+`quote.accept` runs the reservation sync *before* confirming, so it would create the missing
+reservation itself and the pair would still pass. The success signal and the total-failure signal
+were the same number.
+
+What closed it was `tentativeCount` — a field the repair had added to the availability response
+precisely so the plan board can show "1 reservation" without counting it as occupied. Asserting
+`tentativeCount === 1` gives the measurement a node that does *not* vanish on success.
+
+The mutation probe confirmed both halves at once: remove `serviceTo` from the quote position, and
+the count goes to 0 while the availability check stays green. The blind spot was real, and the
+contract holds — a rental position needs the period *and* the product, either alone creates
+nothing.
+
+## Two of five were already covered
+
+The receipts spec had five cases. Transcribing them into a flow table meant reading the existing
+decision table beside them, and two turned out to be the same test twice:
+
+- "incoming and outgoing exclude each other" — the decision table's `E_richtung` case is
+  character-for-character the same thing: `expense` type, `income` category, same line item.
+- "paid-on is never in the future", creation half — that is `E_zahltagWeit`, ten days ahead.
+
+Nobody had noticed, because the two artifacts live in different formats and nobody reads a
+spreadsheet and a TypeScript file side by side. Converting forced the comparison.
+
+What remained after removing the duplicates was exactly the set of steps that touch an *existing*
+receipt — and that turns out to be the clean boundary between the two formats. **The decision
+table says what holds at creation. The flow says what may happen afterwards.** That line was not
+designed; it fell out of the migration.
+
+## Four more of the same error code
+
+Every rejection I measured today came back as HTTP 500: accepting a draft quote, marking a receipt
+paid ten days in the future, redirecting an invoice link. All three are *behaviourally correct* —
+they refuse what should be refused. They just announce it as "my fault" instead of "your input".
+
+That is a finding I had already filed, and I did not go looking for more instances. They arrived
+on their own, which is the useful signal: when a defect class shows up in every unrelated thing
+you touch, the count in the ticket is a floor, not an estimate.
