@@ -2196,3 +2196,91 @@ Renumbering is not available: three commit messages reference 45–54, and a com
 the gap gets documented instead. A documented gap is harmless; a silent one sends someone looking
 for six lost findings. The rule that should have applied: the next number is the maximum across
 *all* the issue files plus one — not the last number in the file you happen to be typing in.
+
+## A list kept beside another list
+
+The question was ordinary: *are there tests left to convert, or missing?* I nearly answered from
+memory. Instead I ran `playwright test --list` and diffed the case titles against the 66 suite
+files. Two suites produced no test case at all.
+
+Both had an entry saying they were covered.
+
+`offenerpostenanlegen` was the worse of the two, because it looked the most complete. It had a row
+in `API_BOUNDARY` — procedure, read-back procedure, setup, everything. It also had a written reason
+in the UI register explaining why it is not driven through the browser. What it did not have was a
+call. The runner listed its boundaries by hand:
+
+```ts
+await run({ ...boundaryFor('angebotanlegen.json'), sending: … })
+await run({ ...boundaryFor('quittunganlegen.json'), sending: … })
+// … eleven more
+```
+
+Thirteen calls. Fourteen registry entries. Ten cases that never ran, for weeks, in a file whose
+entire purpose is to prove that cases run.
+
+Next to the registry row sat a comment I had written myself: *"the table-driven runner does not
+drive it — its ten cases come through the matrix."* That sentence is checkable in about thirty
+seconds, and nobody had checked it, including the person who wrote it. The matrix
+`ZahlungAufPosten` references two of the ten cases as anchors. Eight were left over — all five
+error cases among them.
+
+The second orphan, `kategorieanlegen`, had a different sentence with the same structure: *"the
+category tree is checked at the API boundary (two spec files)."* Both files exist and both are
+real. They check depth, cycles, and renaming. Neither one runs the table. One of six cases was
+anchored in a matrix; five never ran.
+
+And the reason given for excluding `offenerpostenanlegen` from the UI runner pointed at
+`tests/offene-posten-und-mahnung.spec.ts` — a file that no longer exists. It had been converted
+into a flow weeks earlier. **The justification outlived the thing it justified**, and nothing in
+the build noticed, because a justification is prose and prose does not compile.
+
+### The shape, not the incidents
+
+Three instances in one afternoon, and I had already fixed a fourth by hand earlier in the week
+(`auftraganlegen`: five of twelve cases anchored, all four error cases unrun). At three, it stops
+being carelessness and starts being the design.
+
+The design flaw is small enough to state in one line: **a list that has to be maintained beside
+another list will drift.** The registry knows which suites can be driven at the API boundary. The
+runner had its own copy of that knowledge, in a different file, in a different form. Nobody
+compares two files for you.
+
+So the repair is not the missing entry. It is:
+
+```ts
+for (const boundary of API_BOUNDARY) {
+  await run({ ...boundary, ...EXTRAS[boundary.suite] })
+}
+```
+
+A registry entry is now the instruction to drive it. 1267 → 1277 cases, and the class of bug is
+gone rather than one instance of it.
+
+Two things fell out of the rewrite that I did not go looking for. `sending` had been a required
+field, so every boundary without a send path carried a stub — `async () => ({ ok: true, message:
+'no send path on a work order' })`, ten of them, individually worded. Grepping the suites for the
+three effects that trigger a send showed only three tables declare one. **Not one stub had ever
+been called.** Ten functions doing nothing, each of which would have answered `ok: true` to a
+question it cannot answer. `sending` is now optional, and a table that expects a send verdict from
+a boundary that has no send path aborts the case instead.
+
+### Guarding prose
+
+The interesting part of the fix is not the loop — it is that the loop only covers half the class.
+`kategorieanlegen` was never in the registry at all; it was excluded by a *sentence*. So the
+guard has to check the sentence:
+
+1. Every suite is driven by a page module, a registry entry, or a named runner file. A written
+   reason counts for nothing on its own.
+2. Every spec file named in a reason exists on disk.
+
+Both checks pass. Both were then made to fail on purpose — remove the boundary, and it names
+`kategorieanlegen.json`; point a reason at a deleted file, and it names the file. A guard that has
+not been shown red is a guard you are hoping about.
+
+What I keep relearning: the dangerous artifact is not the missing entry, it is the **confident
+sentence next to it**. "Covered by the matrix", "checked at the API boundary", "see this spec
+file" — three reasons, all plausible, all written by someone who believed them, none of them
+true. Code rots loudly. Justifications rot silently, and they read exactly the same after they
+have rotted.
