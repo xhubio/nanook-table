@@ -40,6 +40,11 @@ export function createDefaultFileProcessor(logger: LoggerInterface) {
 
   fileProcessor.registerParser('<DECISION_TABLE>', parserDecision)
   fileProcessor.registerParser('<MATRIX_TABLE>', parserMatrix)
+  // '<SPECIFICATION>' is the documented marker (guide + DEFAULT_TABLE_TYPE_KEYS).
+  // The factory historically registered only '<SPECIFICATION_TABLE>' — a sheet
+  // using the documented marker was silently ignored. Both keys stay valid so
+  // existing workbooks keep loading.
+  fileProcessor.registerParser('<SPECIFICATION>', parserSpecification)
   fileProcessor.registerParser('<SPECIFICATION_TABLE>', parserSpecification)
 
   return fileProcessor

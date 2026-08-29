@@ -312,7 +312,8 @@ Creates a `FileProcessor` pre-configured with:
 - `ImporterXlsx` as the importer
 - `ParserDecision` for `<DECISION_TABLE>` sheets
 - `ParserMatrix` for `<MATRIX_TABLE>` sheets
-- `ParserSpecification` + `ParserSpecificationConverter` for `<SPECIFICATION_TABLE>` sheets
+- `ParserSpecification` for `<SPECIFICATION>` sheets (the legacy marker
+  `<SPECIFICATION_TABLE>` is also registered so existing workbooks keep loading)
 
 ```typescript
 import { createDefaultFileProcessor, LoggerMemory } from 'nanook-table'
