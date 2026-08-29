@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/xhubio/nanook-table/compare/v3.0.0...v3.0.1) (2026-08-29)
+
+
+### Bug Fixes
+
+* **processor:** the documented specification marker reaches its parser ([87c7da9](https://github.com/xhubio/nanook-table/commit/87c7da9f2aff3ea8ffcb489f9292c201b508ded8))
+
 # [3.0.0](https://github.com/xhubio/nanook-table/compare/v2.1.5...v3.0.0) (2026-08-18)
 
 
