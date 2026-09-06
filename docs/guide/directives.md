@@ -92,7 +92,7 @@ A `ReferenceDirective` points to another test case -- in the same table or a dif
 ### Syntax
 
 ```
-ref:<instanceIdSuffix>:<tableName>:<testcaseName>:<fieldName>
+ref:<instanceIdSuffix>:<tableName>:<fieldName>:<testcaseName>
 ```
 
 | Part              | Description                                                                                  |
@@ -100,13 +100,18 @@ ref:<instanceIdSuffix>:<tableName>:<testcaseName>:<fieldName>
 | `ref:`            | Fixed prefix identifying this as a reference directive.                                       |
 | `instanceIdSuffix`| Instance ID for reusing the same referenced test case instance across multiple fields.        |
 | `tableName`       | The name of the table containing the referenced test case. Defaults to the current table.     |
-| `testcaseName`    | The name of the referenced test case. This is mandatory.                                      |
 | `fieldName`       | The field to extract from the referenced test case. If omitted, no data is included.          |
+| `testcaseName`    | The name of the referenced test case. This is mandatory.                                      |
+
+> **Note:** `fieldName` comes **before** `testcaseName`. This is what the implementation reads
+> (`createReferenceDirective` in `TestcaseDefinitionDecision` and `TestcaseDefinitionMatrix`
+> take `parts[3]` as the field and `parts[4]` as the test case) and what the test fixtures use,
+> for example `ref:1:Person_no_ref:first-name:4`.
 
 ### Basic Example
 
 ```
-ref:1:PersonTable:tc1:email
+ref:1:PersonTable:email:tc1
 ```
 
 This references test case `tc1` in the table `PersonTable`, extracts the `email` field, and stores the referenced instance under ID `1`.
@@ -116,7 +121,7 @@ This references test case `tc1` in the table `PersonTable`, extracts the `email`
 A self-reference points to another field within the same test case. This is useful when one field must have the same value as another -- for example, a "confirm password" field that must match the "password" field.
 
 ```
-ref::password:
+ref:::password:
 ```
 
 Or with an explicit table name:
@@ -127,12 +132,16 @@ ref::Person:password:
 
 For a self-reference, the instance ID suffix and the test case name must be omitted (left empty). The table name is optional.
 
+Note the **three** colons in the first form: the empty table name still needs its separator.
+`ref::password:` has one colon too few -- it puts `password` in the table slot, leaves the test
+case name undefined and makes the directive throw.
+
 ### Range Reference
 
 A range reference points to multiple test cases at once, enclosed in square brackets:
 
 ```
-ref::<tableName>:[tc2-tc4]:fieldName
+ref::<tableName>:fieldName:[tc2-tc4]
 ```
 
 This references test cases `tc2`, `tc3`, and `tc4`. To resolve a range reference, the processor must create a separate instance of the **calling** test case for each test case in the range. So if test case `T1` contains a range reference to `[tc2-tc4]`, the processor creates three instances of `T1`:
@@ -148,15 +157,15 @@ For range references, the instance ID suffix must be empty because each expansio
 Instance IDs work the same way as with generator directives. If two reference directives share the same instance ID and point to the same test case, they share the same generated instance:
 
 ```
-ref:1:PersonTable:tc2:email    <- Creates instance of PersonTable:tc2, returns email
-ref:1:PersonTable:tc2:name     <- Reuses the same instance, returns name
+ref:1:PersonTable:email:tc2    <- Creates instance of PersonTable:tc2, returns email
+ref:1:PersonTable:name:tc2     <- Reuses the same instance, returns name
 ```
 
 Without matching instance IDs, each reference creates a new independent instance:
 
 ```
-ref::PersonTable:tc2:email     <- Instance A of PersonTable:tc2
-ref::PersonTable:tc2:name      <- Instance B of PersonTable:tc2 (different data!)
+ref::PersonTable:email:tc2     <- Instance A of PersonTable:tc2
+ref::PersonTable:name:tc2      <- Instance B of PersonTable:tc2 (different data!)
 ```
 
 ### Default Values
