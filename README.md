@@ -165,6 +165,12 @@ npm run format       # run prettier
 npm run typecheck    # type-check without emitting
 ```
 
+## Support
+
+Questions, bugs and ideas go to the [issue tracker](https://github.com/xhubio/nanook-table/issues). It is free and public, and we answer when we find the time.
+
+Nanook is built by [xhub.io](https://xhub.io) (BeeBack UG, Frankfurt am Main). If your team needs more than that — a review of your decision tables, custom generators or writers, Nanook in your CI pipeline, or a support contract with an answer on the next working day — we can be hired for it. See [nanook.xhub.io/support](https://nanook.xhub.io/support) or write to [nanook@xhub.io](mailto:nanook@xhub.io).
+
 ## License
 
 MIT

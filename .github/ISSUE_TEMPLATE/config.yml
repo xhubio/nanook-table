@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://nanook.xhub.io/docs/quickstart/quickstart
+    about: The Quickstart, the guides and the API reference answer most questions.
+  - name: Commercial support
+    url: https://nanook.xhub.io/support
+    about: A table review, integration work or a support contract, from the maintainers at xhub.io.
