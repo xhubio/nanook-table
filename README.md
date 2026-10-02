@@ -175,9 +175,13 @@ See the [docs/](docs/) directory for detailed guides, API reference, and tutoria
 
 ## Use with AI agents
 
-The skill `create-equivalence-class-table` drafts a decision table for a form, page or API as a
-formatted XLSX, checks its coverage and generates the test data. It lives in
-[`skills/`](skills/create-equivalence-class-table/SKILL.md) and ships in the npm package.
+[![skills.sh](https://skills.sh/b/xhubio/nanook-table)](https://skills.sh/xhubio/nanook-table)
+
+The nanook.xhub skill `create-equivalence-class-table` drafts a decision table for a form, page or API
+as a formatted XLSX, checks its coverage and generates the test data. It lives in
+[`skills/`](skills/create-equivalence-class-table/SKILL.md) and ships in the npm package. It is listed on
+[skills.sh](https://skills.sh/xhubio/nanook-table/create-equivalence-class-table), and the docs are
+indexed on [Context7](https://context7.com/xhubio/nanook-table).
 
 **Claude Code** (CLI, desktop, web, IDE), as a plugin:
 

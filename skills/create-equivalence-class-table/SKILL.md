@@ -1,46 +1,46 @@
 ---
 name: create-equivalence-class-table
 description: >
-  Draft a Nanook decision table (equivalence classes, test cases, CASCADE coverage)
+  nanook.xhub: Draft a decision table (equivalence classes, test cases, CASCADE coverage)
   as a formatted XLSX for a form, page or API, check its coverage and generate test
   data from it with @xhubio/nanook-table. Use when asked to create an equivalence
   class table, a decision table, a test case table or test data for a form or API
-  with Nanook. Also: "Equivalenzklassentabelle", "Entscheidungstabelle erstellen",
-  "Testdaten-Tabelle", "nanook table".
+  with Nanook. Also: "equivalence class table", "decision table",
+  "test data table", "nanook table".
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
-# Nanook Decision Table erstellen
+# nanook.xhub: Create a decision table
 
-Erstellt formatierte Excel-Dateien mit Nanook Decision Tables fuer beliebige Test-Objekte
-(Pages, APIs, Formulare). Inkl. Farbformatierung, Formeln, korrekter Marker-Logik und 100% Coverage.
+Creates formatted Excel files with nanook.xhub decision tables for any test object
+(pages, APIs, forms). Includes colour formatting, formulas, correct marker logic and 100% coverage.
 
-## Technologie
-- **exceljs** (nicht xlsx) — wird benoetigt fuer Cell-Styling (Fills, Fonts) und Formeln
-- Nanook's `ImporterXlsx` liest die erzeugte Datei — daher muss die Struktur exakt dem ParserDecision-Format entsprechen
+## Technology
+- **exceljs** (not xlsx) — needed for cell styling (fills, fonts) and formulas
+- Nanook's `ImporterXlsx` reads the generated file — so the structure must match the ParserDecision format exactly
 
-## Umgebung und mitgelieferte Skripte
+## Environment and bundled scripts
 
-- Projekt mit `@xhubio/nanook-table` (ab 3.1.0, ESM; 3.0.1 geht, dann ohne Skripte im Paket) und `exceljs` als devDependency
-  (`npm install -D exceljs`) — `exceljs` ist **keine** Abhaengigkeit von Nanook.
-- Node.js ab 22.18 fuehrt `.ts`/`.mts` direkt aus; aeltere 22.x brauchen
-  `--experimental-strip-types`, `npx tsx` geht ueberall.
-- Standard-Ablage: `scripts/create-<name>-table.ts`, `resources/<name>-tests.xlsx`,
-  `fixtures/<name>/`. Nennt der Nutzer andere Ordner, gelten seine.
-- **Ausgabesprache**: Kommentare, Fehlermeldungen und Expected Results in der Sprache des
-  Nutzers schreiben (Sprache seiner Anfrage), nicht in der Sprache dieser Anleitung.
+- Project with `@xhubio/nanook-table` (3.1.0 or later, ESM; 3.0.1 works, but without the scripts in the package) and `exceljs` as a devDependency
+  (`npm install -D exceljs`) — `exceljs` is **not** a dependency of Nanook.
+- Node.js 22.18 or later runs `.ts`/`.mts` directly; older 22.x need
+  `--experimental-strip-types`, `npx tsx` works everywhere.
+- Default locations: `scripts/create-<name>-table.ts`, `resources/<name>-tests.xlsx`,
+  `fixtures/<name>/`. If the user names other folders, use theirs.
+- **Output language**: write comments, error messages and expected results in the language of
+  the user's request, not in the language of these instructions.
 
-Zwei fertige, gepruefte Skripte liegen im Ordner `scripts/` neben dieser `SKILL.md` — und,
-ab `@xhubio/nanook-table` 3.1.0, im Projekt unter
+Two finished, tested scripts are in the `scripts/` folder next to this `SKILL.md` — and,
+from `@xhubio/nanook-table` 3.1.0, in the project under
 `node_modules/@xhubio/nanook-table/skills/create-equivalence-class-table/scripts/`.
-**Von dort kopieren**: der Ordner liegt im Projekt, der Plugin-Ordner oft ausserhalb und ist
-dann nicht lesbar. Ausfuehren nur im Projekt: Node loest Imports relativ zum Skript auf und
-entfernt unter `node_modules` keine TypeScript-Typen. Ist `cp` nicht erlaubt, die Datei
-lesen und **unveraendert** ins Projekt schreiben. **Nie neu schreiben**: die Skripte sind
-geprueft, eine Nachschrift ist es nicht. Findet sich keine der beiden Quellen, dem Nutzer
-das sagen, statt Ersatz zu bauen.
+**Copy them from there**: that folder is inside the project, the plugin folder is often outside it and
+then not readable. Run them only inside the project: Node resolves imports relative to the script and
+does not strip TypeScript types under `node_modules`. If `cp` is not allowed, read the file
+and write it into the project **unchanged**. **Never rewrite them**: the scripts are
+tested, a rewrite is not. If neither source can be found, tell the user
+so instead of building a substitute.
 
 ```
 cp node_modules/@xhubio/nanook-table/skills/create-equivalence-class-table/scripts/*.mts scripts/
@@ -48,388 +48,388 @@ node scripts/check-classes.mts resources/<name>-tests.xlsx
 node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>
 ```
 
-| Skript | Was es tut | Exit 1 wenn |
+| Script | What it does | Exit 1 if |
 |---|---|---|
-| `check-classes.mts` | liest die Marker aus den Zellen (nicht die Formelwerte), rechnet Kombinationen, Spaltenprodukte und Deckung nach, meldet jede Klasse ohne eigenes `x` | Deckung < 100 %, Klasse ohne `x`, Feld ohne Marker, keine Decision Table |
-| `generate-fixtures.mts` | Nanook liest die Mappe, Generatoren `faker` und `text` sind registriert, ein JSON je Testfall, Anzahl je Tabelle | Nanook hat Fehler geloggt (Nanook wirft nicht, es loggt und macht weiter) |
+| `check-classes.mts` | reads the markers from the cells (not the formula values), recomputes combinations, column products and coverage, reports every class without its own `x` | coverage < 100 %, class without `x`, field without marker, no decision table |
+| `generate-fixtures.mts` | Nanook reads the workbook, generators `faker` and `text` are registered, one JSON per test case, count per table | Nanook logged errors (Nanook does not throw, it logs and carries on) |
 
-Generator `text` (in `generate-fixtures.mts`) liefert die Randfaelle, die `faker` nicht kann:
-`gen::text:empty` (leerer String), `gen::text:spaces:N`, `gen::text:alpha:N`,
-`gen::text:email:N` (N Buchstaben + `@example.com`).
+The `text` generator (in `generate-fixtures.mts`) provides the edge cases `faker` cannot:
+`gen::text:empty` (empty string), `gen::text:spaces:N`, `gen::text:alpha:N`,
+`gen::text:email:N` (N letters + `@example.com`).
 
-## Allgemeiner Workflow: Vom Testobjekt zur Decision Table
+## General workflow: from test object to decision table
 
-### Schritt 1: Testobjekt analysieren
-- Welche Felder hat die Page/Form/API?
-- Welche Felder sind Pflicht, welche optional?
-- Welche Validierungsregeln gelten? (min/max, Format, Abhaengigkeiten)
-- Gibt es logische Feldgruppen? (Adresse, Datum, Positionen)
+### Step 1: Analyse the test object
+- Which fields does the page/form/API have?
+- Which fields are required, which optional?
+- Which validation rules apply? (min/max, format, dependencies)
+- Are there logical field groups? (address, date, line items)
 
-### Schritt 2: Feldgruppen bilden → Tabellen-Struktur
-- **< 6 Felder**: Eine einzelne Tabelle reicht
-- **6-8 Felder**: Pruefen ob Aufteilung sinnvoll ist
-- **> 8 Felder**: Aufteilen in Sub-Tabellen (siehe Multi-Sheet Strategie)
-- Orientierung am Testobjekt: UI-Tabs, API-Objekte, fachliche Domaenen
+### Step 2: Form field groups → table structure
+- **< 6 fields**: a single table is enough
+- **6-8 fields**: check whether splitting makes sense
+- **> 8 fields**: split into sub-tables (see multi-sheet strategy)
+- Follow the test object: UI tabs, API objects, business domains
 
-### Schritt 3: EqClasses definieren pro Feld
-- Fuer jedes Feld: Welche Equivalenzklassen gibt es? (siehe Muster unten)
-- Mindestens 2 EqClasses pro Feld (valid + mind. 1 invalid/Variante)
-- Namen beschreibend waehlen: "valid", "empty", "tooLong", "negative"
+### Step 3: Define EqClasses per field
+- For each field: which equivalence classes exist? (see patterns below)
+- At least 2 EqClasses per field (valid + at least 1 invalid/variant)
+- Choose descriptive names: "valid", "empty", "tooLong", "negative"
 
-### Schritt 4: Testfaelle planen
-- 1 Happy-Path TC (alle Felder valid)
-- 1 Error-TC pro nicht-bevorzugter EqClass (fuer 100% CASCADE)
-- Optional: Weitere valid-Varianten (z.B. optionale Felder leer)
-- TC-Reihenfolge: **Error-TCs zuerst, Valid-TCs zuletzt** (lesbarer CASCADE)
+### Step 4: Plan test cases
+- 1 happy-path TC (all fields valid)
+- 1 error TC per non-preferred EqClass (for 100% CASCADE)
+- Optional: further valid variants (e.g. optional fields empty)
+- TC order: **error TCs first, valid TCs last** (more readable CASCADE)
 
-### Schritt 5: Coverage vorausberechnen
+### Step 5: Precompute coverage
 ```
-total = Produkt aller EqClass-Anzahlen
-Benoetigte TCs fuer 100% CASCADE = (Summe aller nicht-bevorzugten EqClasses) + 1 Happy
+total = product of all EqClass counts
+TCs needed for 100% CASCADE = (sum of all non-preferred EqClasses) + 1 happy
 ```
 
-### Schritt 6: Excel erzeugen und verifizieren
-- Script ausfuehren → Excel generieren
-- In Spreadsheet oeffnen → Farben, Formeln, Marker pruefen
-- Nanook-Generate ausfuehren → Fixtures pruefen
+### Step 6: Generate and verify the Excel file
+- Run the script → generate the Excel file
+- Open it in a spreadsheet → check colours, formulas, markers
+- Run Nanook generate → check the fixtures
 
-## Spalten-Layout (ParserDecision)
+## Column layout (ParserDecision)
 
-| Spalte | Inhalt |
+| Column | Content |
 |--------|--------|
-| A (1) | Name / Feldname |
-| B (2) | Section-Typ (FieldSection, FieldSubSection, ExecuteSection, ...) |
-| C (3) | Equivalence-Class-Name / Anzahl (bei FieldSubSection Header) |
+| A (1) | Name / field name |
+| B (2) | Section type (FieldSection, FieldSubSection, ExecuteSection, ...) |
+| C (3) | Equivalence class name / count (in FieldSubSection header) |
 | D (4) | Generator / TDG |
 | E (5) | Comment |
-| F+ (6+) | Testfall-Spalten |
+| F+ (6+) | Test case columns |
 
-## Zeilen-Reihenfolge im Excel
+## Row order in the Excel file
 
 ```
-<DECISION_TABLE>     ← Header mit TC-Namen in Spalte F+
-Execute              ← ExecuteSection: T/F pro TC
+<DECISION_TABLE>     ← header with TC names in column F+
+Execute              ← ExecuteSection: T/F per TC
 NeverExecute         ← NeverExecuteSection: T/F (optional)
-Multiply             ← MultiplicitySection: 1 pro TC
-FieldSection         ← Gruppen-Header (z.B. "Billing Address")
-  FieldSubSection    ← Feld-Header (z.B. "billingName"), C=COUNTA-Formel
-    EqClass-Zeilen   ← Equivalence-Klassen mit Markern
-  FieldSubSection    ← naechstes Feld
+Multiply             ← MultiplicitySection: 1 per TC
+FieldSection         ← group header (e.g. "Billing Address")
+  FieldSubSection    ← field header (e.g. "billingName"), C=COUNTA formula
+    EqClass rows     ← equivalence classes with markers
+  FieldSubSection    ← next field
     ...
 GeneratorSwitch      ← GeneratorSwitchSection (optional)
 Filter               ← FilterSection (optional)
-Summary              ← SummarySection mit Coverage-Formeln
-Expected Result      ← MultiRowSection (Error-Codes als Zeilen, siehe unten)
-Category             ← TagSection mit "negative"/"valid" Zeilen
+Summary              ← SummarySection with coverage formulas
+Expected Result      ← MultiRowSection (error codes as rows, see below)
+Category             ← TagSection with "negative"/"valid" rows
 <END>
 ```
 
-## Alle Section-Typen (10 total)
+## All section types (10 total)
 
-### Immer verwendet
-| Section | Typ | Zeilen | Beschreibung |
+### Always used
+| Section | Type | Rows | Description |
 |---------|-----|--------|-------------|
-| FieldSection | Multi-Row | 1+ FSS | Gruppiert Felder (z.B. "Billing Address") |
-| FieldSubSection | Multi-Row | 1+ EqClass | Ein Feld mit seinen Equivalence-Klassen |
-| ExecuteSection | Single-Row | 1 | T=generieren, F=nur per Referenz nutzbar |
-| MultiplicitySection | Single-Row | 1 | Wie oft TC generieren (default: 1) |
-| SummarySection | Single-Row | 1 | Coverage-Berechnung (max. 1 pro Tabelle) |
-| MultiRowSection | Multi-Row | 1+ | Expected Results, Error Messages, Actions |
-| TagSection | Multi-Row | 1+ | Labels/Tags fuer TCs (happy-path, smoke, etc.) |
+| FieldSection | Multi-Row | 1+ FSS | Groups fields (e.g. "Billing Address") |
+| FieldSubSection | Multi-Row | 1+ EqClass | One field with its equivalence classes |
+| ExecuteSection | Single-Row | 1 | T=generate, F=usable only via reference |
+| MultiplicitySection | Single-Row | 1 | How often to generate the TC (default: 1) |
+| SummarySection | Single-Row | 1 | Coverage calculation (max. 1 per table) |
+| MultiRowSection | Multi-Row | 1+ | Expected results, error messages, actions |
+| TagSection | Multi-Row | 1+ | Labels/tags for TCs (happy-path, smoke, etc.) |
 
-### Optional / Fortgeschritten
-| Section | Typ | Beschreibung |
+### Optional / advanced
+| Section | Type | Description |
 |---------|-----|-------------|
-| NeverExecuteSection | Single-Row | Gegenteil von ExecuteSection: T=nicht generieren wenn referenziert |
-| FilterSection | Multi-Row | Filter-Ausdruecke fuer bedingte TC-Inklusion. Nur auf Master-TCs, nicht auf referenzierte |
-| GeneratorSwitchSection | Multi-Row | Bestimmte Generatoren pro TC abschalten |
+| NeverExecuteSection | Single-Row | Opposite of ExecuteSection: T=do not generate when referenced |
+| FilterSection | Multi-Row | Filter expressions for conditional TC inclusion. Only on master TCs, not on referenced ones |
+| GeneratorSwitchSection | Multi-Row | Switch off specific generators per TC |
 
-### ExecuteSection Werte
+### ExecuteSection values
 - **True**: `x`, `1`, `y`, `j`, `yes`, `ja`, `si`, `true`, `ok`, `T` (case-insensitive)
-- **False**: `F` oder jeder andere Wert
-- **ACHTUNG**: 'x' wird als TRUE erkannt! Fuer Sub-Tabellen immer 'F' verwenden
+- **False**: `F` or any other value
+- **CAUTION**: 'x' is recognised as TRUE! Always use 'F' for sub-tables
 
-## Marker-System
+## Marker system
 
-### Marker-Typen
-| Marker | Bedeutung | COUNTA | Datengenerierung |
+### Marker types
+| Marker | Meaning | COUNTA | Data generation |
 |--------|-----------|--------|------------------|
-| `x` | Ausgewaehlt (einziger Wert) | Ja | Wird verwendet |
-| `a` | Bevorzugt (bei mehreren) | Ja | Wird bevorzugt gewaehlt |
-| `e` | Fallback (bei mehreren) | Ja | Nur wenn kein `a` vorhanden |
-| `i` | Impossible (logisch unmoeglich) | Ja | Wird NICHT verwendet |
-| leer | Nicht markiert | Nein | Wird nicht verwendet |
+| `x` | Selected (only value) | Yes | Is used |
+| `a` | Preferred (among several) | Yes | Is chosen preferentially |
+| `e` | Fallback (among several) | Yes | Only if there is no `a` |
+| `i` | Impossible (logically impossible) | Yes | Is NOT used |
+| empty | Not marked | No | Is not used |
 
-### Warum bei Fehler-TCs `a` auf der GUELTIGEN Klasse steht
+### Why error TCs put `a` on the VALID class
 
-Die naheliegende Lesart ist „egal, oben geht ja schon etwas schief". Sie ist
-falsch herum. Der Grund ist schaerfer:
+The obvious reading is "doesn't matter, something already goes wrong above". It is
+the wrong way round. The reason is sharper:
 
-> **Die uebrigen Felder bekommen `a` auf der gueltigen Klasse, damit die
-> ERWARTETE Fehlermeldung sichtbar wird und nicht von einer anderen ueberdeckt.**
+> **The other fields get `a` on the valid class so that the
+> EXPECTED error message becomes visible and is not masked by another.**
 
-Stuenden dort beliebige Werte, kaeme womoeglich der Fehler eines anderen Feldes
-zuerst — der Test waere rot und pruefte trotzdem nicht, was er behauptet.
+If arbitrary values stood there, another field's error might come
+first — the test would be red and still not check what it claims.
 
-Beispiel: Ein Testfall erwartet die Ablehnung **am Feld** wegen eines zu langen
-Passworts, es kommt aber `Password too long` **vom Server** — beide Meldungen sind
-wahr, nur die zweite gehoert einer anderen Grenze und verdeckt die erste.
+Example: a test case expects rejection **at the field** because of a password that is
+too long, but `Password too long` comes **from the server** — both messages are
+true, but the second belongs to a different boundary and masks the first.
 
-### `e` im Gutfall heisst „mir egal, was drinsteht" — und das ist erlaubt
+### `e` in the valid case means "I don't care what's in it" — and that is allowed
 
-Haengen an einer Seite Eigenschaften, die fuer
-den Pruefgegenstand **unwichtig** sind, gehoeren im Gutfall alle ihre **gueltigen**
-Klassen auf `e`. Die Deckung ist damit erfuellt, und die Tabelle sagt zugleich
-etwas Wahres aus:
+If a page has properties that are **irrelevant** to
+the object under test, all their **valid** classes go on `e` in the valid case.
+That satisfies coverage, and at the same time the table states
+something true:
 
-> **Nicht „ich habe alle Kombinationen geprueft", sondern „hier ist es mir
-> erklaertermassen gleichgueltig."**
+> **Not "I have tested all combinations", but "here I have
+> explicitly declared that I don't care."**
 
-🔵 Das ist der eigentliche Gewinn: die Gleichgueltigkeit steht **geschrieben**.
-Bekommt die Eigenschaft spaeter Bedeutung — ein Feld wandert in ein PDF, in einen
-Export, in eine Rechnung —, sieht man an der Zeile sofort, wo man darauf
-verzichtet hat, und gibt ihr eine eigene Spalte. Eine Tabelle ohne diese Marken
-verschweigt die Entscheidung; man weiss spaeter nicht, ob jemand geprueft oder
-vergessen hat.
+🔵 That is the real gain: the indifference is **written down**.
+If the property later becomes meaningful — a field moves into a PDF, an
+export, an invoice — the row shows immediately where you
+did without it, and you give it its own column. A table without these markers
+hides the decision; later nobody knows whether someone tested or
+forgot.
 
-🔴 **Niemals auf einer Fehlerklasse.** „Mir egal" gilt fuer zulaessige Werte. Ein
-`e` auf einer Fehlerklasse behauptet, ein ungueltiger Wert fuehre trotzdem zum
-guten Ergebnis.
+🔴 **Never on an error class.** "I don't care" applies to permitted values. An
+`e` on an error class claims an invalid value still leads to the
+good result.
 
-**Zwei Randbedingungen**, damit es nicht schiefgeht:
+**Two constraints**, so that it does not go wrong:
 
 | | |
 |---|---|
-| **Die bevorzugte Klasse braucht ihr `x` woanders** | Oeffnet man den Happy Path selbst, verliert sie es — bei einem Feld, das ganz hinten steht, bleibt dann gar kein Testfall uebrig. `check-classes.mts` meldet das |
-| **`e` erzeugt KEINE Streuung** | `e` heisst „nur, wenn kein `a` da ist" — mit einem `a` im Feld gewinnt es jedes Mal. Wer wirklich variieren will, braucht ein Feld **ohne** `a`; ob die Bibliothek dann je Lauf wechselt, ist ungeprueft |
+| **The preferred class needs its `x` elsewhere** | If you open up the happy path itself, it loses it — for a field at the very end, no test case is then left at all. `check-classes.mts` reports this |
+| **`e` produces NO variation** | `e` means "only if there is no `a`" — with an `a` in the field, the `a` wins every time. Anyone who really wants to vary needs a field **without** `a`; whether the library then switches per run is untested |
 
-⚪ Und falls doch: ein Test, der bei jedem Lauf andere Daten nimmt, reproduziert
-einen Fehlschlag nicht mehr. Streuung ist ein eigener Handel, keine Nebenwirkung
-der Deckung.
+⚪ And if it does: a test that takes different data on every run no longer reproduces
+a failure. Variation is a trade-off of its own, not a side effect
+of coverage.
 
-### 🔴 100 % sind IMMER erreichbar — die Kaskade ist nur nicht immer der Weg dahin
+### 🔴 100 % is ALWAYS reachable — the cascade just isn't always the way there
 
-Die Teleskop-Identitaet `Σ_i (n_i − 1)·Π_{j>i} n_j = C − 1` setzt voraus, dass
-**jede** Klasse ausser der bevorzugten ein Fehler-Ziel ist. Nur eine Fehlerspalte
-darf ihre Nachfolger auf **allen** Klassen oeffnen — sie darf das, weil oben
-ohnehin schon etwas schiefgeht.
+The telescoping identity `Σ_i (n_i − 1)·Π_{j>i} n_j = C − 1` assumes that
+**every** class except the preferred one is an error target. Only an error column
+may open its successors on **all** classes — it may do so because something
+already goes wrong above.
 
-Sobald ein Feld eine **gueltige Alternative** hat (`logo: keins|png|svg`,
-`measurementSystem: metric|imperial`), bricht die Rechnung: eine Gutfall-Spalte
-darf nur die gueltigen Klassen oeffnen, nie die fehlerhaften — sonst behauptete
-sie, ein ungueltiger Wert fuehre zum guten Ergebnis. Ihr Beitrag ist damit
-kleiner als das volle Produkt, und die Summe bleibt unter 100 %.
+As soon as a field has a **valid alternative** (`logo: none|png|svg`,
+`measurementSystem: metric|imperial`), the arithmetic breaks: a valid-case column
+may only open the valid classes, never the faulty ones — otherwise it would claim
+that an invalid value leads to the good result. Its contribution is therefore
+smaller than the full product, and the sum stays below 100 %.
 
-🔴 **Daraus folgt NICHT, dass 100 % unerreichbar waeren.** Was versagt, ist
-die **Abkuerzung**, nicht das Ziel. Die Deckung bleibt erreichbar, man bezahlt sie
-nur mit **Spalten** statt mit einer Identitaet:
+🔴 **This does NOT mean 100 % is unreachable.** What fails is
+the **shortcut**, not the goal. Coverage remains reachable, you just pay for it
+with **columns** instead of an identity:
 
-| Weg | Kosten |
+| Way | Cost |
 |---|---|
-| Kaskade | (n−1) Spalten je Feld — billig, aber nur wenn jede Alternative ein Fehler-Ziel ist |
-| Feldreihenfolge | Felder mit gueltigen Alternativen nach HINTEN; steht so ein Feld zuletzt, ist Π der Nachfolger = 1 und die Gutfall-Spalte traegt wieder voll |
-| Aufzaehlen | die fehlenden Kombinationen als eigene Spalten — im Grenzfall eine je Kombination. Immer moeglich, manchmal viel Arbeit |
+| Cascade | (n−1) columns per field — cheap, but only if every alternative is an error target |
+| Field order | Fields with valid alternatives go to the BACK; if such a field is last, Π of the successors = 1 and the valid-case column counts in full again |
+| Enumerate | the missing combinations as their own columns — in the limit one per combination. Always possible, sometimes a lot of work |
 
-⚪ Eine Tabelle unter 100 % ist dann eine **Entscheidung ueber den Aufwand**, keine
-Grenze der Methode — und sie gehoert bewusst getroffen, nicht aus Versehen.
+⚪ A table below 100 % is then a **decision about effort**, not a
+limit of the method — and it should be made deliberately, not by accident.
 
-> 💡 **Solange nicht aufgezaehlt wird, ist die bessere Frage nicht „wie viel
-> Prozent", sondern „hat jede Klasse einen eigenen Testfall".** Dafuer gibt es
-> `check-classes.mts` — es zaehlt nur `x`, weil `a`/`e` eine Auswahl sind und keine
-> Zusicherung.
+> 💡 **As long as you are not enumerating, the better question is not "what
+> percentage", but "does every class have its own test case".** That is what
+> `check-classes.mts` is for — it counts only `x`, because `a`/`e` are a choice and not a
+> guarantee.
 
-### Marker-Regeln nach Testfall-Typ
+### Marker rules by test case type
 
-**1. Zielfeld (das Feld das dieser TC testet):**
-- NUR die Ziel-EqClass mit `x` markieren
-- Alle anderen EqClasses leer lassen
+**1. Target field (the field this TC tests):**
+- Mark ONLY the target EqClass with `x`
+- Leave all other EqClasses empty
 - COUNTA = 1
 
-**2. Happy-Path TC, Nicht-Zielfeld:**
-- Standard: NUR die bevorzugte gueltige EqClass mit `x` markieren (COUNTA = 1)
-- Ausnahme: Hat das Feld mehrere **gueltige** Klassen und ist es fuer den Pruefgegenstand
-  unwichtig, duerfen alle gueltigen Klassen `e` bekommen (siehe „`e` im Gutfall")
-- Nie `a`/`e` auf ungueltigen Werten (logisch falsch: "alles gueltig" kann keinen Fehlerwert abdecken)
+**2. Happy-path TC, non-target field:**
+- Default: mark ONLY the preferred valid EqClass with `x` (COUNTA = 1)
+- Exception: if the field has several **valid** classes and is irrelevant to the object
+  under test, all valid classes may get `e` (see "`e` in the valid case")
+- Never `a`/`e` on invalid values (logically wrong: "all valid" cannot cover an error value)
 
-**3. Fehler-TC, Nicht-Zielfeld:**
-- Gueltige EqClass mit `a` markieren (wird bevorzugt gewaehlt)
-- Alle anderen EqClasses mit `e` markieren (zaehlen fuer Coverage)
-- COUNTA = Anzahl EqClasses → erhoehte Coverage
-- Grund: Bei Fehler-TCs ist es egal was in Nicht-Zielfeldern steht, wir testen ja den Fehler
+**3. Error TC, non-target field:**
+- Mark the valid EqClass with `a` (chosen preferentially)
+- Mark all other EqClasses with `e` (count towards coverage)
+- COUNTA = number of EqClasses → higher coverage
+- Reason: in error TCs it does not matter what is in non-target fields, we are testing the error
 
 **4. Impossible (`i`):**
-- Fuer logisch unmoegliche Kombinationen (z.B. UI blendet Feld aus)
-- Zaehlt fuer COUNTA/Coverage aber wird nicht generiert
-- Dient dazu die Tabelle auf 100% Coverage zu bringen
+- For logically impossible combinations (e.g. the UI hides the field)
+- Counts for COUNTA/coverage but is not generated
+- Serves to bring the table to 100% coverage
 
-### Regel: Einzelner Marker = immer `x`
-Wenn fuer ein Feld in einem TC nur EINE EqClass markiert ist, muss `x` verwendet werden (nicht `a`).
+### Rule: single marker = always `x`
+If only ONE EqClass is marked for a field in a TC, `x` must be used (not `a`).
 
-## Formeln (alle Werte als Excel-Formeln, keine statischen Zahlen)
+## Formulas (all values as Excel formulas, no static numbers)
 
-### FieldSubSection Header (Spalte C)
+### FieldSubSection header (column C)
 ```
 =COUNTA(C_eqStart:C_eqEnd)
 ```
-Zaehlt die EqClass-Namen → ergibt Anzahl der Equivalence-Klassen.
+Counts the EqClass names → gives the number of equivalence classes.
 
-### FieldSubSection Header (TC-Spalten)
+### FieldSubSection header (TC columns)
 ```
 =COUNTA(F_eqStart:F_eqEnd)
 ```
-Zaehlt die Marker pro TC → ergibt wie viele EqClasses dieser TC abdeckt.
+Counts the markers per TC → gives how many EqClasses this TC covers.
 
-### Summary (Spalte C) — Gesamtkombinationen
+### Summary (column C) — total combinations
 ```
 =C_fss1 * C_fss2 * C_fss3 * ...
 ```
-Produkt aller FieldSubSection-C-Werte = Gesamtzahl moeglicher Kombinationen.
+Product of all FieldSubSection C values = total number of possible combinations.
 
-### Summary (TC-Spalten) — Pro-TC Coverage
+### Summary (TC columns) — per-TC coverage
 ```
 =F_fss1 * F_fss2 * F_fss3 * ...
 ```
-Produkt aller FieldSubSection-COUNTA-Werte fuer diesen TC.
+Product of all FieldSubSection COUNTA values for this TC.
 
-### Summary (Spalte E) — Summe aller TC-Coverages
+### Summary (column E) — sum of all TC coverages
 ```
 =SUM(F_summary:lastTC_summary)
 ```
 
-### Summary (Spalte D) — Prozent
+### Summary (column D) — percentage
 ```
 =E_summary / C_summary
 ```
 Format: `0.00%`
 
-## Farbformatierung
+## Colour formatting
 
-| Zeilen-Typ | Hintergrund | Schrift |
+| Row type | Background | Font |
 |---|---|---|
-| `<DECISION_TABLE>` Header | Dunkelblau #0070C0 | Weiss, Bold |
-| ExecuteSection | Blau #4472C4 | Weiss |
-| MultiplicitySection | Blau #4472C4 | Weiss |
-| FieldSection Header | Blau #4472C4 | Weiss |
-| FieldSubSection Header | Blau #4472C4 | Weiss |
-| EqClass Datenzeilen | Kein Fill | Standard |
-| SummarySection | Gruen #00B050 | Weiss, Bold |
-| MultiRowSection Header | Gruen #00B050 | Blau |
-| MultiRowSection Daten | Kein Fill | Standard |
-| TagSection Header | Blau #4472C4 | Weiss |
-| TagSection Daten | Kein Fill | Standard |
-| `<END>` | Blau #4472C4 | Weiss |
+| `<DECISION_TABLE>` header | Dark blue #0070C0 | White, bold |
+| ExecuteSection | Blue #4472C4 | White |
+| MultiplicitySection | Blue #4472C4 | White |
+| FieldSection header | Blue #4472C4 | White |
+| FieldSubSection header | Blue #4472C4 | White |
+| EqClass data rows | No fill | Default |
+| SummarySection | Green #00B050 | White, bold |
+| MultiRowSection header | Green #00B050 | Blue |
+| MultiRowSection data | No fill | Default |
+| TagSection header | Blue #4472C4 | White |
+| TagSection data | No fill | Default |
+| `<END>` | Blue #4472C4 | White |
 
-## TC-Spalten Formatierung
+## TC column formatting
 - Horizontal: center
 - Vertical: middle
-- Breite: 5
+- Width: 5
 
-## Spaltenbreiten
+## Column widths
 - A (Name): 25
 - B (Type): 20
 - C (EqClass): 30
-- D (Generator): 15 (bzw. 35 wenn kein Percent in D)
+- D (Generator): 15 (or 35 if there is no percentage in D)
 - E (Comment): 30
 
-## EqClass-Muster fuer gaengige Feldtypen
+## EqClass patterns for common field types
 
-🔴 **Der eingebaute `faker`-Generator nimmt nur einen Pfad, keine Argumente.**
-`gen::faker:string.alpha(300)` oder `gen:1:faker:string.alpha:255` scheitern; Nanook loggt
-den Fehler und laesst den Testfall weg (weniger Faelle als Spalten). Laengen, Leerwerte und
-Leerzeichen deshalb ueber den Generator `text` (siehe oben) oder einen eigenen Generator.
-Leere Zellen und reine Leerzeichen taugen nicht als Wert: der Importer trimmt Zellen.
+🔴 **The built-in `faker` generator takes only a path, no arguments.**
+`gen::faker:string.alpha(300)` or `gen:1:faker:string.alpha:255` fail; Nanook logs
+the error and drops the test case (fewer cases than columns). So produce lengths, empty values and
+spaces via the `text` generator (see above) or a generator of your own.
+Empty cells and pure spaces are no good as values: the importer trims cells.
 
-Ungueltige EqClasses sollten immer `errorCode` und `errorMessage` haben. Diese werden im
-Expected-Result-Bereich als eigene Zeilen dargestellt (siehe "Expected Result — Error-Code-Zeilen").
-Gueltige Varianten (z.B. `credit_note` als alternativer Typ) haben kein `errorCode`.
+Invalid EqClasses should always have `errorCode` and `errorMessage`. These are shown as
+separate rows in the expected-result area (see "Expected Result — error code rows").
+Valid variants (e.g. `credit_note` as an alternative type) have no `errorCode`.
 
-### Pflicht-Textfeld (z.B. Name, Strasse)
-| EqClass | Generator | Kommentar | errorCode | errorMessage |
+### Required text field (e.g. name, street)
+| EqClass | Generator | Comment | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
-| valid | `gen:N:faker:person.fullName` | Gueltiger Wert | — | — |
-| empty | `gen::text:empty` | Pflichtfeld leer | `NAME_EMPTY` | Name ist Pflichtfeld |
-| whitespace | `gen::text:spaces:3` | Nur Leerzeichen | `NAME_WHITESPACE` | Name darf nicht nur Leerzeichen sein |
-| tooLong | `gen::text:alpha:300` | Ueber max. Laenge | `NAME_TOO_LONG` | Name ueberschreitet max. Laenge |
+| valid | `gen:N:faker:person.fullName` | Valid value | — | — |
+| empty | `gen::text:empty` | Required field empty | `NAME_EMPTY` | Name is required |
+| whitespace | `gen::text:spaces:3` | Spaces only | `NAME_WHITESPACE` | Name must not be only spaces |
+| tooLong | `gen::text:alpha:300` | Over max. length | `NAME_TOO_LONG` | Name exceeds max. length |
 
-### Optionales Textfeld (z.B. Notizen, Kommentar)
-| EqClass | Generator | Kommentar | errorCode |
+### Optional text field (e.g. notes, comment)
+| EqClass | Generator | Comment | errorCode |
 |---------|-----------|-----------|-----------|
-| valid | `gen:N:faker:lorem.paragraph` | Gueltiger Wert | — |
-| empty | `gen::text:empty` | Optional leer (valid!) | — (kein Fehler!) |
+| valid | `gen:N:faker:lorem.paragraph` | Valid value | — |
+| empty | `gen::text:empty` | Optional, empty (valid!) | — (no error!) |
 
-### Email-Feld
-| EqClass | Generator | Kommentar | errorCode | errorMessage |
+### Email field
+| EqClass | Generator | Comment | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
-| valid | `gen:N:faker:internet.email` | Gueltige Email | — | — |
-| invalid | `not-an-email` | Falsches Format | `EMAIL_FORMAT` | Email hat falsches Format |
-| empty | `gen::text:empty` | Leer (Pflicht=Error, Optional=Valid) | `EMAIL_EMPTY` | Email ist Pflichtfeld |
+| valid | `gen:N:faker:internet.email` | Valid email | — | — |
+| invalid | `not-an-email` | Wrong format | `EMAIL_FORMAT` | Email has wrong format |
+| empty | `gen::text:empty` | Empty (required=error, optional=valid) | `EMAIL_EMPTY` | Email is required |
 
-### Numerisches Feld (z.B. Menge, Preis)
-| EqClass | Generator | Kommentar | errorCode | errorMessage |
+### Numeric field (e.g. quantity, price)
+| EqClass | Generator | Comment | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
-| valid | `100` | Gueltiger Wert | — | — |
-| zero | `0` | Nullwert (je nach Kontext) | `QTY_ZERO` | Menge darf nicht Null sein |
-| negative | `-1` | Negativer Wert | `QTY_NEGATIVE` | Menge darf nicht negativ sein |
-| tooHigh | `999999` | Ueber Maximum | `QTY_TOO_HIGH` | Menge ueberschreitet Maximum |
+| valid | `100` | Valid value | — | — |
+| zero | `0` | Zero value (depending on context) | `QTY_ZERO` | Quantity must not be zero |
+| negative | `-1` | Negative value | `QTY_NEGATIVE` | Quantity must not be negative |
+| tooHigh | `999999` | Over maximum | `QTY_TOO_HIGH` | Quantity exceeds maximum |
 
-### Datumsfeld
-| EqClass | Generator | Kommentar | errorCode | errorMessage |
+### Date field
+| EqClass | Generator | Comment | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
-| valid | `2026-03-01` | Gueltiges Datum | — | — |
-| empty | `gen::text:empty` | Kein Datum | `DATE_EMPTY` | Datum ist Pflichtfeld |
-| invalid | `not-a-date` | Kein gueltiges Datum | `DATE_FORMAT` | Datum hat falsches Format |
-| past | `2020-01-01` | Datum in der Vergangenheit | — (oft gueltig) | — |
-| future | `2030-12-31` | Datum in der Zukunft | — (oft gueltig) | — |
+| valid | `2026-03-01` | Valid date | — | — |
+| empty | `gen::text:empty` | No date | `DATE_EMPTY` | Date is required |
+| invalid | `not-a-date` | Not a valid date | `DATE_FORMAT` | Date has wrong format |
+| past | `2020-01-01` | Date in the past | — (often valid) | — |
+| future | `2030-12-31` | Date in the future | — (often valid) | — |
 
-### Select/Dropdown (z.B. Land, Typ)
-| EqClass | Generator | Kommentar | errorCode | errorMessage |
+### Select/dropdown (e.g. country, type)
+| EqClass | Generator | Comment | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
-| valid | `DE` | Gueltiger Wert | — | — |
-| invalid | `UNGUELTIG` | Nicht in der Liste | `COUNTRY_INVALID` | Ungueltiger Laendercode |
-| empty | `gen::text:empty` | Keine Auswahl | `COUNTRY_EMPTY` | Laendercode ist Pflichtfeld |
+| valid | `DE` | Valid value | — | — |
+| invalid | `INVALID` | Not in the list | `COUNTRY_INVALID` | Invalid country code |
+| empty | `gen::text:empty` | No selection | `COUNTRY_EMPTY` | Country code is required |
 
-### Boolean/Checkbox
-| EqClass | Generator | Kommentar | errorCode |
+### Boolean/checkbox
+| EqClass | Generator | Comment | errorCode |
 |---------|-----------|-----------|-----------|
-| true | `true` | Aktiviert | — |
-| false | `false` | Deaktiviert | — |
+| true | `true` | Enabled | — |
+| false | `false` | Disabled | — |
 
-### Hinweise zu EqClasses
-- Nicht jedes Feld braucht alle Varianten — nur die **fachlich relevanten**
-- Weniger EqClasses = kleinerer Kombinationsraum = leichter 100% erreichbar
-- `i` (impossible) fuer logisch unmoegliche Kombinationen (z.B. UI blendet Feld aus)
-- Bei Abhaengigkeiten zwischen Feldern: Pruefen ob Referenzen/Self-Refs noetig sind
-- **errorCode** nur bei EqClasses die einen Fehler ausloesen, NICHT bei gueltigen Varianten
-- **errorCode** sollte dem tatsaechlichen Error-Code des Systems entsprechen (z.B. API-Fehlercodes)
+### Notes on EqClasses
+- Not every field needs all variants — only the **relevant ones for the business**
+- Fewer EqClasses = smaller combination space = 100% easier to reach
+- `i` (impossible) for logically impossible combinations (e.g. the UI hides the field)
+- With dependencies between fields: check whether references/self-refs are needed
+- **errorCode** only on EqClasses that trigger an error, NOT on valid variants
+- **errorCode** should match the system's actual error code (e.g. API error codes)
 
-## Daten in Zellen: Statisch, Generator, Referenz
+## Data in cells: static, generator, reference
 
-### Statische Daten
-Jeder Wert der NICHT mit `gen:` oder `ref:` beginnt wird direkt als Testdaten uebernommen.
+### Static data
+Any value that does NOT start with `gen:` or `ref:` is taken directly as test data.
 ```
-DE              ← Wird als String "DE" verwendet
-100             ← Wird als String "100" verwendet
-not-an-email    ← Wird als String verwendet
+DE              ← used as the string "DE"
+100             ← used as the string "100"
+not-an-email    ← used as a string
 ```
 
-### Generator-Syntax
+### Generator syntax
 ```
 gen:<instanceId>:<generatorName>:<parameter>
 ```
-| Teil | Beschreibung |
+| Part | Description |
 |------|-------------|
-| instanceId | Gruppiert zusammengehoerige Generierungen. Gleiche ID = gleiche Daten |
-| generatorName | Name des registrierten Generators (z.B. "faker") |
-| parameter | Generator-spezifisch (z.B. Faker-Funktion) |
+| instanceId | Groups related generations. Same ID = same data |
+| generatorName | Name of the registered generator (e.g. "faker") |
+| parameter | Generator-specific (e.g. faker function) |
 
-**Instance-ID Reuse** — Zusammengehoerige Felder:
+**Instance ID reuse** — related fields:
 ```
-gen:1:faker:person.fullName    ← Person 1
-gen:1:faker:internet.email     ← Email von Person 1 (gleiche Instanz!)
-gen:2:faker:person.fullName    ← Person 2 (andere Instanz)
+gen:1:faker:person.fullName    ← person 1
+gen:1:faker:internet.email     ← email of person 1 (same instance!)
+gen:2:faker:person.fullName    ← person 2 (different instance)
 ```
 
-**Haeufige Faker-Funktionen** (nur der Pfad, ohne Argumente):
+**Common faker functions** (path only, no arguments):
 ```
 person.fullName, person.firstName, person.lastName
 internet.email, internet.url
@@ -441,96 +441,96 @@ date.recent, date.future, date.past
 phone.number
 ```
 
-### Self-References
-Referenziert ein anderes Feld im gleichen Testfall:
+### Self-references
+References another field in the same test case:
 ```
-ref:::fieldName:    ← Wert von "fieldName" im selben TC
+ref:::fieldName:    ← value of "fieldName" in the same TC
 ```
-Nuetzlich wenn ein Feld vom Wert eines anderen abhaengt.
+Useful when one field depends on the value of another.
 
-🔴 **Mindestens Version 2.1.3.** Steht die Selbstreferenz in einer Tabelle, die ihrerseits
-von aussen referenziert wird (also im Normalfall jeder Datentabelle), blieb das Feld davor
-**still leer** — keine Fehlermeldung, nur ein fehlender Wert. Ursache waren zwei Defekte:
-eine ungepruefte Instanz beim Aufloesen und ein Ziel-Knoten, der beim Einsammeln der
-Direktiven auf die aufsammelnde Tabelle umgebogen wurde. Symptom, an dem man es erkennt:
-eine Testfall-Tabelle erzeugt **weniger Faelle als Spalten** (real: 3 von 7).
+🔴 **Version 2.1.3 or later.** If the self-reference is in a table that is itself
+referenced from outside (which normally means every data table), the field used to stay
+**silently empty** before that — no error message, just a missing value. The cause was two defects:
+an unchecked instance during resolution and a target node that got redirected to the collecting
+table while the directives were being collected. The symptom that gives it away:
+a test case table produces **fewer cases than columns** (in practice: 3 of 7).
 
-## Testfall-Definition
+## Test case definition
 
-Jeder Testfall braucht:
-1. **Name** (im Header) — sequentiell (`invalid_1`, `valid_1`) in Sub-Tabellen, beschreibend in Haupt-Tabellen
-2. **Typ**: Happy-Path oder Fehler-TC (bestimmt Marker-Logik)
-3. **Zielfeld(er)**: Welche(s) Feld(er) testet dieser TC
-4. **Ziel-EqClass**: Welche EqClass wird im Zielfeld ausgewaehlt
-5. **Expected Result**: Error-Code-Zeile mit `x` Marker (oder `valid`-Zeile)
-6. **Category**: `negative` oder `valid` Zeile mit `x` Marker
+Each test case needs:
+1. **Name** (in the header) — sequential (`invalid_1`, `valid_1`) in sub-tables, descriptive in main tables
+2. **Type**: happy path or error TC (determines marker logic)
+3. **Target field(s)**: which field(s) this TC tests
+4. **Target EqClass**: which EqClass is selected in the target field
+5. **Expected result**: error code row with `x` marker (or `valid` row)
+6. **Category**: `negative` or `valid` row with `x` marker
 
-### TC-Benennung: Sequentiell vs. Beschreibend
+### TC naming: sequential vs. descriptive
 
-| Tabellen-Typ | Naming | Beispiel | Grund |
+| Table type | Naming | Example | Reason |
 |---|---|---|---|
-| **Sub-Tabelle** (Execute=F) | Sequentiell | `invalid_1`, `invalid_2`, ..., `valid_1` | Range-Referenzen `[invalid_1-N]` benoetigen fortlaufende Nummern |
-| **Haupt-Tabelle** (Execute=T) | Beschreibend | `format_xrechnung`, `sellerData_invalid` | Wird nicht per Range referenziert, Lesbarkeit wichtiger |
+| **Sub-table** (Execute=F) | Sequential | `invalid_1`, `invalid_2`, ..., `valid_1` | Range references `[invalid_1-N]` need consecutive numbers |
+| **Main table** (Execute=T) | Descriptive | `format_xrechnung`, `sellerData_invalid` | Not referenced by range, readability matters more |
 
-## Datenstruktur fuer Feld-Definitionen
+## Data structure for field definitions
 
 ```typescript
 interface EqClass {
-  name: string          // EqClass-Name (z.B. "valid", "empty")
-  generator: string     // Generator/Wert (z.B. "gen:1:faker:person.fullName")
-  comment: string       // Beschreibung
-  targetTcs: string[]   // Welche TCs waehlen diese EqClass als Ziel
-  preferred: boolean    // Ist dies der gueltige/bevorzugte Wert?
-  errorCode?: string    // Erwarteter Error-Code wenn diese EqClass einen Fehler ausloest
-  errorMessage?: string // Menschenlesbare Fehlerbeschreibung fuer Expected-Result-Zeile
+  name: string          // EqClass name (e.g. "valid", "empty")
+  generator: string     // Generator/value (e.g. "gen:1:faker:person.fullName")
+  comment: string       // Description
+  targetTcs: string[]   // Which TCs choose this EqClass as target
+  preferred: boolean    // Is this the valid/preferred value?
+  errorCode?: string    // Expected error code if this EqClass triggers an error
+  errorMessage?: string // Human-readable error description for the expected-result row
 }
 
 interface FieldDef {
-  name: string          // Feldname
-  eqClasses: EqClass[]  // Equivalence-Klassen
-  targetTcs: string[]   // Welche TCs testen dieses Feld
+  name: string          // Field name
+  eqClasses: EqClass[]  // Equivalence classes
+  targetTcs: string[]   // Which TCs test this field
 }
 
 interface SectionDef {
-  name: string          // Section-Name (z.B. "Billing Address")
-  fields: FieldDef[]    // Felder in dieser Section
+  name: string          // Section name (e.g. "Billing Address")
+  fields: FieldDef[]    // Fields in this section
 }
 ```
 
-## Expected Result — Error-Code-Zeilen
+## Expected Result — error code rows
 
-Statt generischer "valid"/"error" Werte werden Error-Codes als **eigene Zeilen** dargestellt.
-Das ist lesbarer, weil Error-Codes und Fehlerbeschreibungen mehr Platz haben.
+Instead of generic "valid"/"error" values, error codes are shown as **separate rows**.
+That is more readable, because error codes and error descriptions get more space.
 
-### Struktur
+### Structure
 
 ```
 Expected Result  | MultiRowSection |                        |                                        | TC1 | TC2 | ... | valid_1
-                 |                 | valid                  | Daten sind gueltig, kein Fehler        |     |     |     |   x
-                 |                 | NAME_EMPTY             | Name ist Pflichtfeld                    |  x  |     |     |
-                 |                 | NAME_WHITESPACE        | Name darf nicht nur Leerzeichen sein    |     |  x  |     |
-                 |                 | EMAIL_FORMAT           | Email hat falsches Format               |     |     |  x  |
-                 |                 | valid_variant          | Gueltige Variante, kein Fehler          |     |     |     |
+                 |                 | valid                  | Data is valid, no error                 |     |     |     |   x
+                 |                 | NAME_EMPTY             | Name is required                        |  x  |     |     |
+                 |                 | NAME_WHITESPACE        | Name must not be only spaces            |     |  x  |     |
+                 |                 | EMAIL_FORMAT           | Email has wrong format                  |     |     |  x  |
+                 |                 | valid_variant          | Valid variant, no error                 |     |     |     |
 ```
 
-### Regeln
+### Rules
 
-- **Zeile `valid`**: `x` bei allen TCs die keinen Fehler erwarten (Happy-Path)
-- **Error-Code-Zeilen**: Eine Zeile pro uniquem `errorCode` aus den EqClasses
-  - Spalte C: Error-Code (z.B. `NAME_EMPTY`)
-  - Spalte D: Menschenlesbare Fehlerbeschreibung (`errorMessage`)
-  - TC-Spalten: `x` beim TC der diesen Error ausloest
-- **Zeile `valid_variant`**: `x` bei TCs deren Ziel-EqClass kein `errorCode` hat
-  (z.B. `credit_note` als alternativer Rechnungstyp — gueltig, aber nicht preferred)
-- Error-Codes werden aus der `errorCode`-Property der Ziel-EqClass des TCs abgeleitet
-- Ein TC hat genau **eine** Error-Code-Zeile mit `x` (oder `valid`/`valid_variant`)
+- **Row `valid`**: `x` on all TCs that expect no error (happy path)
+- **Error code rows**: one row per unique `errorCode` from the EqClasses
+  - Column C: error code (e.g. `NAME_EMPTY`)
+  - Column D: human-readable error description (`errorMessage`)
+  - TC columns: `x` on the TC that triggers this error
+- **Row `valid_variant`**: `x` on TCs whose target EqClass has no `errorCode`
+  (e.g. `credit_note` as an alternative invoice type — valid, but not preferred)
+- Error codes are derived from the `errorCode` property of the TC's target EqClass
+- A TC has exactly **one** error code row with `x` (or `valid`/`valid_variant`)
 
 ## Category TagSection
 
-Statt einer einzelnen "category" Zeile mit Werten werden `negative` und `valid` als
-**separate Zeilen** dargestellt, jeweils mit `x` Markern.
+Instead of a single "category" row with values, `negative` and `valid` are shown as
+**separate rows**, each with `x` markers.
 
-### Struktur
+### Structure
 
 ```
 Category         | TagSection      |                        |                                        | TC1 | TC2 | ... | valid_1
@@ -538,162 +538,162 @@ Category         | TagSection      |                        |                   
                  |                 | valid                  |                                        |     |     |     |   x
 ```
 
-### Regeln
+### Rules
 
-- **Header**: Spalte A = `Category`, Spalte B = `TagSection`
-- **Zeile `negative`**: `x` bei allen TCs deren Ziel-EqClass ein `errorCode` hat
-- **Zeile `valid`**: `x` bei Happy-Path TCs und TCs ohne `errorCode` (gueltige Varianten)
-- Ein TC bekommt `x` in genau einer der beiden Zeilen
+- **Header**: column A = `Category`, column B = `TagSection`
+- **Row `negative`**: `x` on all TCs whose target EqClass has an `errorCode`
+- **Row `valid`**: `x` on happy-path TCs and TCs without `errorCode` (valid variants)
+- A TC gets `x` in exactly one of the two rows
 
-## Verifikation nach Erstellung
+## Verification after creation
 
-1. `node scripts/create-<name>-table.ts` — Excel erzeugen
-2. `node scripts/check-classes.mts resources/<name>-tests.xlsx` — Deckung und eigenes `x` je Klasse
-3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>` — Nanook parst und generiert
-4. **Anzahl pruefen**: je Tabelle mit `Execute = T` ein Fall pro Testfall-Spalte, plus einer je
-   weiterem Element einer Bereichsreferenz. Weniger heisst: ein Generator ist gescheitert.
-5. Dem Nutzer sagen, die Mappe in einer Tabellenkalkulation zu oeffnen (Farben, Formeln, Summary-Zeile),
-   und die Annahmen nennen, die nicht aus seiner Anfrage stammen (Laengen, Fehlercodes).
+1. `node scripts/create-<name>-table.ts` — generate the Excel file
+2. `node scripts/check-classes.mts resources/<name>-tests.xlsx` — coverage and own `x` per class
+3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>` — Nanook parses and generates
+4. **Check the count**: for each table with `Execute = T`, one case per test case column, plus one for each
+   further element of a range reference. Fewer means: a generator failed.
+5. Tell the user to open the workbook in a spreadsheet application (colours, formulas, summary row),
+   and name the assumptions that did not come from their request (lengths, error codes).
 
-## Referenzen zwischen Tabellen (Nanook's Kern-Feature)
+## References between tables (Nanook's core feature)
 
-### Konzept
-Eine Haupt-Tabelle kann auf Sub-Tabellen verweisen. Die Referenz steht als **Generator-Wert** in einer EqClass-Zeile (Spalte D).
+### Concept
+A main table can refer to sub-tables. The reference is written as a **generator value** in an EqClass row (column D).
 
-### Referenz-Syntax
+### Reference syntax
 ```
 ref:InstanceId:TableName:FieldName:TestcaseName
 ```
 
-**ACHTUNG:** FieldName kommt VOR TestcaseName! (Code: `parts[3]=targetFieldName, parts[4]=targetTestcaseName`)
+**CAUTION:** FieldName comes BEFORE TestcaseName! (Code: `parts[3]=targetFieldName, parts[4]=targetTestcaseName`)
 
-| Teil | Pflicht | Beschreibung |
+| Part | Required | Description |
 |------|---------|-------------|
-| `ref` | Ja | Keyword (parts[0]) |
-| InstanceId | Nein | Gruppiert zusammengehoerige Referenzen (parts[1]) |
-| TableName | Nein | Ziel-Tabelle, leer = gleiche Tabelle (parts[2]) |
-| FieldName | Nein | Spezifisches Feld, leer = kein Datenwert (parts[3]) |
-| TestcaseName | Ja | Ziel-Testfall (parts[4]) |
+| `ref` | Yes | Keyword (parts[0]) |
+| InstanceId | No | Groups related references (parts[1]) |
+| TableName | No | Target table, empty = same table (parts[2]) |
+| FieldName | No | Specific field, empty = no data value (parts[3]) |
+| TestcaseName | Yes | Target test case (parts[4]) |
 
-### Beispiele
+### Examples
 ```
-ref:1:BillingAddress:billingName:validAddress   ← Feld billingName aus validAddress in BillingAddress
-ref:1:BillingAddress:street:validAddress        ← selbe Instanz, anderes Feld
-ref:1:BillingAddress::validAddress              ← ohne FieldName (nur Instanz erzeugen)
-ref:::password:                                  ← Self-Reference (gleiche Tabelle)
+ref:1:BillingAddress:billingName:validAddress   ← field billingName from validAddress in BillingAddress
+ref:1:BillingAddress:street:validAddress        ← same instance, different field
+ref:1:BillingAddress::validAddress              ← without FieldName (only create the instance)
+ref:::password:                                  ← self-reference (same table)
 ```
 
-### Range-Referenzen
+### Range references
 ```
 ref::TableName::[tc_prefix_1-N]
 ```
-- Eckige Klammern `[prefix_1-N]` referenzieren mehrere TCs (prefix_1, prefix_2, ..., prefix_N)
-- InstanceId MUSS leer sein bei Ranges (Code prueft das und loggt Error)
-- Erzeugt eine Kopie des aufrufenden TCs pro referenziertem TC
-- **Kartesisches Produkt**: Mehrere Range-Referenzen in einem TC multiplizieren sich!
+- Square brackets `[prefix_1-N]` reference several TCs (prefix_1, prefix_2, ..., prefix_N)
+- InstanceId MUST be empty for ranges (the code checks this and logs an error)
+- Creates one copy of the calling TC per referenced TC
+- **Cartesian product**: several range references in one TC multiply!
 
-#### Range-Parsing (Code: `processRanges`)
+#### Range parsing (code: `processRanges`)
 ```
 [invalid_1-7]   → invalid_1, invalid_2, ..., invalid_7
 [valid_1-2]     → valid_1, valid_2
 [T3-4]          → T3, T4
-[a1-3,b1-2]     → a1, a2, a3, b1, b2  (Komma-separierte Ranges)
+[a1-3,b1-2]     → a1, a2, a3, b1, b2  (comma-separated ranges)
 ```
-Regex: `/(\D*)(\d+)-(\d+)$/` — Nicht-Ziffern-Prefix + Start-Nummer + End-Nummer
+Regex: `/(\D*)(\d+)-(\d+)$/` — non-digit prefix + start number + end number
 
-### Valid/Invalid-Strategie mit Ranges
+### Valid/invalid strategy with ranges
 
-Sub-Tabellen-TCs benennen nach Schema `valid_N` und `invalid_N`.
-Die Haupt-Tabelle hat dann nur 2 EqClasses pro Referenzfeld:
+Name sub-table TCs following the scheme `valid_N` and `invalid_N`.
+The main table then has only 2 EqClasses per reference field:
 
 ```
 billingScenario (FieldSubSection)
-  valid      | ref::BillingAddress::valid_1           | Single-Ref (1 Fixture)
-  invalid    | ref::BillingAddress::[invalid_1-7]     | Range-Ref (7 Fixtures)
+  valid      | ref::BillingAddress::valid_1           | single ref (1 fixture)
+  invalid    | ref::BillingAddress::[invalid_1-7]     | range ref (7 fixtures)
 ```
 
-**Warum "valid" als Single-Ref, "invalid" als Range:**
-- Error-TCs brauchen jede Fehlervariante → Range expandiert automatisch
-- Non-Target-Felder referenzieren immer valid_1 → keine unnoetige Multiplikation
-- Ergebnis: billingInvalid → 7 Fixtures, datesInvalid → 4 Fixtures, etc.
-- Kartesisches Produkt bleibt klein: 1 × 1 × 9 = 9 (nicht 2 × 4 × 9 = 72)
+**Why "valid" as a single ref, "invalid" as a range:**
+- Error TCs need every error variant → the range expands automatically
+- Non-target fields always reference valid_1 → no unnecessary multiplication
+- Result: billingInvalid → 7 fixtures, datesInvalid → 4 fixtures, etc.
+- The Cartesian product stays small: 1 × 1 × 9 = 9 (not 2 × 4 × 9 = 72)
 
-**Naming-Konvention Sub-Tabellen (sequentiell!):**
+**Naming convention for sub-tables (sequential!):**
 ```
-invalid_1  ← Erster Fehlerfall (error-first!)
-invalid_2  ← Zweiter Fehlerfall
+invalid_1  ← first error case (error-first!)
+invalid_2  ← second error case
 ...
-invalid_N  ← Letzter Fehlerfall
-valid_1    ← Standard-Happy-Path (alle Felder gueltig)
-valid_2    ← Variante (z.B. minimale Pflichtfelder)
+invalid_N  ← last error case
+valid_1    ← default happy path (all fields valid)
+valid_2    ← variant (e.g. minimal required fields)
 ```
 
-**Warum sequentielle Nummern in Sub-Tabellen:**
-- Range-Referenzen `[invalid_1-N]` brauchen fortlaufende Nummern
-- Haupt-Tabelle referenziert `ref::SellerData::[invalid_1-17]` → expandiert zu invalid_1, invalid_2, ..., invalid_17
-- Beschreibende Namen (z.B. `seller.name_empty`) wuerden Range-Referenzen unmoeglich machen
-- Die Zuordnung TC-Name → getestetes Feld/EqClass ist ueber die Tabellenstruktur ersichtlich
+**Why sequential numbers in sub-tables:**
+- Range references `[invalid_1-N]` need consecutive numbers
+- The main table references `ref::SellerData::[invalid_1-17]` → expands to invalid_1, invalid_2, ..., invalid_17
+- Descriptive names (e.g. `seller.name_empty`) would make range references impossible
+- The mapping TC name → tested field/EqClass is visible from the table structure
 
-**Naming-Konvention Haupt-Tabelle (beschreibend):**
+**Naming convention for the main table (descriptive):**
 ```
-format_xrechnung        ← Beschreibender Name (kein Range-Ref auf Haupt-Tabelle)
-sellerData_invalid      ← Sub-Tabelle referenziert per Range
-buyerData_invalid       ← Sub-Tabelle referenziert per Range
-valid_1                 ← Happy-Path
+format_xrechnung        ← descriptive name (no range ref to the main table)
+sellerData_invalid      ← references the sub-table by range
+buyerData_invalid       ← references the sub-table by range
+valid_1                 ← happy path
 ```
-Haupt-Tabellen werden nicht per Range referenziert, daher koennen beschreibende Namen verwendet werden.
+Main tables are not referenced by range, so descriptive names can be used.
 
-### Multi-Sheet Architektur
+### Multi-sheet architecture
 ```
 <name>-tests.xlsx
-├── Sheet "MainTable"        ← Haupt-Tabelle (execute=T), CASCADE, 100%
-│   subTableAScenario         ← valid (single-ref) + invalid (range-ref)
-│   subTableBScenario         ← valid (single-ref) + invalid (range-ref)
-│   directField1, field2      ← Direkte Felder (valid/empty)
-├── Sheet "SubTableA"        ← Sub-Tabelle (execute=F), CASCADE, 100%
-├── Sheet "SubTableB"        ← Sub-Tabelle (execute=F), CASCADE, 100%
+├── Sheet "MainTable"        ← main table (execute=T), CASCADE, 100%
+│   subTableAScenario         ← valid (single ref) + invalid (range ref)
+│   subTableBScenario         ← valid (single ref) + invalid (range ref)
+│   directField1, field2      ← direct fields (valid/empty)
+├── Sheet "SubTableA"        ← sub-table (execute=F), CASCADE, 100%
+├── Sheet "SubTableB"        ← sub-table (execute=F), CASCADE, 100%
 └── ...
 ```
 
-### Wichtige Referenz-Regeln
-- **ExecuteSection='F'** bei Sub-Tabellen: TCs werden nur per Referenz ausgefuehrt, keine eigenen Fixtures
-- **Filter** in referenzierten TCs werden NICHT ausgefuehrt (nur im Master-TC)
-- **Tags** aus referenzierten TCs werden gesammelt
-- **NeverExecuteSection**: Verhindert Referenzierung von anderen TCs (Gegenteil von ExecuteSection=F!)
-- **Tabellennamen** muessen ueber alle geladenen Spreadsheets eindeutig sein
-- Jede Referenz-Aufloesung erzeugt eine neue Instanz des referenzierten TCs
+### Important reference rules
+- **ExecuteSection='F'** for sub-tables: TCs are executed only via reference, no fixtures of their own
+- **Filters** in referenced TCs are NOT executed (only in the master TC)
+- **Tags** from referenced TCs are collected
+- **NeverExecuteSection**: prevents referencing from other TCs (opposite of ExecuteSection=F!)
+- **Table names** must be unique across all loaded spreadsheets
+- Every reference resolution creates a new instance of the referenced TC
 
-### Tabellen aufteilen (Multi-Sheet Strategie)
+### Splitting tables (multi-sheet strategy)
 
-#### Wann aufteilen?
-- Tabelle hat mehr als 6-8 Felder → Kombinationen explodieren (z.B. 18 Felder = 25M Kombinationen)
-- Feldgruppen gehoeren logisch zusammen (Adresse, Datum, Positionen)
-- Verschiedene Hauptszenarien brauchen unterschiedliche Sub-Tabellen
-- Coverage unter ~80% trotz korrekter Marker → Tabelle ist zu gross
+#### When to split?
+- The table has more than 6-8 fields → combinations explode (e.g. 18 fields = 25M combinations)
+- Field groups belong together logically (address, date, line items)
+- Different main scenarios need different sub-tables
+- Coverage below ~80% despite correct markers → the table is too big
 
-#### Aufteilung orientiert sich am Testobjekt
-Die Tabellenstruktur spiegelt das Testobjekt wider — nicht umgekehrt:
-- **UI-Formular**: Jede logische Form-Sektion (Tab, Accordion, Wizard-Step) kann ein Sheet werden
-- **API-Endpunkt**: Request-Body-Struktur bestimmt die Aufteilung (verschachtelte Objekte → Sub-Sheets)
-- **Fachliche Domaene**: Bounded Contexts / Aggregate-Grenzen als natuerliche Schnittlinien
-- **Wiederverwendung**: Gleiche Sub-Tabelle (z.B. Adresse) kann von verschiedenen Haupt-Tabellen referenziert werden
+#### The split follows the test object
+The table structure mirrors the test object — not the other way round:
+- **UI form**: each logical form section (tab, accordion, wizard step) can become a sheet
+- **API endpoint**: the request body structure determines the split (nested objects → sub-sheets)
+- **Business domain**: bounded contexts / aggregate boundaries as natural cut lines
+- **Reuse**: the same sub-table (e.g. address) can be referenced by different main tables
 
-#### Vorgehensweise
+#### Procedure
 
-**1. Feldgruppen identifizieren:**
-Felder die fachlich zusammengehoeren in Gruppen einteilen.
+**1. Identify field groups:**
+Divide fields that belong together in business terms into groups.
 
-**2. Jede Gruppe wird ein eigenstaendiges Sheet:**
-- Eigener `<DECISION_TABLE>` Header
-- Eigene Testfaelle (Happy-Path + Fehlerfaelle fuer diese Gruppe)
-- Eigene Coverage-Berechnung → Ziel 100% pro Sub-Tabelle
-- Kleine Kombinationszahl → einfach 100% erreichbar
+**2. Each group becomes a self-contained sheet:**
+- Its own `<DECISION_TABLE>` header
+- Its own test cases (happy path + error cases for this group)
+- Its own coverage calculation → target 100% per sub-table
+- Small number of combinations → 100% easy to reach
 
-**3. Haupt-Tabelle referenziert Sub-Sheets:**
-- Fuer jede Feldgruppe ein FieldSubSection mit Referenz-EqClasses
-- Jede EqClass verweist auf einen TC der Sub-Tabelle
+**3. The main table references the sub-sheets:**
+- One FieldSubSection with reference EqClasses for each field group
+- Each EqClass points to a TC of the sub-table
 
-**4. Beispiel Haupt-Tabelle (valid/invalid mit Ranges):**
+**4. Example main table (valid/invalid with ranges):**
 ```
 <DECISION_TABLE>              | billingInvalid | datesInvalid | validAll
 FieldSection "Billing"
@@ -706,238 +706,238 @@ FieldSection "Dates"
     invalid                   | ref::SubB::[invalid_1-4]      | e |    |
 ```
 
-## Orchestrierung: Datentabellen und Testfall-Tabellen
+## Orchestration: data tables and test case tables
 
-> Die Multi-Sheet-Strategie oben zerlegt **eine grosse Tabelle** in Teile. Daneben gibt es
-> ein zweites, davon unabhaengiges Zusammenspiel: **Entitaeten** und **Ablaeufe**. Wer die
-> beiden verwechselt, schreibt dieselben Feld-Definitionen in jede Tabelle neu.
+> The multi-sheet strategy above breaks **one large table** into parts. Alongside it there is
+> a second, independent interplay: **entities** and **flows**. Anyone who confuses
+> the two rewrites the same field definitions in every table.
 
-### Zwei Arten von Tabelle
+### Two kinds of table
 
-| | `Execute` | Was sie beschreibt | Beispiel |
+| | `Execute` | What it describes | Example |
 |---|---|---|---|
-| **Datentabelle** | `F` | eine **Entitaet**: ihre Felder und deren EqClasses | `User`, `CompanyDE` |
-| **Testfall-Tabelle** | `T` | einen **Ablauf**: welche Situationen es gibt | `Registration`, `Login` |
+| **Data table** | `F` | an **entity**: its fields and their EqClasses | `User`, `CompanyDE` |
+| **Test case table** | `T` | a **flow**: which situations exist | `Registration`, `Login` |
 
-Eine Datentabelle erzeugt von sich aus **nichts**; sie wird ausschliesslich referenziert.
-Dieselbe `User`-Tabelle bedient Registrierung, Anmeldung und spaeter Kundenanlage — die
-EqClasses fuer `email` stehen **einmal** auf der Welt.
+A data table produces **nothing** on its own; it is only ever referenced.
+The same `User` table serves registration, login and later customer creation — the
+EqClasses for `email` exist **once** in the world.
 
-🔴 **Die Tabellen muessen Blaetter EINER Mappe sein.** Referenzen loesen sich nicht ueber
-Dateigrenzen auf; eine Referenz auf ein anderes File meldet
-`The targetTable 'User' does not exists`. Einzeldateien pro Tabelle sind zum Bearbeiten in
-Ordnung, muessen aber vor dem Generieren zusammengefuehrt werden.
+🔴 **The tables must be sheets of ONE workbook.** References do not resolve across
+file boundaries; a reference to another file reports
+`The targetTable 'User' does not exists`. Separate files per table are fine for editing,
+but must be merged before generating.
 
-### Eine Testfall-Tabelle definiert Faelle, keine Felder
+### A test case table defines cases, not fields
 
-Der haeufigste Anfaengerfehler (und er kostet am meisten): in die Testfall-Tabelle wieder
-alle Felder schreiben. Sie enthaelt **fast keine** Feld-Definitionen. Sie benennt die
-Situationen des Ablaufs und holt sich die Klassen per Referenz.
+The most common beginner's mistake (and the most expensive one): writing all the fields
+into the test case table again. It contains **almost no** field definitions. It names the
+situations of the flow and pulls in the classes by reference.
 
-Registrierung, vollstaendig — drei Felder, vier Testfaelle, 1 × 2 × 2 = 4 Kombinationen, 100 %:
+Registration, complete — three fields, four test cases, 1 × 2 × 2 = 4 combinations, 100 %:
 
 ```
-FieldSection "Sekundaerdaten"
-  sitzung (FSS)
-    abgemeldet          |                             | x | x | x | x
-  existierenderUser (FSS)
-    nein                |                             | x | x |   |
-    ja                  | ref:1:User::OK_1            |   |   | x | x
-FieldSection "Primaerdaten"
-  benutzer (FSS)
-    gueltig             | ref:1:User::OK_1            | x |   | x |
-    ungueltig           | ref::User::[E_1-16]         |   | x |   | x
+FieldSection "Secondary data"
+  session (FSS)
+    loggedOut           |                             | x | x | x | x
+  existingUser (FSS)
+    no                  |                             | x | x |   |
+    yes                 | ref:1:User::OK_1            |   |   | x | x
+FieldSection "Primary data"
+  user (FSS)
+    valid               | ref:1:User::OK_1            | x |   | x |
+    invalid             | ref::User::[E_1-16]         |   | x |   | x
 ```
 
-Eine **leere Generator-Zelle** heisst: das Feld bekommt keinen Wert (Nanook loggt nur eine
-Info). Fuer reine Zustaende wie `abgemeldet` ist das richtig — die Zeile benennt den
-Zustand, Daten braucht er nicht. Spalte 3 ist „Benutzer existiert schon, derselbe wird
-registriert" (dieselbe Instanz-Id `1`), Spalte 4 „Benutzer existiert, Eingabe ungueltig".
+An **empty generator cell** means: the field gets no value (Nanook only logs an
+info). For pure states like `loggedOut` that is right — the row names the
+state, it needs no data. Column 3 is "user already exists, the same one is being
+registered" (the same instance id `1`), column 4 "user exists, input invalid".
 
-Die 16 ungueltigen Faelle stehen in **einer Zelle**. Kaeme ein 17. Fehlerfall in `User`
-dazu, aendert sich hier nichts.
+The 16 invalid cases are in **one cell**. If a 17th error case were added to `User`,
+nothing changes here.
 
-### Die Sekundaerdaten-Sektion *ist* der Basiszustand
+### The secondary data section *is* the base state
 
-Die Verallgemeinerung, die den Suite-Writer erst moeglich macht:
+The generalisation that makes the suite writer possible in the first place:
 
-- **Primaerdaten** = was der Test eintippt.
-- **Sekundaerdaten** = was vorher wahr sein muss — und das ist genau ein Basiszustand.
+- **Primary data** = what the test types in.
+- **Secondary data** = what must be true beforehand — and that is exactly one base state.
 
-Der Writer muss ihn also nicht erraten, er liest ihn ab:
+So the writer does not have to guess it, it reads it off:
 
-| Sekundaerdaten-Feld | Wert | Basiszustand |
+| Secondary data field | Value | Base state |
 |---|---|---|
-| `sitzung` | `abgemeldet` | niemand angemeldet |
-| `existierenderUser` | *(leer)* | nichts vorzubereiten |
-| `existierenderUser` | `ref:1:User::OK_1` | Entitaet `User` per API anlegen |
+| `session` | `loggedOut` | nobody logged in |
+| `existingUser` | *(empty)* | nothing to prepare |
+| `existingUser` | `ref:1:User::OK_1` | create entity `User` via the API |
 
-🔵 Die Referenz sagt **beides**: welche Entitaet und welche Daten. Was sie **nicht** sagt,
-ist das *Wie* — welcher API-Weg einen Benutzer anlegt. Das steht einmal je Entitaet im
-Laeufer, nicht in der Tabelle. Eine neue Entitaet heisst eine Zeile mehr, keine Aenderung
-am Generator.
+🔵 The reference says **both**: which entity and which data. What it does **not** say
+is the *how* — which API route creates a user. That lives once per entity in the
+runner, not in the table. A new entity means one more row, no change
+to the generator.
 
-### Dieselbe Instanz-Id zweimal = derselbe Datensatz
+### The same instance id twice = the same record
 
-`ref:1:User::OK_1` in **zwei** Zellen desselben Testfalls liefert **einen** Benutzer, nicht
-zwei — die `1` ist die Instanz-Id. Genau damit baut man „der Benutzer existiert schon":
-einmal als Basiszustand anlegen, einmal als Eingabe eintippen.
+`ref:1:User::OK_1` in **two** cells of the same test case yields **one** user, not
+two — the `1` is the instance id. That is exactly how you build "the user already exists":
+create it once as the base state, type it in once as input.
 
-Ohne Instanz-Id (`ref::User::OK_1`) entstehen zwei unabhaengige Datensaetze.
+Without an instance id (`ref::User::OK_1`) you get two independent records.
 
-### Eine eigene Spalte fuer eine dedizierte Erwartung
+### A column of its own for a dedicated expectation
 
-Manchmal ist die Fehlermeldung der eigentliche Testgegenstand — „diese E-Mail gibt es
-schon" ist etwas anderes als „ungueltige Eingabe". Dafuer lohnt eine **zusaetzliche
-Spalte** statt einer Verzweigung in einer bestehenden.
+Sometimes the error message is the actual subject of the test — "this email already
+exists" is something different from "invalid input". That is worth an **additional
+column** rather than a branch in an existing one.
 
-Damit die Summenrechnung stimmt, bekommen die nachfolgenden Felder in dieser Spalte `x`
-auf dem bevorzugten Wert und `i` auf dem Rest: `i` zaehlt fuer COUNTA, erzeugt aber nichts.
-Die Spalte kostet so keine Doppelabdeckung.
+To keep the sum right, the subsequent fields in this column get `x`
+on the preferred value and `i` on the rest: `i` counts for COUNTA but produces nothing.
+That way the column costs no double coverage.
 
-⚪ Zusatzspalten, die **nicht** zur Kombinatorik gehoeren, gehoeren ans **Ende** und aus der
-Summe heraus — und ihr Name sollte das zeigen.
+⚪ Additional columns that do **not** belong to the combinatorics go at the **end** and out of the
+sum — and their name should show that.
 
-### Zusammengesetzte Generatoren
+### Composite generators
 
-Felder duerfen aus anderen Feldern entstehen, per Selbstreferenz im Generator-Ausdruck.
-`vorlage` und `mail` sind **eigene Generatoren eines Projekts, nicht im Paket** — das Beispiel
-zeigt das Muster; wer es nutzt, schreibt sie selbst (`DataGeneratorBase` erweitern und registrieren):
+Fields may be built from other fields, via self-reference in the generator expression.
+`template` and `mail` are **a project's own generators, not in the package** — the example
+shows the pattern; anyone using it writes them themselves (extend `DataGeneratorBase` and register it):
 
 ```
 firstName | gen::faker:person.firstName
 lastName  | gen::faker:person.lastName
-name      | gen::vorlage:{firstName} {lastName}
-email     | gen::mail:example.com          ← baut vorname.nachname@…, garantiert eindeutig
+name      | gen::template:{firstName} {lastName}
+email     | gen::mail:example.com          ← builds firstname.lastname@…, guaranteed unique
 ```
 
-🔴 **Eine Zusicherung, die nie eingreift, ist von einer kaputten nicht zu unterscheiden.**
-Zieht faker lauter verschiedene Namen, laeuft die Eindeutigkeits-Logik nie. Der Test dafuer
-muss die Kollision **erzwingen** (feste Namen, drei Aufrufe,
-drei verschiedene Ergebnisse).
+🔴 **A guarantee that never kicks in cannot be told apart from a broken one.**
+If faker draws nothing but distinct names, the uniqueness logic never runs. The test for it
+must **force** the collision (fixed names, three calls,
+three different results).
 
-### Drei Ebenen, nicht zwei — die Ausfuehrung bekommt ein eigenes Blatt
+### Three levels, not two — execution gets a sheet of its own
 
-Datentabelle und Testfall-Tabelle reichen, solange eine Entitaet **einen** Ablauf
-hat. Sobald es zwei werden (Anlegen *und* Bearbeiten), traegt die Aufteilung
-nicht mehr — und man merkt es zu spaet:
+Data table and test case table are enough as long as an entity has **one** flow.
+As soon as there are two (create *and* edit), the split no longer
+holds — and you notice too late:
 
-| Blatt | `Execute` | beschreibt |
+| Sheet | `Execute` | describes |
 |---|---|---|
-| `CompanyCommon` | `F` | was in **jedem** Land gleich ist |
-| `CompanyDE` · `CompanyES` | `F` | die Felder **eines Landes**, samt seiner Rechtsfolgen |
-| `FirmaAnlegenDE` · `…ES` | `T` | die **Ausfuehrung**: Basiszustand und Faelle |
+| `CompanyCommon` | `F` | what is the same in **every** country |
+| `CompanyDE` · `CompanyES` | `F` | the fields of **one country**, including its legal consequences |
+| `CreateCompanyDE` · `…ES` | `T` | the **execution**: base state and cases |
 
-🔴 **Der Basiszustand gehoert NICHT in die Feldtabelle**, auch wenn er fuer jeden
-Fall derselbe ist. Wer ihn dort hinschreibt, bindet die **Entitaet** an einen
-**Ablauf** — und beim zweiten Ablauf faengt jemand von vorne an. Das Ausfuehrungs-
-Blatt ist dagegen billig: Basiszustand, zwei bis drei Faelle, der Rest per
-Referenz.
+🔴 **The base state does NOT belong in the field table**, even if it is the same for
+every case. Writing it there ties the **entity** to a
+**flow** — and with the second flow someone starts over. The execution
+sheet, on the other hand, is cheap: base state, two or three cases, the rest by
+reference.
 
-🔵 Eine Datentabelle darf dabei eine **andere Datentabelle** referenzieren:
-`CompanyDE` holt sich die gemeinsamen Stammdaten aus `CompanyCommon`, und
-`FirmaAnlegenDE` holt sich `CompanyDE`. Die Kette ist beliebig tief — nur oben
-steht genau ein Blatt mit `Execute = T`.
+🔵 A data table may reference **another data table**:
+`CompanyDE` pulls the shared master data from `CompanyCommon`, and
+`CreateCompanyDE` pulls in `CompanyDE`. The chain can be arbitrarily deep — only at the top
+is there exactly one sheet with `Execute = T`.
 
-### Wo die Trennlinie zwischen Laendern verlaeuft
+### Where the dividing line between countries runs
 
-Nicht „Stammdaten gegen Laenderdaten", sondern: **sind die Aequivalenzklassen
-dieselben?**
+Not "master data versus country data", but: **are the equivalence classes
+the same?**
 
-Deshalb wandern `postalCode` und `timezone` ins Land, obwohl sie wie Stammdaten
-aussehen — ihre Klassen sind gleich (`valid`/`empty`/`wrongFormat`/…), ihre
-**gueltigen Werte** nicht. Und `phone` bleibt gemeinsam, obwohl die Vorwahl
-landesabhaengig ist: sie wird nicht geprueft, also unterscheidet sich nichts.
+That is why `postalCode` and `timezone` move into the country even though they look like master
+data — their classes are the same (`valid`/`empty`/`wrongFormat`/…), their
+**valid values** are not. And `phone` stays shared even though the dialling code
+depends on the country: it is not validated, so nothing differs.
 
-💡 **Woran man sieht, dass sich die Aufteilung lohnt**: nach der Trennung in gemeinsame
-und Laender-Tabellen kostet jedes weitere Land nur noch seine eigenen Spalten.
+💡 **How you can tell the split pays off**: after separating into shared
+and country tables, each further country costs only its own columns.
 
-### Rechtsfolgen gehoeren in die Wirkungs-Sektion, nicht in die Felder
+### Legal consequences belong in the effect section, not in the fields
 
-Der eigentliche Grund, warum Laender getrennte Tabellen brauchen, ist **nicht**
-die Werteliste von `businessType`. Es ist, was aus der Wahl **folgt**:
+The real reason countries need separate tables is **not**
+the value list of `businessType`. It is what **follows** from the choice:
 
 ```
-DE   Rechtsform × § 19          →  Buchfuehrungsart UND Belegform (2×2-Matrix)
-ES   kein § 19 (es gibt keins)  →  stattdessen: wem gehoert die Steuerkennung?
+DE   legal form × § 19          →  bookkeeping type AND document form (2×2 matrix)
+ES   no § 19 (there is none)    →  instead: who owns the tax identifier?
 ```
 
-Spanien hat **kein** Kleinunternehmer-Regime — die deutsche Achse existiert dort
-gar nicht. Dafuer eine, die DE nicht hat: eine Gesellschaft fuehrt eine eigene
-Kennung, ein Einzelunternehmer seine persoenliche (die auslaendisch sein kann).
+Spain has **no** small-business regime — the German axis does not exist there
+at all. Instead it has one that DE does not: a company holds its own
+identifier, a sole trader their personal one (which may be foreign).
 
-⚪ Solche Faelle bekommen **eigene Spalten am Ende**, ausserhalb der
-Deckungssumme: sie pruefen kein weiteres Feld, sondern ein Zusammentreffen.
+⚪ Such cases get **their own columns at the end**, outside the
+coverage sum: they do not test another field, but a coincidence of conditions.
 
-### 🔴 Ein abgeleitetes Feld ist keine Eingabe
+### 🔴 A derived field is not an input
 
-Traegt die Anwendung einen Wert selbst zusammen, gehoert er in die **Erwartung**,
-nicht in die Primaerdaten — sonst beschreibt die Tabelle eine Eingabe, die es
-nicht gibt.
+If the application assembles a value itself, it belongs in the **expectation**,
+not in the primary data — otherwise the table describes an input that does
+not exist.
 
-Beispiel: die spanische USt-IdNr ist `ES` + NIF/CIF, wird berechnet
-und ist im Formular `readOnly`. Zwei Felder mit eigenen Klassen waeren dort
-schlicht falsch. **Deutschland ist der Sonderfall**, nicht die Norm: dort sind
-USt-IdNr und Steuernummer zwei verschiedene Nummern von zwei Behoerden.
+Example: the Spanish VAT ID is `ES` + NIF/CIF, is calculated
+and is `readOnly` in the form. Two fields with their own classes would simply be
+wrong there. **Germany is the special case**, not the norm: there the
+VAT ID and the tax number are two different numbers from two authorities.
 
-💡 Die Frage, die das entscheidet: *Kann ein Mensch diesen Wert eintippen?* Wenn
-nicht, ist es eine Wirkung.
+💡 The question that decides it: *Can a human type in this value?* If
+not, it is an effect.
 
-### 🔴 Klassen nach NAMEN suchen, nie nach Index
+### 🔴 Look up classes by NAME, never by index
 
-Ein Erzeuger, der `klassen[1]` nimmt, bricht in dem Moment, in dem jemand eine
-Klasse davor einfuegt — und zwar **lautlos**: die Referenz zeigt auf die falsche
-Klasse, die Bereichsreferenz verschwindet, und aus 32 Testfaellen werden 18, ohne
-dass etwas rot wird.
+A generator that takes `classes[1]` breaks the moment someone inserts a
+class before it — and does so **silently**: the reference points to the wrong
+class, the range reference disappears, and 32 test cases become 18, without
+anything turning red.
 
-Wer nach Namen sucht, bekommt beim Umbenennen eine Meldung statt eines stillen
-Datenverlusts.
+Looking up by name gives you an error message on rename instead of a silent
+data loss.
 
-### Reihenfolge beim Aufbau
+### Order of construction
 
-1. **Datentabellen zuerst** (`Execute = F`) — die Entitaeten, die der Ablauf braucht.
-2. **Registrierung vor Anmeldung.** Anmelden setzt einen Benutzer voraus; ohne
-   Registrierung gibt es ihn nur ueber einen fremden Anbieter (Google/Apple), und dann
-   haengt der Test am Mock statt an der Anwendung.
-3. **Dann der Ablauf** als Testfall-Tabelle, die nur noch Faelle benennt.
-4. Einzeldateien **zusammenfuehren**, dann generieren.
+1. **Data tables first** (`Execute = F`) — the entities the flow needs.
+2. **Registration before login.** Login requires a user; without
+   registration the user only exists via a third-party provider (Google/Apple), and then
+   the test depends on the mock instead of the application.
+3. **Then the flow** as a test case table that only names cases.
+4. **Merge** separate files, then generate.
 
-## CASCADE-Muster fuer 100% Coverage
+## CASCADE pattern for 100% coverage
 
-### Konzept
-Bei der CASCADE-Technik werden `a`/`e`-Marker nur auf Felder gesetzt, die **nach** dem Zielfeld in der Feldreihenfolge kommen. Felder **vor** dem Zielfeld bekommen nur `x` auf den bevorzugten Wert (wie beim Happy-Path).
+### Concept
+With the CASCADE technique, `a`/`e` markers are set only on fields that come **after** the target field in field order. Fields **before** the target field get only `x` on the preferred value (as in the happy path).
 
-### Warum funktioniert CASCADE?
-Jeder TC deckt weniger ab als der vorherige. Die Produkte bilden eine abnehmende Reihe:
+### Why does CASCADE work?
+Each TC covers less than the previous one. The products form a decreasing series:
 ```
-TC1 (Feld 1):   1 × 2 × 2 × 2 × 2 = 16  (a/e auf Felder 2-5)
-TC2 (Feld 2):   1 × 1 × 2 × 2 × 2 =  8  (a/e auf Felder 3-5)
-TC3 (Feld 3):   1 × 1 × 1 × 2 × 2 =  4  (a/e auf Felder 4-5)
-TC4 (Feld 4):   1 × 1 × 1 × 1 × 2 =  2  (a/e auf Feld 5)
-TC5 (Feld 5):   1 × 1 × 1 × 1 × 1 =  1  (kein Feld danach)
-TC6 (Happy):    1 × 1 × 1 × 1 × 1 =  1
+TC1 (field 1):  1 × 2 × 2 × 2 × 2 = 16  (a/e on fields 2-5)
+TC2 (field 2):  1 × 1 × 2 × 2 × 2 =  8  (a/e on fields 3-5)
+TC3 (field 3):  1 × 1 × 1 × 2 × 2 =  4  (a/e on fields 4-5)
+TC4 (field 4):  1 × 1 × 1 × 1 × 2 =  2  (a/e on field 5)
+TC5 (field 5):  1 × 1 × 1 × 1 × 1 =  1  (no field after it)
+TC6 (happy):    1 × 1 × 1 × 1 × 1 =  1
                                       ──
-Summe:                                32 = 2^5 = total
+Sum:                                  32 = 2^5 = total
 ```
 
-### Voraussetzung fuer exakt 100%
-**Jede nicht-bevorzugte EqClass braucht einen eigenen Error-TC.**
-Dann ergibt die Summe der Produkte exakt das Total.
+### Precondition for exactly 100%
+**Every non-preferred EqClass needs its own error TC.**
+Then the sum of the products equals the total exactly.
 
-**Spezialfall: Alle Felder haben 2 EqClasses:**
+**Special case: all fields have 2 EqClasses:**
 ```
-total = 2^n   (n = Anzahl Felder)
-summe = 2^(n-1) + 2^(n-2) + ... + 2^0 + 1 = 2^n
+total = 2^n   (n = number of fields)
+sum   = 2^(n-1) + 2^(n-2) + ... + 2^0 + 1 = 2^n
 ```
 
-**Allgemein: Felder mit unterschiedlichen EqClass-Zahlen (z.B. 3, 2, 2, 2, 3, 3):**
-Funktioniert auch! Jede nicht-bevorzugte EqClass ergibt einen TC mit Produkt:
+**General: fields with different EqClass counts (e.g. 3, 2, 2, 2, 3, 3):**
+Works too! Each non-preferred EqClass gives a TC with product:
 ```
-produkt(TC) = 1^(Felder davor) × Produkt(EqClass-Anzahlen der Felder danach)
+product(TC) = 1^(fields before) × product(EqClass counts of the fields after)
 ```
-Alle Produkte + Happy-Path(1) = Total.
+All products + happy path(1) = total.
 
-**Beispiel BillingAddress (3x2x2x2x3x3 = 216):**
+**Example BillingAddress (3x2x2x2x3x3 = 216):**
 ```
 billingName:   empty(72) + whitespace(72)          = 144
 street:        empty(36)                           =  36
@@ -946,31 +946,31 @@ city:          empty(9)                            =   9
 country:       invalid_3chars(3) + empty(3)        =   6
 customerEmail: invalid(1) + empty(1)               =   2
 happy:                                             =   1
-                                             Summe: 216 = 100%
+                                               Sum: 216 = 100%
 ```
 
-### Implementierung
-Jeder Nicht-Happy TC braucht ein **Zielfeld** (das Feld das er testet). Die Felder muessen eine feste Reihenfolge haben.
+### Implementation
+Every non-happy TC needs a **target field** (the field it tests). The fields must have a fixed order.
 
-**Marker-Logik pro TC:**
-1. **Happy-Path TC**: Alle Felder `x` auf preferred → Produkt = 1
-2. **Error/Target TC**:
-   - Zielfeld: `x` auf Ziel-EqClass → COUNTA = 1
-   - Felder VOR Zielfeld: `x` auf preferred → COUNTA = 1
-   - Felder NACH Zielfeld: `a` auf preferred, `e` auf rest → COUNTA = n
+**Marker logic per TC:**
+1. **Happy-path TC**: all fields `x` on preferred → product = 1
+2. **Error/target TC**:
+   - Target field: `x` on target EqClass → COUNTA = 1
+   - Fields BEFORE the target field: `x` on preferred → COUNTA = 1
+   - Fields AFTER the target field: `a` on preferred, `e` on the rest → COUNTA = n
 
-### Wann CASCADE verwenden?
-- Haupt-Tabellen mit Referenz-Feldern (valid/invalid pro Ref → 2 EqClasses)
-- Sub-Tabellen mit beliebigen EqClass-Anzahlen pro Feld
-- Wenn die Coverage-Summe exakt das Total treffen soll (100%)
+### When to use CASCADE?
+- Main tables with reference fields (valid/invalid per ref → 2 EqClasses)
+- Sub-tables with any EqClass counts per field
+- When the coverage sum should hit the total exactly (100%)
 
-### Wann NICHT CASCADE?
-- Wenn Felder logisch zusammengehoeren und immer gemeinsam markiert werden muessen
-- Wenn bewusst >100% Coverage gewuenscht ist (maximale Abdeckung)
+### When NOT to use CASCADE?
+- When fields belong together logically and must always be marked together
+- When >100% coverage is deliberately wanted (maximum coverage)
 
-### TC-Reihenfolge: Error-First
-Fuer Menschen lesbarer: **Error-TCs zuerst, Valid-TCs zuletzt.**
-Das CASCADE-Treppenmuster (a/e-Marker von links nach rechts) wird sofort sichtbar.
+### TC order: error-first
+More readable for humans: **error TCs first, valid TCs last.**
+The CASCADE staircase pattern (a/e markers from left to right) becomes visible immediately.
 ```
                     | inv_1 | inv_2 | inv_3 | inv_4 | valid_1
 field1 valid        |       |   x   |   x   |   x   |   x
@@ -982,16 +982,16 @@ field3 valid        |   a   |   a   |       |   x   |   x
 field4 valid        |   a   |   a   |   a   |       |   x
        empty        |   e   |   e   |   e   |   x   |
 ```
-Die a/e-Marker bilden ein Dreieck — sofort erkennbar ob das Muster stimmt.
+The a/e markers form a triangle — you can see at once whether the pattern is right.
 
-## Wichtige Hinweise
+## Important notes
 
-- `exceljs` ist 1-basiert (Spalte 1 = A, Zeile 1 = erste Zeile)
-- Formeln mit `{ formula: '...' }` schreiben, NICHT als String
-- Prozent-Zelle braucht `numFmt: '0.00%'`
-- `row.commit()` nach Aenderungen aufrufen
-- Styling wird NACH dem Schreiben der Daten angewendet (sonst ueberschreibt commit() den Style)
-- Nanook's ImporterXlsx liest die Excel-Datei — die Formeln muessen nicht berechnet sein, aber die Struktur muss stimmen
-- Vollstaendiges Beispiel (Login-Formular, zwei Blaetter, Mappe und Fixtures):
+- `exceljs` is 1-based (column 1 = A, row 1 = first row)
+- Write formulas with `{ formula: '...' }`, NOT as a string
+- The percentage cell needs `numFmt: '0.00%'`
+- Call `row.commit()` after changes
+- Styling is applied AFTER writing the data (otherwise commit() overwrites the style)
+- Nanook's ImporterXlsx reads the Excel file — the formulas do not need to be calculated, but the structure must be right
+- Complete example (login form, two sheets, workbook and fixtures):
   https://nanook.xhub.io/blog/2026/08/22/login-example-ai-generated-table
-- Hintergrund zu den Regeln oben: `notes.md` neben dieser Datei (nicht noetig fuer die Arbeit)
+- Background to the rules above: `notes.md` next to this file (not needed for the work)

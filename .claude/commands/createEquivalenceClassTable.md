@@ -1,26 +1,26 @@
 # /createEquivalenceClassTable
 
-> Seit Skill 0.2.0 auch als Plugin: `/plugin marketplace add xhubio/nanook-table`, dann
-> `/plugin install nanook@nanook`; der Skill heisst dort `/nanook:create-equivalence-class-table`.
+> Also available as a plugin since skill 0.2.0: `/plugin marketplace add xhubio/nanook-table`, then
+> `/plugin install nanook@nanook`; there the skill is `/nanook:create-equivalence-class-table`.
 
-Erstellt eine Nanook Decision Table (Equivalenzklassentabelle) als formatierte Excel-Datei fuer ein gegebenes Testobjekt.
+Creates a nanook.xhub decision table (equivalence class table) as a formatted Excel file for a given test object.
 
-## Verwendung
+## Usage
 
 ```
-/createEquivalenceClassTable <Page-Name, API-Endpunkt oder Formular-Beschreibung>
+/createEquivalenceClassTable <page name, API endpoint or form description>
 ```
 
-## Was passiert
+## What happens
 
-1. Liest den `create-equivalence-class-table` Skill (`skills/create-equivalence-class-table/SKILL.md` im Paket)
-2. Analysiert das Testobjekt (Felder, Validierungen, Feldgruppen)
-3. Definiert EqClasses pro Feld nach gaengigen Mustern
-4. Plant Testfaelle mit CASCADE fuer 100% Coverage
-5. Erzeugt ein TypeScript-Script das die Excel-Datei generiert
-6. Verifiziert: Excel erzeugen, Deckung pruefen (`check-classes.mts`), Fixtures generieren (`generate-fixtures.mts`)
+1. Reads the `create-equivalence-class-table` skill (`skills/create-equivalence-class-table/SKILL.md` in the package)
+2. Analyses the test object (fields, validations, field groups)
+3. Defines equivalence classes per field from common patterns
+4. Plans test cases with CASCADE for 100 % coverage
+5. Writes a TypeScript script that generates the Excel file
+6. Verifies: build the workbook, check the coverage (`check-classes.mts`), generate fixtures (`generate-fixtures.mts`)
 
-## Beispiele
+## Examples
 
 ```
 /createEquivalenceClassTable Invoice Create Page
@@ -28,20 +28,20 @@ Erstellt eine Nanook Decision Table (Equivalenzklassentabelle) als formatierte E
 /createEquivalenceClassTable POST /api/v1/orders
 ```
 
-## Ergebnis
+## Result
 
-- TypeScript-Script in `scripts/create-<name>-table.ts`
-- Excel-Datei in `resources/<name>-tests.xlsx`
-- Formatiert mit Farben, Formeln, CASCADE-Markern
-- 100% Coverage pro Sheet
+- TypeScript script in `scripts/create-<name>-table.ts`
+- Excel file in `resources/<name>-tests.xlsx`
+- Formatted with colours, formulas, CASCADE markers
+- 100 % coverage per sheet
 
-## Naechste Schritte
+## Next steps
 
-Nach der Erstellung:
-1. Excel in Spreadsheet-App oeffnen und Marker/Coverage pruefen
-2. Weitere Generatoren in `scripts/generate-fixtures.mts` registrieren, falls die Tabelle welche aufruft
-3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx` um Fixtures zu erzeugen
+After the table is created:
+1. Open the workbook in a spreadsheet app and check markers and coverage
+2. Register further generators in `scripts/generate-fixtures.mts` if the table calls any
+3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx` to generate the fixtures
 
 ---
 
-**Skill-Referenz**: Fuehre den Skill `create-equivalence-class-table` aus mit dem angegebenen Testobjekt als Kontext.
+**Skill reference**: run the skill `create-equivalence-class-table` with the given test object as context.

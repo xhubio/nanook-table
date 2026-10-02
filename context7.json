@@ -1,6 +1,6 @@
 {
   "$schema": "https://context7.com/schema/context7.json",
-  "projectTitle": "Nanook",
+  "projectTitle": "nanook.xhub",
   "description": "Test cases from equivalence class tables in XLSX, test data from pluggable generators and writers (@xhubio/nanook-table).",
   "excludeFolders": [
     "docs/articles",
