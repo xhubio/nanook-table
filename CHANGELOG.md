@@ -1,3 +1,10 @@
+## [3.1.3](https://github.com/xhubio/nanook-table/compare/v3.1.2...v3.1.3) (2026-10-02)
+
+
+### Bug Fixes
+
+* **skill:** English skill text, display name nanook.xhub ([8f696a2](https://github.com/xhubio/nanook-table/commit/8f696a247c98cc10ef235c48e4ece48b3fbfbc01))
+
 ## [3.1.2](https://github.com/xhubio/nanook-table/compare/v3.1.1...v3.1.2) (2026-10-02)
 
 
