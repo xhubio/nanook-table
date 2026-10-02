@@ -8,7 +8,7 @@ import {
   DataGeneratorBase,
   DataGeneratorRegistry,
   GeneratorFaker
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 ```
 
 ## Generator Lifecycle
@@ -140,8 +140,8 @@ Base implementation of `DataGeneratorInterface`. Provides store loading/saving, 
 **Override this method in subclasses.** This is where the actual data generation logic goes. The base class `generate()` method handles instance ID caching and uniqueness; `_doGenerate()` is only called when new data is actually needed.
 
 ```typescript
-import { DataGeneratorBase } from 'nanook-table'
-import type { GeneratorDirective } from 'nanook-table'
+import { DataGeneratorBase } from '@xhubio/nanook-table'
+import type { GeneratorDirective } from '@xhubio/nanook-table'
 
 class GeneratorTimestamp extends DataGeneratorBase {
   async _doGenerate(
@@ -165,8 +165,8 @@ import {
   DataGeneratorBase,
   DataGeneratorRegistry,
   LoggerMemory
-} from 'nanook-table'
-import type { GeneratorDirective, TestcaseData } from 'nanook-table'
+} from '@xhubio/nanook-table'
+import type { GeneratorDirective, TestcaseData } from '@xhubio/nanook-table'
 
 class GeneratorCounter extends DataGeneratorBase {
   private counter = 0
@@ -261,7 +261,7 @@ import {
   GeneratorFaker,
   DataGeneratorRegistry,
   LoggerMemory
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 const registry = new DataGeneratorRegistry()

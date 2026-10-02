@@ -105,7 +105,7 @@ import {
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
   createDefaultWriter
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 async function main() {
   const logger = new LoggerMemory()
@@ -195,7 +195,7 @@ interface FilterProcessorInterface {
 Here is a filter that treats the expression as a regular expression and includes test cases where at least one tag matches:
 
 ```typescript
-import type { FilterProcessorInterface } from 'nanook-table'
+import type { FilterProcessorInterface } from '@xhubio/nanook-table'
 
 export class RegexFilterProcessor implements FilterProcessorInterface {
   name: string
@@ -233,7 +233,7 @@ processor.addFilterProcessor(
 Here is a filter that assigns numeric priority levels to tags and includes only test cases above a threshold:
 
 ```typescript
-import type { FilterProcessorInterface } from 'nanook-table'
+import type { FilterProcessorInterface } from '@xhubio/nanook-table'
 
 const PRIORITY_MAP: Record<string, number> = {
   critical: 100,

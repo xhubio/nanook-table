@@ -7,7 +7,7 @@ import {
   LoggerInterface,
   LoggerMemory,
   getLoggerMemory
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 ```
 
 ---
@@ -99,7 +99,7 @@ await logger.fatal('Cannot open file: tests.xlsx')
 To integrate Nanook with your own logging infrastructure, extend `LoggerInterface` and override the `_writeLog` method:
 
 ```typescript
-import { LoggerInterface } from 'nanook-table'
+import { LoggerInterface } from '@xhubio/nanook-table'
 
 class WinstonLogger extends LoggerInterface {
   private winston: WinstonInstance
@@ -161,7 +161,7 @@ console.log(logger.entries.info.length) // 0
 ### Example
 
 ```typescript
-import { LoggerMemory } from 'nanook-table'
+import { LoggerMemory } from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 logger.writeConsole = true
@@ -197,7 +197,7 @@ Each entry in the `entries` arrays is an object with:
 Factory function that creates and returns a new `LoggerMemory` instance.
 
 ```typescript
-import { getLoggerMemory } from 'nanook-table'
+import { getLoggerMemory } from '@xhubio/nanook-table'
 
 const logger = getLoggerMemory()
 logger.writeConsole = true
@@ -222,7 +222,7 @@ logger.level = 'debug'
 
 ```typescript
 import { describe, it, expect } from 'vitest'
-import { LoggerMemory } from 'nanook-table'
+import { LoggerMemory } from '@xhubio/nanook-table'
 
 describe('my generator', () => {
   it('logs a warning for empty config', async () => {

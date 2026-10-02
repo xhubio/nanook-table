@@ -16,7 +16,7 @@ import {
   FilterInterface,
   PREFIX_GENERATOR,
   PREFIX_REFERENCE
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 ```
 
 ## TableInterface

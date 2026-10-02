@@ -82,8 +82,8 @@ Create a file `src/CsvWriter.ts`:
 ```typescript
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import type { LoggerInterface } from 'nanook-table'
-import type { InterfaceWriter } from 'nanook-table'
+import type { LoggerInterface } from '@xhubio/nanook-table'
+import type { InterfaceWriter } from '@xhubio/nanook-table'
 
 // Define the shape of the testcase data we receive
 interface TestcaseData {
@@ -184,7 +184,7 @@ import {
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
   createDefaultWriter
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 import { GeneratorPerson } from './GeneratorPerson.js'
 import { CsvWriter } from './CsvWriter.js'
 
