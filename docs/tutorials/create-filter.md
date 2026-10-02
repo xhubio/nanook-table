@@ -104,7 +104,7 @@ import {
   SimpleArrayIgnoreFilterProcessor,
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
-  createDefaultWriter
+  type InterfaceWriter
 } from '@xhubio/nanook-table'
 
 async function main() {
@@ -112,12 +112,26 @@ async function main() {
   logger.writeConsole = true
 
   const fileProcessor = createDefaultFileProcessor(logger)
+  await fileProcessor.load('resources/demo.xlsx')
+  const tables = Object.fromEntries(
+    fileProcessor.tables.map((t) => [t.tableName, t])
+  )
+
+  // Print the name of every test case that passes the filters
+  const writer: InterfaceWriter = {
+    logger,
+    async before() {},
+    async write(tc) {
+      console.log(tc.tableName, tc.name)
+    },
+    async after() {}
+  }
 
   const processor = new TestcaseProcessor({
     logger,
     generatorRegistry: createDefaultGeneratorRegistry(),
-    writer: createDefaultWriter(logger),
-    tables: {}
+    writer: [writer],
+    tables
   })
 
   // Register the include filter
@@ -129,9 +143,6 @@ async function main() {
   processor.addFilterProcessor(
     new SimpleArrayIgnoreFilterProcessor({ name: 'SimpleArrayIgnoreFilter' })
   )
-
-  await fileProcessor.load('resources/demo.xlsx')
-  processor.tables = fileProcessor.tables
 
   await processor.process()
 }

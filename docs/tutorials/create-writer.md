@@ -1,6 +1,6 @@
 # Create a Custom Writer
 
-The default writer outputs each test case as a JSON file. In many real-world scenarios, you need data in a different format -- CSV for import into a database, XML for an API, or a custom structure for a test harness. In this tutorial, you will create a CSV writer and use it alongside the default writer.
+The writer from the previous tutorials outputs each test case as a JSON file. In many real-world scenarios, you need data in a different format -- CSV for import into a database, XML for an API, or a custom structure for a test harness. In this tutorial, you will create a CSV writer and use it alongside that JSON writer.
 
 ## The InterfaceWriter Contract
 
@@ -148,9 +148,8 @@ export class CsvWriter implements InterfaceWriter {
   }
 
   /**
-   * Builds the output file path for a given test case.
-   * The directory is expected to already exist (the default writer
-   * creates it, and writers execute in registration order).
+   * Builds the output file path for a given test case
+   * and creates its directory if needed.
    */
   private async createFileName(
     testcaseData: TestcaseData
@@ -174,16 +173,17 @@ The writer does the following for each test case:
 
 ## Register Multiple Writers
 
-Update your `src/tdg.ts` to include both the default writer and the CSV writer:
+Update your `src/tdg.ts` to include both the JSON writer and the CSV writer:
 
 ```typescript
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
   LoggerMemory,
   TestcaseProcessor,
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
-  createDefaultWriter
+  type InterfaceWriter
 } from '@xhubio/nanook-table'
 import { GeneratorPerson } from './GeneratorPerson.js'
 import { CsvWriter } from './CsvWriter.js'
@@ -193,23 +193,12 @@ async function main() {
   logger.writeConsole = true
 
   const fileProcessor = createDefaultFileProcessor(logger)
+  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
+  const tables = Object.fromEntries(
+    fileProcessor.tables.map((t) => [t.tableName, t])
+  )
 
   const generatorRegistry = createDefaultGeneratorRegistry()
-
-  // Get the default JSON writer (createDefaultWriter returns an array)
-  const defaultWriter = createDefaultWriter(logger)[0]
-
-  // Create the CSV writer
-  const csvWriter = new CsvWriter({ logger })
-
-  const processor = new TestcaseProcessor({
-    logger,
-    generatorRegistry,
-    // Register both writers; they execute in this order
-    writer: [defaultWriter, csvWriter],
-    tables: {}
-  })
-
   generatorRegistry.registerGenerator(
     'generatorPerson',
     new GeneratorPerson({
@@ -219,8 +208,31 @@ async function main() {
     })
   )
 
-  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
-  processor.tables = fileProcessor.tables
+  // The JSON writer from the previous tutorials
+  const jsonWriter: InterfaceWriter = {
+    logger,
+    async before() {},
+    async write(tc) {
+      const dir = path.join('tdg', tc.name)
+      await fs.mkdir(dir, { recursive: true })
+      await fs.writeFile(
+        path.join(dir, 'testcaseData.json'),
+        JSON.stringify(tc, null, 2)
+      )
+    },
+    async after() {}
+  }
+
+  // Create the CSV writer
+  const csvWriter = new CsvWriter({ logger })
+
+  const processor = new TestcaseProcessor({
+    logger,
+    generatorRegistry,
+    // Register both writers; they execute in this order
+    writer: [jsonWriter, csvWriter],
+    tables
+  })
 
   await processor.process()
 }
@@ -232,8 +244,8 @@ main()
 
 Key points:
 
-- **`createDefaultWriter(logger)`** returns an array containing one default writer. Extract it with `[0]`.
-- **The `writer` option** accepts an array of writers. They execute in the order they appear: the default writer runs first (creating the directory and writing `testcaseData.json`), then the CSV writer runs second (writing `person.csv` into the same directory).
+- **Do not use `createDefaultWriter(logger)` here.** In 3.x its `before()` and `after()` throw `Method not implemented`, so the processor stops before the first test case. Write your own writer, as above.
+- **The `writer` option** accepts an array of writers. They execute in the order they appear: the JSON writer runs first (creating the directory and writing `testcaseData.json`), then the CSV writer runs second (writing `person.csv` into the same directory).
 - You can register as many writers as you need. Each writer independently extracts and formats the data it cares about.
 
 ## Run and Inspect the Output
@@ -250,7 +262,7 @@ Each test case directory now contains two files:
 ```
 tdg/
   TC1/
-    testcaseData.json    (from the default writer)
+    testcaseData.json    (from the JSON writer)
     person.csv           (from the CSV writer)
   TC2/
     testcaseData.json

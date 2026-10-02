@@ -17,7 +17,7 @@ Nanook is a toolkit for defining test cases in Excel spreadsheets and generating
 Install the package:
 
 ```bash
-npm install nanook-table
+npm install @xhubio/nanook-table
 ```
 
 Create and run a generation script:
@@ -28,23 +28,46 @@ import {
   LoggerMemory,
   TestcaseProcessor,
   createDefaultFileProcessor,
-  createDefaultGeneratorRegistry,
-  createDefaultWriter
+  DataGeneratorRegistry,
+  GeneratorFaker,
+  type InterfaceWriter
 } from '@xhubio/nanook-table'
 
 async function main() {
   const logger = new LoggerMemory()
   logger.writeConsole = true
 
-  const fileProcessor = await createDefaultFileProcessor(logger)
+  const fileProcessor = createDefaultFileProcessor(logger)
+  await fileProcessor.load(path.join('resources', 'tests.xlsx'))
+
+  // the processor expects the tables keyed by table name
+  const tables = Object.fromEntries(
+    fileProcessor.tables.map((t) => [t.tableName, t])
+  )
+
+  // the registry starts empty: register every generator your tables call
+  const generatorRegistry = new DataGeneratorRegistry()
+  generatorRegistry.registerGenerator(
+    'faker',
+    new GeneratorFaker({ generatorRegistry, name: 'faker', logger })
+  )
+
+  const writer: InterfaceWriter = {
+    logger,
+    async before() {},
+    async write(tc) {
+      console.log(tc.tableName, tc.name, JSON.stringify(tc.data))
+    },
+    async after() {}
+  }
+
   const processor = new TestcaseProcessor({
     logger,
-    generatorRegistry: createDefaultGeneratorRegistry(),
-    writer: createDefaultWriter(logger)
+    generatorRegistry,
+    writer: [writer],
+    tables
   })
 
-  await fileProcessor.load(path.join('resources', 'tests.xlsx'))
-  processor.tables = fileProcessor.tables
   await processor.process()
 }
 
@@ -75,12 +98,11 @@ Table Models              -- TableDecision, TableMatrix
 TestcaseProcessor         -- orchestrates the generation loop
     |
     +-- DataGeneratorRegistry
-    |       +-- GeneratorFaker (built-in)
+    |       +-- GeneratorFaker (built-in, register it yourself)
     |       +-- your custom generators
     |
     +-- InterfaceWriter[]
-    |       +-- default JSON writer
-    |       +-- your custom writers
+    |       +-- your writers
     v
 Output Files / Data
 ```
