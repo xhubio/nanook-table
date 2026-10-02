@@ -1,0 +1,17 @@
+{
+  "name": "nanook",
+  "owner": {
+    "name": "xhub.io",
+    "url": "https://xhub.io"
+  },
+  "metadata": {
+    "description": "Nanook: test cases from equivalence class tables, test data from generators."
+  },
+  "plugins": [
+    {
+      "name": "nanook",
+      "source": "./",
+      "description": "Draft Nanook decision tables as XLSX, check the coverage, generate test data."
+    }
+  ]
+}
