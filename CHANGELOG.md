@@ -1,3 +1,10 @@
+## [3.1.2](https://github.com/xhubio/nanook-table/compare/v3.1.1...v3.1.2) (2026-10-02)
+
+
+### Bug Fixes
+
+* **skill:** copy the scripts from node_modules, never rewrite them ([04b9e69](https://github.com/xhubio/nanook-table/commit/04b9e69ca73842e180cb72a55cfce2532a0c5485))
+
 ## [3.1.1](https://github.com/xhubio/nanook-table/compare/v3.1.0...v3.1.1) (2026-10-02)
 
 
