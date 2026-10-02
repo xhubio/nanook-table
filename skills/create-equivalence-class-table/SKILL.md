@@ -34,7 +34,9 @@ Erstellt formatierte Excel-Dateien mit Nanook Decision Tables fuer beliebige Tes
 
 Neben dieser `SKILL.md` liegt ein Ordner `scripts/` mit zwei fertigen Skripten. Sie
 importieren `@xhubio/nanook-table` bzw. `exceljs`; Node loest Imports relativ zum Ort des
-Skripts auf. Deshalb **zuerst ins Projekt kopieren**, dann dort ausfuehren:
+Skripts auf. Deshalb **zuerst ins Projekt kopieren**, dann dort ausfuehren. Ist `cp` nicht
+erlaubt, die Datei lesen und **unveraendert** ins Projekt schreiben — nicht neu schreiben:
+die Skripte sind geprueft, eine Nachschrift ist es nicht.
 
 ```
 cp <skill-ordner>/scripts/check-classes.mts <skill-ordner>/scripts/generate-fixtures.mts scripts/
