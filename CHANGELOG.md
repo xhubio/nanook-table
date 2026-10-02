@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/xhubio/nanook-table/compare/v3.1.0...v3.1.1) (2026-10-02)
+
+
+### Bug Fixes
+
+* **skill:** copy the bundled scripts unchanged instead of rewriting them ([25cd7d1](https://github.com/xhubio/nanook-table/commit/25cd7d1b3aafe55bfd0b89e6c689527919e154d4))
+
 # [3.1.0](https://github.com/xhubio/nanook-table/compare/v3.0.1...v3.1.0) (2026-10-02)
 
 
