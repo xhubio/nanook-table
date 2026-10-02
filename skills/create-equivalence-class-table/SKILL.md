@@ -23,7 +23,7 @@ Erstellt formatierte Excel-Dateien mit Nanook Decision Tables fuer beliebige Tes
 
 ## Umgebung und mitgelieferte Skripte
 
-- Projekt mit `@xhubio/nanook-table` (ab 3.0.1, ESM) und `exceljs` als devDependency
+- Projekt mit `@xhubio/nanook-table` (ab 3.1.0, ESM; 3.0.1 geht, dann ohne Skripte im Paket) und `exceljs` als devDependency
   (`npm install -D exceljs`) — `exceljs` ist **keine** Abhaengigkeit von Nanook.
 - Node.js ab 22.18 fuehrt `.ts`/`.mts` direkt aus; aeltere 22.x brauchen
   `--experimental-strip-types`, `npx tsx` geht ueberall.
@@ -32,14 +32,18 @@ Erstellt formatierte Excel-Dateien mit Nanook Decision Tables fuer beliebige Tes
 - **Ausgabesprache**: Kommentare, Fehlermeldungen und Expected Results in der Sprache des
   Nutzers schreiben (Sprache seiner Anfrage), nicht in der Sprache dieser Anleitung.
 
-Neben dieser `SKILL.md` liegt ein Ordner `scripts/` mit zwei fertigen Skripten. Sie
-importieren `@xhubio/nanook-table` bzw. `exceljs`; Node loest Imports relativ zum Ort des
-Skripts auf. Deshalb **zuerst ins Projekt kopieren**, dann dort ausfuehren. Ist `cp` nicht
-erlaubt, die Datei lesen und **unveraendert** ins Projekt schreiben — nicht neu schreiben:
-die Skripte sind geprueft, eine Nachschrift ist es nicht.
+Zwei fertige, gepruefte Skripte liegen im Ordner `scripts/` neben dieser `SKILL.md` — und,
+ab `@xhubio/nanook-table` 3.1.0, im Projekt unter
+`node_modules/@xhubio/nanook-table/skills/create-equivalence-class-table/scripts/`.
+**Von dort kopieren**: der Ordner liegt im Projekt, der Plugin-Ordner oft ausserhalb und ist
+dann nicht lesbar. Ausfuehren nur im Projekt: Node loest Imports relativ zum Skript auf und
+entfernt unter `node_modules` keine TypeScript-Typen. Ist `cp` nicht erlaubt, die Datei
+lesen und **unveraendert** ins Projekt schreiben. **Nie neu schreiben**: die Skripte sind
+geprueft, eine Nachschrift ist es nicht. Findet sich keine der beiden Quellen, dem Nutzer
+das sagen, statt Ersatz zu bauen.
 
 ```
-cp <skill-ordner>/scripts/check-classes.mts <skill-ordner>/scripts/generate-fixtures.mts scripts/
+cp node_modules/@xhubio/nanook-table/skills/create-equivalence-class-table/scripts/*.mts scripts/
 node scripts/check-classes.mts resources/<name>-tests.xlsx
 node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>
 ```
