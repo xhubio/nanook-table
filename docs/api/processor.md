@@ -12,7 +12,7 @@ import {
   createDefaultGeneratorRegistry,
   createDefaultWriter,
   createDefaultFileProcessor
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 ```
 
 ---
@@ -77,7 +77,7 @@ import {
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
   createDefaultWriter
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 logger.writeConsole = true
@@ -147,8 +147,8 @@ Called once after all test cases have been processed. Use this for cleanup (clos
 ### Custom Writer Example
 
 ```typescript
-import { InterfaceWriter } from 'nanook-table'
-import type { TestcaseData } from 'nanook-table'
+import { InterfaceWriter } from '@xhubio/nanook-table'
+import type { TestcaseData } from '@xhubio/nanook-table'
 
 class ConsoleWriter extends InterfaceWriter {
   async before(): Promise<void> {
@@ -172,7 +172,7 @@ class ConsoleWriter extends InterfaceWriter {
 The processor accepts an array of writers. All writers receive every test case.
 
 ```typescript
-import { TestcaseProcessor } from 'nanook-table'
+import { TestcaseProcessor } from '@xhubio/nanook-table'
 
 const jsonWriter = createDefaultWriter(logger)
 const consoleWriter = [new ConsoleWriter({ logger })]
@@ -229,7 +229,7 @@ new SimpleArrayFilterProcessor(name: string, delimiter: string)
 ### Example
 
 ```typescript
-import { SimpleArrayFilterProcessor } from 'nanook-table'
+import { SimpleArrayFilterProcessor } from '@xhubio/nanook-table'
 
 const filter = new SimpleArrayFilterProcessor('include', ',')
 
@@ -262,7 +262,7 @@ new SimpleArrayIgnoreFilterProcessor(name: string, delimiter: string)
 ### Example
 
 ```typescript
-import { SimpleArrayIgnoreFilterProcessor } from 'nanook-table'
+import { SimpleArrayIgnoreFilterProcessor } from '@xhubio/nanook-table'
 
 const filter = new SimpleArrayIgnoreFilterProcessor('exclude', ',')
 
@@ -286,7 +286,7 @@ These convenience functions create pre-configured instances with sensible defaul
 Creates a `DataGeneratorRegistry` with `GeneratorFaker` already registered under the name `'GeneratorFaker'`.
 
 ```typescript
-import { createDefaultGeneratorRegistry } from 'nanook-table'
+import { createDefaultGeneratorRegistry } from '@xhubio/nanook-table'
 
 const registry = createDefaultGeneratorRegistry()
 // registry.getGenerator('GeneratorFaker') is available
@@ -300,7 +300,7 @@ registry.registerGenerator('myGenerator', new MyGenerator({ logger }))
 Creates an array containing the default JSON file writer. This writer outputs one JSON file per test case into a `tdg/` directory.
 
 ```typescript
-import { createDefaultWriter, LoggerMemory } from 'nanook-table'
+import { createDefaultWriter, LoggerMemory } from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 const writers = createDefaultWriter(logger)
@@ -316,7 +316,7 @@ Creates a `FileProcessor` pre-configured with:
   `<SPECIFICATION_TABLE>` is also registered so existing workbooks keep loading)
 
 ```typescript
-import { createDefaultFileProcessor, LoggerMemory } from 'nanook-table'
+import { createDefaultFileProcessor, LoggerMemory } from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 const fileProcessor = await createDefaultFileProcessor(logger)

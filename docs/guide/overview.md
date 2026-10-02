@@ -58,7 +58,7 @@ The `ImporterXlsx` class reads `.xlsx` files and provides a uniform cell-access 
 Importers are registered with the `FileProcessor` by file extension:
 
 ```typescript
-import { FileProcessor, ImporterXlsx } from 'nanook-table'
+import { FileProcessor, ImporterXlsx } from '@xhubio/nanook-table'
 
 const fileProcessor = new FileProcessor()
 const importer = new ImporterXlsx()
@@ -84,7 +84,7 @@ import {
   ParserDecision,
   ParserMatrix,
   ParserSpecification
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const fileProcessor = new FileProcessor()
 fileProcessor.registerImporter('xlsx', new ImporterXlsx())
@@ -130,7 +130,7 @@ The `TestcaseProcessor` is the core orchestrator. It takes the parsed table mode
 8. Passes the generated test case data to all registered writers.
 
 ```typescript
-import { TestcaseProcessor, DataGeneratorRegistry } from 'nanook-table'
+import { TestcaseProcessor, DataGeneratorRegistry } from '@xhubio/nanook-table'
 
 const processor = new TestcaseProcessor({
   tables: {},
@@ -147,7 +147,7 @@ await processor.process()
 The `DataGeneratorRegistry` is a centralized service registry that manages all data generators by their unique names. Generators are registered by name, and this name is the same name used in the spreadsheet to invoke the generator via generator directives.
 
 ```typescript
-import { DataGeneratorRegistry, GeneratorFaker } from 'nanook-table'
+import { DataGeneratorRegistry, GeneratorFaker } from '@xhubio/nanook-table'
 
 const registry = new DataGeneratorRegistry()
 registry.registerGenerator('faker', new GeneratorFaker())
@@ -182,7 +182,7 @@ import {
   TestcaseProcessor,
   DataGeneratorRegistry,
   GeneratorFaker
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 // 1. Set up the file processor with importer and parsers
 const fileProcessor = new FileProcessor()

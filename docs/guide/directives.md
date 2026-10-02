@@ -72,7 +72,7 @@ Generator directives have an `order` property (default: 1000). Directives with l
 ### TypeScript Interface
 
 ```typescript
-import type { GeneratorDirectiveInterface } from 'nanook-table'
+import type { GeneratorDirectiveInterface } from '@xhubio/nanook-table'
 
 // The interface:
 interface GeneratorDirectiveInterface {
@@ -180,7 +180,7 @@ ref::PersonTable:name:tc2      <- Instance B of PersonTable:tc2 (different data!
 ### TypeScript Interface
 
 ```typescript
-import type { ReferenceDirectiveInterface } from 'nanook-table'
+import type { ReferenceDirectiveInterface } from '@xhubio/nanook-table'
 
 interface ReferenceDirectiveInterface {
   fieldName: string
@@ -208,7 +208,7 @@ some arbitrary text        <- Any text
 ### TypeScript Interface
 
 ```typescript
-import type { StaticDirectiveInterface } from 'nanook-table'
+import type { StaticDirectiveInterface } from '@xhubio/nanook-table'
 
 interface StaticDirectiveInterface {
   fieldName: string
@@ -226,7 +226,7 @@ Field directives are typically used by data generators that need access to the m
 ### TypeScript Interface
 
 ```typescript
-import type { FieldDirectiveInterface } from 'nanook-table'
+import type { FieldDirectiveInterface } from '@xhubio/nanook-table'
 
 interface FieldDirectiveInterface {
   fieldName: string

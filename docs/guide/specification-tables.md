@@ -176,7 +176,7 @@ import type {
   RuleConverterPlugin,
   RuleConversionContext,
   EquivalenceClassResult
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const myPlugin: RuleConverterPlugin = {
   name: 'MY_RULE',
@@ -245,7 +245,7 @@ To register your plugin, start with the default registry and add your plugin:
 import {
   createDefaultConverterRegistry,
   ParserSpecificationConverter
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 // Create a registry pre-populated with all built-in converters
 const registry = createDefaultConverterRegistry()
@@ -260,7 +260,7 @@ const converter = new ParserSpecificationConverter({ registry })
 If you need a completely custom set of converters (without the built-in ones), create a fresh registry:
 
 ```typescript
-import { RuleConverterRegistry } from 'nanook-table'
+import { RuleConverterRegistry } from '@xhubio/nanook-table'
 
 const registry = new RuleConverterRegistry()
 registry.register(myPlugin)

@@ -14,7 +14,7 @@ import {
   ParserSpecificationConverter,
   RuleConverterRegistry,
   createDefaultConverterRegistry
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 ```
 
 ---
@@ -76,7 +76,7 @@ XLSX implementation of `ImporterInterface`. Uses the `xlsx` library to read Exce
 ### Example
 
 ```typescript
-import { ImporterXlsx } from 'nanook-table'
+import { ImporterXlsx } from '@xhubio/nanook-table'
 
 const importer = new ImporterXlsx()
 await importer.loadFile('resources/tests.xlsx')
@@ -122,7 +122,7 @@ Loads the given file, iterates over all sheets, and parses each one into a table
 After this call, the `tables` property contains all parsed table models.
 
 ```typescript
-import { createDefaultFileProcessor, LoggerMemory } from 'nanook-table'
+import { createDefaultFileProcessor, LoggerMemory } from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
 const fp = await createDefaultFileProcessor(logger)
@@ -283,7 +283,7 @@ import {
   ParserSpecification,
   ParserSpecificationConverter,
   ImporterXlsx
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const importer = new ImporterXlsx()
 await importer.loadFile('spec.xlsx')
@@ -395,12 +395,12 @@ Returns an array of all registered plugin names.
 ### Custom Rule Converter Example
 
 ```typescript
-import { RuleConverterRegistry } from 'nanook-table'
+import { RuleConverterRegistry } from '@xhubio/nanook-table'
 import type {
   RuleConverterPlugin,
   RuleConversionContext,
   EquivalenceClassResult
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 const myPlugin: RuleConverterPlugin = {
   name: 'maxLength',
@@ -428,7 +428,7 @@ registry.register(myPlugin)
 Factory function that creates a `RuleConverterRegistry` pre-populated with all built-in rule converter plugins.
 
 ```typescript
-import { createDefaultConverterRegistry } from 'nanook-table'
+import { createDefaultConverterRegistry } from '@xhubio/nanook-table'
 
 const registry = createDefaultConverterRegistry()
 console.log(registry.names()) // list of all built-in converter names

@@ -38,11 +38,11 @@ import {
   DataGeneratorBase,
   DataGeneratorRegistry,
   LoggerMemory
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 import type {
   DataGeneratorGenerateRequest,
   DataGeneratorOptions
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 
 // Sample data arrays
 const FIRST_NAMES = [
@@ -162,7 +162,7 @@ import {
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
   createDefaultWriter
-} from 'nanook-table'
+} from '@xhubio/nanook-table'
 import { GeneratorPerson } from './GeneratorPerson.js'
 
 async function main() {
