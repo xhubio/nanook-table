@@ -1,12 +1,15 @@
 ---
 name: create-equivalence-class-table
 description: >
-  Erstellt formatierte Excel-Dateien mit Nanook Decision Tables (Entscheidungstabellen)
-  fuer beliebige Test-Objekte (Pages, APIs, Formulare). Inkl. Farbformatierung, Formeln,
-  korrekter Marker-Logik, CASCADE-Muster und 100% Coverage.
-  Trigger: "create equivalence class table", "decision table erstellen",
-  "equivalenzklassentabelle", "testdaten tabelle", "nanook table"
-version: 0.1.0
+  Draft a Nanook decision table (equivalence classes, test cases, CASCADE coverage)
+  as a formatted XLSX for a form, page or API, check its coverage and generate test
+  data from it with @xhubio/nanook-table. Use when asked to create an equivalence
+  class table, a decision table, a test case table or test data for a form or API
+  with Nanook. Also: "Equivalenzklassentabelle", "Entscheidungstabelle erstellen",
+  "Testdaten-Tabelle", "nanook table".
+license: MIT
+metadata:
+  version: "0.2.0"
 ---
 
 # Nanook Decision Table erstellen
@@ -17,6 +20,36 @@ Erstellt formatierte Excel-Dateien mit Nanook Decision Tables fuer beliebige Tes
 ## Technologie
 - **exceljs** (nicht xlsx) — wird benoetigt fuer Cell-Styling (Fills, Fonts) und Formeln
 - Nanook's `ImporterXlsx` liest die erzeugte Datei — daher muss die Struktur exakt dem ParserDecision-Format entsprechen
+
+## Umgebung und mitgelieferte Skripte
+
+- Projekt mit `@xhubio/nanook-table` (ab 3.0.1, ESM) und `exceljs` als devDependency
+  (`npm install -D exceljs`) — `exceljs` ist **keine** Abhaengigkeit von Nanook.
+- Node.js ab 22.18 fuehrt `.ts`/`.mts` direkt aus; aeltere 22.x brauchen
+  `--experimental-strip-types`, `npx tsx` geht ueberall.
+- Standard-Ablage: `scripts/create-<name>-table.ts`, `resources/<name>-tests.xlsx`,
+  `fixtures/<name>/`. Nennt der Nutzer andere Ordner, gelten seine.
+- **Ausgabesprache**: Kommentare, Fehlermeldungen und Expected Results in der Sprache des
+  Nutzers schreiben (Sprache seiner Anfrage), nicht in der Sprache dieser Anleitung.
+
+Neben dieser `SKILL.md` liegt ein Ordner `scripts/` mit zwei fertigen Skripten. Sie
+importieren `@xhubio/nanook-table` bzw. `exceljs`; Node loest Imports relativ zum Ort des
+Skripts auf. Deshalb **zuerst ins Projekt kopieren**, dann dort ausfuehren:
+
+```
+cp <skill-ordner>/scripts/check-classes.mts <skill-ordner>/scripts/generate-fixtures.mts scripts/
+node scripts/check-classes.mts resources/<name>-tests.xlsx
+node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>
+```
+
+| Skript | Was es tut | Exit 1 wenn |
+|---|---|---|
+| `check-classes.mts` | liest die Marker aus den Zellen (nicht die Formelwerte), rechnet Kombinationen, Spaltenprodukte und Deckung nach, meldet jede Klasse ohne eigenes `x` | Deckung < 100 %, Klasse ohne `x`, Feld ohne Marker, keine Decision Table |
+| `generate-fixtures.mts` | Nanook liest die Mappe, Generatoren `faker` und `text` sind registriert, ein JSON je Testfall, Anzahl je Tabelle | Nanook hat Fehler geloggt (Nanook wirft nicht, es loggt und macht weiter) |
+
+Generator `text` (in `generate-fixtures.mts`) liefert die Randfaelle, die `faker` nicht kann:
+`gen::text:empty` (leerer String), `gen::text:spaces:N`, `gen::text:alpha:N`,
+`gen::text:email:N` (N Buchstaben + `@example.com`).
 
 ## Allgemeiner Workflow: Vom Testobjekt zur Decision Table
 
@@ -132,14 +165,13 @@ falsch herum. Der Grund ist schaerfer:
 Stuenden dort beliebige Werte, kaeme womoeglich der Fehler eines anderen Feldes
 zuerst — der Test waere rot und pruefte trotzdem nicht, was er behauptet.
 
-🔵 Genau das real gemessen (2026-08-15): ein Testfall erwartete eine Ablehnung
-**am Feld** wegen zu langen Passworts; gekommen ist `Password too long` **vom
-Server**. Beide Meldungen sind wahr, nur die zweite gehoert einer anderen
-Grenze — und sie haette jede Feldmeldung verdeckt.
+Beispiel: Ein Testfall erwartet die Ablehnung **am Feld** wegen eines zu langen
+Passworts, es kommt aber `Password too long` **vom Server** — beide Meldungen sind
+wahr, nur die zweite gehoert einer anderen Grenze und verdeckt die erste.
 
 ### `e` im Gutfall heisst „mir egal, was drinsteht" — und das ist erlaubt
 
-(Festlegung Torsten, 2026-08-15.) Haengen an einer Seite Eigenschaften, die fuer
+Haengen an einer Seite Eigenschaften, die fuer
 den Pruefgegenstand **unwichtig** sind, gehoeren im Gutfall alle ihre **gueltigen**
 Klassen auf `e`. Die Deckung ist damit erfuellt, und die Tabelle sagt zugleich
 etwas Wahres aus:
@@ -158,12 +190,12 @@ vergessen hat.
 `e` auf einer Fehlerklasse behauptet, ein ungueltiger Wert fuehre trotzdem zum
 guten Ergebnis.
 
-**Zwei gemessene Randbedingungen** (2026-08-15), damit es nicht schiefgeht:
+**Zwei Randbedingungen**, damit es nicht schiefgeht:
 
 | | |
 |---|---|
-| **Die bevorzugte Klasse braucht ihr `x` woanders** | Oeffnet man den Happy Path selbst, verliert sie es — bei einem Feld, das ganz hinten steht, bleibt dann gar kein Testfall uebrig. Real: vier Klassen auf einen Schlag, `check-klassen` hat es gemeldet |
-| **`e` erzeugt KEINE Streuung** | `e` heisst „nur, wenn kein `a` da ist" — mit einem `a` im Feld gewinnt es jedes Mal. Zwei Laeufe lieferten identische Werte. Wer wirklich variieren will, braucht ein Feld **ohne** `a`; ob die Bibliothek dann je Lauf wechselt, ist ungeprueft |
+| **Die bevorzugte Klasse braucht ihr `x` woanders** | Oeffnet man den Happy Path selbst, verliert sie es — bei einem Feld, das ganz hinten steht, bleibt dann gar kein Testfall uebrig. `check-classes.mts` meldet das |
+| **`e` erzeugt KEINE Streuung** | `e` heisst „nur, wenn kein `a` da ist" — mit einem `a` im Feld gewinnt es jedes Mal. Wer wirklich variieren will, braucht ein Feld **ohne** `a`; ob die Bibliothek dann je Lauf wechselt, ist ungeprueft |
 
 ⚪ Und falls doch: ein Test, der bei jedem Lauf andere Daten nimmt, reproduziert
 einen Fehlschlag nicht mehr. Streuung ist ein eigener Handel, keine Nebenwirkung
@@ -182,8 +214,7 @@ darf nur die gueltigen Klassen oeffnen, nie die fehlerhaften — sonst behauptet
 sie, ein ungueltiger Wert fuehre zum guten Ergebnis. Ihr Beitrag ist damit
 kleiner als das volle Produkt, und die Summe bleibt unter 100 %.
 
-🔴 **Daraus folgt NICHT, dass 100 % unerreichbar waeren** (Klarstellung Torsten,
-2026-08-15 — ich hatte hier zuerst das Gegenteil geschrieben). Was versagt, ist
+🔴 **Daraus folgt NICHT, dass 100 % unerreichbar waeren.** Was versagt, ist
 die **Abkuerzung**, nicht das Ziel. Die Deckung bleibt erreichbar, man bezahlt sie
 nur mit **Spalten** statt mit einer Identitaet:
 
@@ -193,13 +224,12 @@ nur mit **Spalten** statt mit einer Identitaet:
 | Feldreihenfolge | Felder mit gueltigen Alternativen nach HINTEN; steht so ein Feld zuletzt, ist Π der Nachfolger = 1 und die Gutfall-Spalte traegt wieder voll |
 | Aufzaehlen | die fehlenden Kombinationen als eigene Spalten — im Grenzfall eine je Kombination. Immer moeglich, manchmal viel Arbeit |
 
-⚪ Gemessen: `CompanyDE` steht bei 66,85 %. Das ist eine **Entscheidung ueber den
-Aufwand**, keine Grenze der Methode — und sie gehoert bewusst getroffen, nicht
-aus Versehen.
+⚪ Eine Tabelle unter 100 % ist dann eine **Entscheidung ueber den Aufwand**, keine
+Grenze der Methode — und sie gehoert bewusst getroffen, nicht aus Versehen.
 
 > 💡 **Solange nicht aufgezaehlt wird, ist die bessere Frage nicht „wie viel
 > Prozent", sondern „hat jede Klasse einen eigenen Testfall".** Dafuer gibt es
-> `check-klassen` — es zaehlt nur `x`, weil `a`/`e` eine Auswahl sind und keine
+> `check-classes.mts` — es zaehlt nur `x`, weil `a`/`e` eine Auswahl sind und keine
 > Zusicherung.
 
 ### Marker-Regeln nach Testfall-Typ
@@ -210,9 +240,10 @@ aus Versehen.
 - COUNTA = 1
 
 **2. Happy-Path TC, Nicht-Zielfeld:**
-- NUR die gueltige EqClass mit `x` markieren
-- Keine `e` auf ungueltigen Werten (logisch falsch: "all valid" kann nicht "Invalid > 100%" abdecken)
-- COUNTA = 1
+- Standard: NUR die bevorzugte gueltige EqClass mit `x` markieren (COUNTA = 1)
+- Ausnahme: Hat das Feld mehrere **gueltige** Klassen und ist es fuer den Pruefgegenstand
+  unwichtig, duerfen alle gueltigen Klassen `e` bekommen (siehe „`e` im Gutfall")
+- Nie `a`/`e` auf ungueltigen Werten (logisch falsch: "alles gueltig" kann keinen Fehlerwert abdecken)
 
 **3. Fehler-TC, Nicht-Zielfeld:**
 - Gueltige EqClass mit `a` markieren (wird bevorzugt gewaehlt)
@@ -296,6 +327,12 @@ Format: `0.00%`
 
 ## EqClass-Muster fuer gaengige Feldtypen
 
+🔴 **Der eingebaute `faker`-Generator nimmt nur einen Pfad, keine Argumente.**
+`gen::faker:string.alpha(300)` oder `gen:1:faker:string.alpha:255` scheitern; Nanook loggt
+den Fehler und laesst den Testfall weg (weniger Faelle als Spalten). Laengen, Leerwerte und
+Leerzeichen deshalb ueber den Generator `text` (siehe oben) oder einen eigenen Generator.
+Leere Zellen und reine Leerzeichen taugen nicht als Wert: der Importer trimmt Zellen.
+
 Ungueltige EqClasses sollten immer `errorCode` und `errorMessage` haben. Diese werden im
 Expected-Result-Bereich als eigene Zeilen dargestellt (siehe "Expected Result — Error-Code-Zeilen").
 Gueltige Varianten (z.B. `credit_note` als alternativer Typ) haben kein `errorCode`.
@@ -304,22 +341,22 @@ Gueltige Varianten (z.B. `credit_note` als alternativer Typ) haben kein `errorCo
 | EqClass | Generator | Kommentar | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
 | valid | `gen:N:faker:person.fullName` | Gueltiger Wert | — | — |
-| empty | `` | Pflichtfeld leer | `NAME_EMPTY` | Name ist Pflichtfeld |
-| whitespace | `   ` | Nur Leerzeichen | `NAME_WHITESPACE` | Name darf nicht nur Leerzeichen sein |
-| tooLong | `gen:N:faker:string.alpha(300)` | Ueber max. Laenge | `NAME_TOO_LONG` | Name ueberschreitet max. Laenge |
+| empty | `gen::text:empty` | Pflichtfeld leer | `NAME_EMPTY` | Name ist Pflichtfeld |
+| whitespace | `gen::text:spaces:3` | Nur Leerzeichen | `NAME_WHITESPACE` | Name darf nicht nur Leerzeichen sein |
+| tooLong | `gen::text:alpha:300` | Ueber max. Laenge | `NAME_TOO_LONG` | Name ueberschreitet max. Laenge |
 
 ### Optionales Textfeld (z.B. Notizen, Kommentar)
 | EqClass | Generator | Kommentar | errorCode |
 |---------|-----------|-----------|-----------|
 | valid | `gen:N:faker:lorem.paragraph` | Gueltiger Wert | — |
-| empty | `` | Optional leer (valid!) | — (kein Fehler!) |
+| empty | `gen::text:empty` | Optional leer (valid!) | — (kein Fehler!) |
 
 ### Email-Feld
 | EqClass | Generator | Kommentar | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
 | valid | `gen:N:faker:internet.email` | Gueltige Email | — | — |
 | invalid | `not-an-email` | Falsches Format | `EMAIL_FORMAT` | Email hat falsches Format |
-| empty | `` | Leer (Pflicht=Error, Optional=Valid) | `EMAIL_EMPTY` | Email ist Pflichtfeld |
+| empty | `gen::text:empty` | Leer (Pflicht=Error, Optional=Valid) | `EMAIL_EMPTY` | Email ist Pflichtfeld |
 
 ### Numerisches Feld (z.B. Menge, Preis)
 | EqClass | Generator | Kommentar | errorCode | errorMessage |
@@ -333,7 +370,7 @@ Gueltige Varianten (z.B. `credit_note` als alternativer Typ) haben kein `errorCo
 | EqClass | Generator | Kommentar | errorCode | errorMessage |
 |---------|-----------|-----------|-----------|-------------|
 | valid | `2026-03-01` | Gueltiges Datum | — | — |
-| empty | `` | Kein Datum | `DATE_EMPTY` | Datum ist Pflichtfeld |
+| empty | `gen::text:empty` | Kein Datum | `DATE_EMPTY` | Datum ist Pflichtfeld |
 | invalid | `not-a-date` | Kein gueltiges Datum | `DATE_FORMAT` | Datum hat falsches Format |
 | past | `2020-01-01` | Datum in der Vergangenheit | — (oft gueltig) | — |
 | future | `2030-12-31` | Datum in der Zukunft | — (oft gueltig) | — |
@@ -343,7 +380,7 @@ Gueltige Varianten (z.B. `credit_note` als alternativer Typ) haben kein `errorCo
 |---------|-----------|-----------|-----------|-------------|
 | valid | `DE` | Gueltiger Wert | — | — |
 | invalid | `UNGUELTIG` | Nicht in der Liste | `COUNTRY_INVALID` | Ungueltiger Laendercode |
-| empty | `` | Keine Auswahl | `COUNTRY_EMPTY` | Laendercode ist Pflichtfeld |
+| empty | `gen::text:empty` | Keine Auswahl | `COUNTRY_EMPTY` | Laendercode ist Pflichtfeld |
 
 ### Boolean/Checkbox
 | EqClass | Generator | Kommentar | errorCode |
@@ -386,14 +423,14 @@ gen:1:faker:internet.email     ← Email von Person 1 (gleiche Instanz!)
 gen:2:faker:person.fullName    ← Person 2 (andere Instanz)
 ```
 
-**Haeufige Faker-Funktionen:**
+**Haeufige Faker-Funktionen** (nur der Pfad, ohne Argumente):
 ```
 person.fullName, person.firstName, person.lastName
 internet.email, internet.url
 location.street, location.city, location.zipCode, location.country
 lorem.paragraph, lorem.sentence, lorem.word
 commerce.productName, commerce.price
-string.alpha(N), string.numeric(N), string.uuid
+string.uuid
 date.recent, date.future, date.past
 phone.number
 ```
@@ -504,10 +541,13 @@ Category         | TagSection      |                        |                   
 
 ## Verifikation nach Erstellung
 
-1. `npx tsx scripts/create-<name>-table.ts` — Excel erzeugen
-2. Excel in LibreOffice/Numbers oeffnen — Farben, Formeln, Marker pruefen
-3. `npx tsx scripts/generate-<name>-fixtures.ts` — Nanook parst und generiert
-4. Pruefen: Korrekte Anzahl Fixtures, Daten korrekt
+1. `node scripts/create-<name>-table.ts` — Excel erzeugen
+2. `node scripts/check-classes.mts resources/<name>-tests.xlsx` — Deckung und eigenes `x` je Klasse
+3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>` — Nanook parst und generiert
+4. **Anzahl pruefen**: je Tabelle mit `Execute = T` ein Fall pro Testfall-Spalte, plus einer je
+   weiterem Element einer Bereichsreferenz. Weniger heisst: ein Generator ist gescheitert.
+5. Dem Nutzer sagen, die Mappe in einer Tabellenkalkulation zu oeffnen (Farben, Formeln, Summary-Zeile),
+   und die Annahmen nennen, die nicht aus seiner Anfrage stammen (Laengen, Fehlercodes).
 
 ## Referenzen zwischen Tabellen (Nanook's Kern-Feature)
 
@@ -688,20 +728,25 @@ Der haeufigste Anfaengerfehler (und er kostet am meisten): in die Testfall-Tabel
 alle Felder schreiben. Sie enthaelt **fast keine** Feld-Definitionen. Sie benennt die
 Situationen des Ablaufs und holt sich die Klassen per Referenz.
 
-Registrierung, vollstaendig — drei Zeilen, vier Testfaelle, 100 %:
+Registrierung, vollstaendig — drei Felder, vier Testfaelle, 1 × 2 × 2 = 4 Kombinationen, 100 %:
 
 ```
 FieldSection "Sekundaerdaten"
   sitzung (FSS)
-    abgemeldet          | <NOTHING>                   | x | x | x | x
+    abgemeldet          |                             | x | x | x | x
   existierenderUser (FSS)
-    nein                | <NOTHING>                   | x | x |   | x
-    ja                  | ref:1:User::OK_1            |   |   | x |
+    nein                |                             | x | x |   |
+    ja                  | ref:1:User::OK_1            |   |   | x | x
 FieldSection "Primaerdaten"
   benutzer (FSS)
     gueltig             | ref:1:User::OK_1            | x |   | x |
     ungueltig           | ref::User::[E_1-16]         |   | x |   | x
 ```
+
+Eine **leere Generator-Zelle** heisst: das Feld bekommt keinen Wert (Nanook loggt nur eine
+Info). Fuer reine Zustaende wie `abgemeldet` ist das richtig — die Zeile benennt den
+Zustand, Daten braucht er nicht. Spalte 3 ist „Benutzer existiert schon, derselbe wird
+registriert" (dieselbe Instanz-Id `1`), Spalte 4 „Benutzer existiert, Eingabe ungueltig".
 
 Die 16 ungueltigen Faelle stehen in **einer Zelle**. Kaeme ein 17. Fehlerfall in `User`
 dazu, aendert sich hier nichts.
@@ -749,7 +794,9 @@ Summe heraus — und ihr Name sollte das zeigen.
 
 ### Zusammengesetzte Generatoren
 
-Felder duerfen aus anderen Feldern entstehen, per Selbstreferenz im Generator-Ausdruck:
+Felder duerfen aus anderen Feldern entstehen, per Selbstreferenz im Generator-Ausdruck.
+`vorlage` und `mail` sind **eigene Generatoren eines Projekts, nicht im Paket** — das Beispiel
+zeigt das Muster; wer es nutzt, schreibt sie selbst (`DataGeneratorBase` erweitern und registrieren):
 
 ```
 firstName | gen::faker:person.firstName
@@ -759,13 +806,11 @@ email     | gen::mail:example.com          ← baut vorname.nachname@…, garant
 ```
 
 🔴 **Eine Zusicherung, die nie eingreift, ist von einer kaputten nicht zu unterscheiden.**
-Im echten Lauf zog faker 19 verschiedene Namen — die Eindeutigkeits-Logik lief kein
-einziges Mal. Der Test dafuer muss die Kollision **erzwingen** (feste Namen, drei Aufrufe,
+Zieht faker lauter verschiedene Namen, laeuft die Eindeutigkeits-Logik nie. Der Test dafuer
+muss die Kollision **erzwingen** (feste Namen, drei Aufrufe,
 drei verschiedene Ergebnisse).
 
 ### Drei Ebenen, nicht zwei — die Ausfuehrung bekommt ein eigenes Blatt
-
-(Festlegung Torsten, 2026-08-15, beim Aufbau der Firmenanlage.)
 
 Datentabelle und Testfall-Tabelle reichen, solange eine Entitaet **einen** Ablauf
 hat. Sobald es zwei werden (Anlegen *und* Bearbeiten), traegt die Aufteilung
@@ -798,9 +843,8 @@ aussehen — ihre Klassen sind gleich (`valid`/`empty`/`wrongFormat`/…), ihre
 **gueltigen Werte** nicht. Und `phone` bleibt gemeinsam, obwohl die Vorwahl
 landesabhaengig ist: sie wird nicht geprueft, also unterscheidet sich nichts.
 
-💡 **Der Prueffall, an dem sich die Aufteilung lohnt**: das gemessene Beispiel
-hatte 45 Spalten fuer ein Land. Nach der Trennung: 20 gemeinsame + 22 deutsche +
-19 spanische — und das zweite Land kostete danach fast nichts.
+💡 **Woran man sieht, dass sich die Aufteilung lohnt**: nach der Trennung in gemeinsame
+und Laender-Tabellen kostet jedes weitere Land nur noch seine eigenen Spalten.
 
 ### Rechtsfolgen gehoeren in die Wirkungs-Sektion, nicht in die Felder
 
@@ -825,7 +869,7 @@ Traegt die Anwendung einen Wert selbst zusammen, gehoert er in die **Erwartung**
 nicht in die Primaerdaten — sonst beschreibt die Tabelle eine Eingabe, die es
 nicht gibt.
 
-Gemessenes Beispiel: die spanische USt-IdNr ist `ES` + NIF/CIF, wird berechnet
+Beispiel: die spanische USt-IdNr ist `ES` + NIF/CIF, wird berechnet
 und ist im Formular `readOnly`. Zwei Felder mit eigenen Klassen waeren dort
 schlicht falsch. **Deutschland ist der Sonderfall**, nicht die Norm: dort sind
 USt-IdNr und Steuernummer zwei verschiedene Nummern von zwei Behoerden.
@@ -838,7 +882,7 @@ nicht, ist es eine Wirkung.
 Ein Erzeuger, der `klassen[1]` nimmt, bricht in dem Moment, in dem jemand eine
 Klasse davor einfuegt — und zwar **lautlos**: die Referenz zeigt auf die falsche
 Klasse, die Bereichsreferenz verschwindet, und aus 32 Testfaellen werden 18, ohne
-dass etwas rot wird. Real passiert am 2026-08-15, zweimal am selben Tag.
+dass etwas rot wird.
 
 Wer nach Namen sucht, bekommt beim Umbenennen eine Meldung statt eines stillen
 Datenverlusts.
@@ -942,4 +986,6 @@ Die a/e-Marker bilden ein Dreieck — sofort erkennbar ob das Muster stimmt.
 - `row.commit()` nach Aenderungen aufrufen
 - Styling wird NACH dem Schreiben der Daten angewendet (sonst ueberschreibt commit() den Style)
 - Nanook's ImporterXlsx liest die Excel-Datei — die Formeln muessen nicht berechnet sein, aber die Struktur muss stimmen
-- Referenz-Beispiel Script: `saas-coding-kernel/repo/tools/playwright-test-definition/scripts/create-invoice-table.ts`
+- Vollstaendiges Beispiel (Login-Formular, zwei Blaetter, Mappe und Fixtures):
+  https://nanook.xhub.io/blog/2026/08/22/login-example-ai-generated-table
+- Hintergrund zu den Regeln oben: `notes.md` neben dieser Datei (nicht noetig fuer die Arbeit)

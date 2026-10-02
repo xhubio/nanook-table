@@ -13,6 +13,14 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "docs",
+    "skills",
+    ".claude-plugin",
+    ".claude/commands/createEquivalenceClassTable.md",
+    "CHANGELOG.md"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",

@@ -1,5 +1,8 @@
 # /createEquivalenceClassTable
 
+> Seit Skill 0.2.0 auch als Plugin: `/plugin marketplace add xhubio/nanook-table`, dann
+> `/plugin install nanook@nanook`; der Skill heisst dort `/nanook:create-equivalence-class-table`.
+
 Erstellt eine Nanook Decision Table (Equivalenzklassentabelle) als formatierte Excel-Datei fuer ein gegebenes Testobjekt.
 
 ## Verwendung
@@ -10,12 +13,12 @@ Erstellt eine Nanook Decision Table (Equivalenzklassentabelle) als formatierte E
 
 ## Was passiert
 
-1. Liest den `create-equivalence-class-table` Skill (`.claude/skills/create-equivalence-class-table/SKILL.md`)
+1. Liest den `create-equivalence-class-table` Skill (`skills/create-equivalence-class-table/SKILL.md` im Paket)
 2. Analysiert das Testobjekt (Felder, Validierungen, Feldgruppen)
 3. Definiert EqClasses pro Feld nach gaengigen Mustern
 4. Plant Testfaelle mit CASCADE fuer 100% Coverage
 5. Erzeugt ein TypeScript-Script das die Excel-Datei generiert
-6. Verifiziert: Excel erzeugen, Coverage pruefen, Fixtures generieren
+6. Verifiziert: Excel erzeugen, Deckung pruefen (`check-classes.mts`), Fixtures generieren (`generate-fixtures.mts`)
 
 ## Beispiele
 
@@ -36,8 +39,8 @@ Erstellt eine Nanook Decision Table (Equivalenzklassentabelle) als formatierte E
 
 Nach der Erstellung:
 1. Excel in Spreadsheet-App oeffnen und Marker/Coverage pruefen
-2. Generate-Script anpassen/erstellen falls noetig
-3. `npx tsx scripts/generate-<name>-fixtures.ts` um Fixtures zu erzeugen
+2. Weitere Generatoren in `scripts/generate-fixtures.mts` registrieren, falls die Tabelle welche aufruft
+3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx` um Fixtures zu erzeugen
 
 ---
 

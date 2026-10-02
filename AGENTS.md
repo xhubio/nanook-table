@@ -13,7 +13,7 @@ This is a single-package ESM TypeScript project that consolidates the former `@x
 - **npm package**: `@xhubio/nanook-table`
 - **Node.js**: >= 22
 - **Module system**: ESM (NodeNext)
-- **Documentation website**: [nanook.io](https://nanook.io)
+- **Documentation website**: [nanook.xhub.io](https://nanook.xhub.io)
 
 ## Build & Development Commands
 

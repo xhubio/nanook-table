@@ -24,12 +24,14 @@ Requires Node.js >= 22.
 
 ```typescript
 import path from 'node:path'
+import fs from 'node:fs/promises'
 import {
   LoggerMemory,
   TestcaseProcessor,
   createDefaultFileProcessor,
-  createDefaultGeneratorRegistry,
-  createDefaultWriter
+  DataGeneratorRegistry,
+  GeneratorFaker,
+  type InterfaceWriter
 } from '@xhubio/nanook-table'
 
 async function main() {
@@ -37,7 +39,12 @@ async function main() {
   logger.writeConsole = true
 
   const fileProcessor = createDefaultFileProcessor(logger)
-  const generatorRegistry = createDefaultGeneratorRegistry()
+  // the registry starts empty: register every generator your tables call (gen::faker:...)
+  const generatorRegistry = new DataGeneratorRegistry()
+  generatorRegistry.registerGenerator(
+    'faker',
+    new GeneratorFaker({ generatorRegistry, name: 'faker', logger })
+  )
 
   await fileProcessor.load([path.join('resources', 'tests.xlsx')])
 
@@ -46,10 +53,22 @@ async function main() {
     tables[table.tableName] = table
   }
 
+  // one JSON file per test case; see "Writing a Custom Writer" below
+  const writer: InterfaceWriter = {
+    logger,
+    async before() {
+      await fs.mkdir('tdg', { recursive: true })
+    },
+    async write(tc) {
+      await fs.writeFile(path.join('tdg', `${tc.tableName}.${tc.name}.json`), JSON.stringify(tc, null, 2))
+    },
+    async after() {}
+  }
+
   const processor = new TestcaseProcessor({
     logger,
     generatorRegistry,
-    writer: [createDefaultWriter(logger)],
+    writer: [writer],
     tables
   })
 
@@ -153,6 +172,35 @@ See the [docs/](docs/) directory for detailed guides, API reference, and tutoria
 - **[API Reference](docs/api/)** -- Every public class, interface, and function
 - **[Guides](docs/guide/)** -- Conceptual explanations of tables, directives, and generators
 - **[Tutorials](docs/tutorials/)** -- Step-by-step walkthroughs
+
+## Use with AI agents
+
+The skill `create-equivalence-class-table` drafts a decision table for a form, page or API as a
+formatted XLSX, checks its coverage and generates the test data. It lives in
+[`skills/`](skills/create-equivalence-class-table/SKILL.md) and ships in the npm package.
+
+**Claude Code** (CLI, desktop, web, IDE), as a plugin:
+
+```
+/plugin marketplace add xhubio/nanook-table
+/plugin install nanook@nanook
+/nanook:create-equivalence-class-table Login form with email and password
+```
+
+**Other agents** (Codex, Cursor, Copilot, Gemini CLI and others that read
+[Agent Skills](https://agentskills.io)):
+
+```bash
+npx skills add xhubio/nanook-table --skill create-equivalence-class-table
+```
+
+**Any agent that reads `AGENTS.md`**: paste the block from
+[docs/agents-snippet.md](docs/agents-snippet.md) into your project's `AGENTS.md`. It points the agent
+to the Markdown docs in `node_modules/@xhubio/nanook-table/docs/`, which match the installed version.
+
+The generated script needs `exceljs` in your project (`npm install -D exceljs`). Setup for each agent,
+the docs as plain text (`llms.txt`) and how to check what the agent produced:
+[nanook.xhub.io/docs/guide/use-with-ai](https://nanook.xhub.io/docs/guide/use-with-ai).
 
 ## Development
 
