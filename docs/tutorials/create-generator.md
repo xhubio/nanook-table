@@ -155,13 +155,14 @@ Each test case has a unique instance ID. When the processor encounters the three
 Update your `src/tdg.ts` file to import and register the generator:
 
 ```typescript
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import {
   LoggerMemory,
   TestcaseProcessor,
   createDefaultFileProcessor,
   createDefaultGeneratorRegistry,
-  createDefaultWriter
+  type InterfaceWriter
 } from '@xhubio/nanook-table'
 import { GeneratorPerson } from './GeneratorPerson.js'
 
@@ -170,15 +171,12 @@ async function main() {
   logger.writeConsole = true
 
   const fileProcessor = createDefaultFileProcessor(logger)
+  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
+  const tables = Object.fromEntries(
+    fileProcessor.tables.map((t) => [t.tableName, t])
+  )
 
   const generatorRegistry = createDefaultGeneratorRegistry()
-
-  const processor = new TestcaseProcessor({
-    logger,
-    generatorRegistry,
-    writer: createDefaultWriter(logger),
-    tables: {}
-  })
 
   // Register the custom generator
   generatorRegistry.registerGenerator(
@@ -190,8 +188,27 @@ async function main() {
     })
   )
 
-  await fileProcessor.load(path.join('resources', 'demo.xlsx'))
-  processor.tables = fileProcessor.tables
+  // One JSON file per test case, as in the previous tutorial
+  const writer: InterfaceWriter = {
+    logger,
+    async before() {},
+    async write(tc) {
+      const dir = path.join('tdg', tc.name)
+      await fs.mkdir(dir, { recursive: true })
+      await fs.writeFile(
+        path.join(dir, 'testcaseData.json'),
+        JSON.stringify(tc, null, 2)
+      )
+    },
+    async after() {}
+  }
+
+  const processor = new TestcaseProcessor({
+    logger,
+    generatorRegistry,
+    writer: [writer],
+    tables
+  })
 
   await processor.process()
 }

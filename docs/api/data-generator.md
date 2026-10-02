@@ -35,38 +35,43 @@ Abstract interface that all data generators must implement. Defines the contract
 ### Constructor
 
 ```typescript
-new DataGeneratorInterface(options: {
-  logger: LoggerInterface
-  serviceRegistry?: DataGeneratorRegistry
+// DataGeneratorOptions, as taken by DataGeneratorBase and GeneratorFaker
+new DataGeneratorBase(options: {
+  generatorRegistry: DataGeneratorRegistry
+  name: string
+  logger?: LoggerInterface
   unique?: boolean
   maxUniqueTries?: number
   varDir?: string
   useStore?: boolean
+  storeName?: string
 })
 ```
 
 | Option | Type | Default | Description |
 |---|---|---|---|
-| `logger` | `LoggerInterface` | required | Logger instance for diagnostic output |
-| `serviceRegistry` | `DataGeneratorRegistry` | `undefined` | Registry providing access to other generators. Allows generators to compose with each other |
-| `unique` | `boolean` | `true` | When `true`, the generator should return unique values. The definition of "unique" is generator-specific |
-| `maxUniqueTries` | `number` | `100` | Maximum attempts to generate a unique value before throwing an error |
-| `varDir` | `string` | `undefined` | Directory path for reading/writing persistent store files |
+| `generatorRegistry` | `DataGeneratorRegistry` | required | The registry that holds all available generators. Allows generators to compose with each other |
+| `name` | `string` | required | The name under which this generator is registered. Pass the same name to `registerGenerator()` |
+| `logger` | `LoggerInterface` | `new LoggerMemory()` | Logger instance for diagnostic output |
+| `unique` | `boolean` | `false` | When `true`, the generator should return unique values. The definition of "unique" is generator-specific |
+| `maxUniqueTries` | `number` | `20` | Maximum attempts to generate a unique value before throwing an error |
+| `varDir` | `string` | `'var'` | Directory path for reading/writing persistent store files |
 | `useStore` | `boolean` | `false` | Whether the generator should persist data between runs |
+| `storeName` | `string` | the `name` option | The name of the data store associated with this generator |
 
 ### Properties
 
 | Property | Type | Description |
 |---|---|---|
 | `logger` | `LoggerInterface` | The logger instance |
-| `serviceRegistry` | `DataGeneratorRegistry` | The registry of all available generators |
+| `generatorRegistry` | `DataGeneratorRegistry` | The registry of all available generators |
 | `unique` | `boolean` | Whether uniqueness is enforced |
 | `maxUniqueTries` | `number` | Maximum uniqueness retry count |
 | `uniqueSet` | `Set<string>` | Stores previously generated values for uniqueness checks |
 | `instanceData` | `Map<string, unknown>` | Maps instance IDs to previously generated data. Ensures the same instance ID returns the same value |
 | `varDir` | `string` | Store directory path |
 | `useStore` | `boolean` | Whether the store is active |
-| `name` | `string` | The name under which this generator is registered. Set automatically by the registry |
+| `name` | `string` | The name under which this generator is registered. Set from the `name` option and overwritten by `registerGenerator()` |
 
 ### Methods
 
@@ -166,15 +171,13 @@ import {
   DataGeneratorRegistry,
   LoggerMemory
 } from '@xhubio/nanook-table'
-import type { GeneratorDirective, TestcaseData } from '@xhubio/nanook-table'
+import type { DataGeneratorGenerateRequest } from '@xhubio/nanook-table'
 
 class GeneratorCounter extends DataGeneratorBase {
   private counter = 0
 
-  async _doGenerate(
-    instanceId: string,
-    testcase: TestcaseData,
-    generatorDirective: GeneratorDirective
+  protected override async doGenerate(
+    request: DataGeneratorGenerateRequest
   ): Promise<number> {
     this.counter += 1
     return this.counter
@@ -184,7 +187,11 @@ class GeneratorCounter extends DataGeneratorBase {
 // Register the generator
 const logger = new LoggerMemory()
 const registry = new DataGeneratorRegistry()
-const counter = new GeneratorCounter({ logger, serviceRegistry: registry })
+const counter = new GeneratorCounter({
+  generatorRegistry: registry,
+  name: 'counter',
+  logger
+})
 registry.registerGenerator('counter', counter)
 ```
 
@@ -202,7 +209,7 @@ Registers a generator under the given name. Also sets the `name` property on the
 
 ```typescript
 const registry = new DataGeneratorRegistry()
-const faker = new GeneratorFaker({ logger })
+const faker = new GeneratorFaker({ generatorRegistry: registry, name: 'GeneratorFaker', logger })
 registry.registerGenerator('GeneratorFaker', faker)
 ```
 
@@ -265,8 +272,12 @@ import {
 
 const logger = new LoggerMemory()
 const registry = new DataGeneratorRegistry()
-const faker = new GeneratorFaker({ logger, serviceRegistry: registry })
+const faker = new GeneratorFaker({
+  generatorRegistry: registry,
+  name: 'GeneratorFaker',
+  logger
+})
 registry.registerGenerator('GeneratorFaker', faker)
 ```
 
-The `createDefaultGeneratorRegistry()` factory function in the processor module creates a registry with `GeneratorFaker` already registered.
+`GeneratorFaker` is never registered for you. The `createDefaultGeneratorRegistry()` factory function in the processor module returns an empty registry, so register `GeneratorFaker` explicitly as shown above.

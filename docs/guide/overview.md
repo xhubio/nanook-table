@@ -150,7 +150,10 @@ The `DataGeneratorRegistry` is a centralized service registry that manages all d
 import { DataGeneratorRegistry, GeneratorFaker } from '@xhubio/nanook-table'
 
 const registry = new DataGeneratorRegistry()
-registry.registerGenerator('faker', new GeneratorFaker())
+registry.registerGenerator(
+  'faker',
+  new GeneratorFaker({ generatorRegistry: registry, name: 'faker' })
+)
 ```
 
 Each generator has a lifecycle: `loadStore() -> generate() -> createPostProcessDirectives() -> postProcess() -> saveStore()`. The registry coordinates calling `loadStore()` and `saveStore()` across all registered generators.
@@ -196,7 +199,10 @@ await fileProcessor.load(['tests.xlsx', 'more-tests.xlsx'])
 
 // 3. Set up the data generator registry
 const registry = new DataGeneratorRegistry()
-registry.registerGenerator('faker', new GeneratorFaker())
+registry.registerGenerator(
+  'faker',
+  new GeneratorFaker({ generatorRegistry: registry, name: 'faker' })
+)
 
 // 4. Set up the processor with generators and writers
 const processor = new TestcaseProcessor({
