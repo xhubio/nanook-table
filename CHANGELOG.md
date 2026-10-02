@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/xhubio/nanook-table/compare/v3.0.1...v3.1.0) (2026-10-02)
+
+
+### Features
+
+* ship the decision-table skill as a Claude Code plugin and Agent Skill ([910c4ef](https://github.com/xhubio/nanook-table/commit/910c4ef74dcd1f75c1a7f1ff966b2bc9fc509e85))
+
 ## [3.0.1](https://github.com/xhubio/nanook-table/compare/v3.0.0...v3.0.1) (2026-08-29)
 
 
