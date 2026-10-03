@@ -1,3 +1,10 @@
+## [3.2.2](https://github.com/xhubio/nanook-table/compare/v3.2.1...v3.2.2) (2026-10-03)
+
+
+### Bug Fixes
+
+* **processor:** one instance id per node for generate and postProcess ([c53e143](https://github.com/xhubio/nanook-table/commit/c53e143640234187ced5a69a469aa1cf13d545c2))
+
 ## [3.2.1](https://github.com/xhubio/nanook-table/compare/v3.2.0...v3.2.1) (2026-10-03)
 
 
