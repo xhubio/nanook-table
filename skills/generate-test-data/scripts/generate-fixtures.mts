@@ -110,6 +110,8 @@ class FixtureWriter implements InterfaceWriter {
 
 async function main() {
   const logger = new LoggerMemory({ writeConsole: process.argv.includes('--verbose') })
+  // the default level is 'error'; keep the warnings (e.g. a sheet name used twice) too
+  logger.level = 'warning'
 
   const fileProcessor = createDefaultFileProcessor(logger)
   await fileProcessor.load([XLSX_FILE])

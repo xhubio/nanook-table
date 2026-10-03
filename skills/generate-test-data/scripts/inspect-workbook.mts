@@ -112,6 +112,8 @@ async function fakerPathExists(config: string): Promise<boolean> {
 
 async function main() {
   const logger = new LoggerMemory()
+  // the default level is 'error'; keep the loader's warnings (e.g. a sheet name used twice) too
+  logger.level = 'warning'
   const fileProcessor = createDefaultFileProcessor(logger)
   await fileProcessor.load([XLSX_FILE])
   const tables = fileProcessor.tables
