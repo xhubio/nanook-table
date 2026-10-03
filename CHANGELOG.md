@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/xhubio/nanook-table/compare/v3.2.0...v3.2.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* **generator:** cache per instance id and parameter ([67d7ff4](https://github.com/xhubio/nanook-table/commit/67d7ff44f737b9ec10f91ba9de92203d1ca813d6))
+
 # [3.2.0](https://github.com/xhubio/nanook-table/compare/v3.1.3...v3.2.0) (2026-10-03)
 
 
