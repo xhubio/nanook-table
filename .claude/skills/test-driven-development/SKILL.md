@@ -6,6 +6,9 @@ description: >
   Trigger: "tdd", "test driven", "test first", "red green refactor",
   "tests zuerst schreiben", "test-driven development"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Test-Driven Development — Tests zuerst

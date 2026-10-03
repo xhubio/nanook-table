@@ -7,6 +7,9 @@ description: >
   Trigger: "parallel agents", "sub-agents dispatchen", "parallel ausfuehren",
   "agents parallel starten", "parallelize tasks"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Dispatching Parallel Agents — Parallele Sub-Agent-Koordination
