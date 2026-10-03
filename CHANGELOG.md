@@ -1,3 +1,10 @@
+## [3.3.1](https://github.com/xhubio/nanook-table/compare/v3.3.0...v3.3.1) (2026-10-03)
+
+
+### Bug Fixes
+
+* **generator:** log a failing generate() also without testcaseMeta ([fba31b7](https://github.com/xhubio/nanook-table/commit/fba31b788eee066fd3b74de8ab8bfaeb68960104))
+
 # [3.3.0](https://github.com/xhubio/nanook-table/compare/v3.2.2...v3.3.0) (2026-10-03)
 
 
