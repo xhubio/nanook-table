@@ -11,7 +11,7 @@ description: >
   "nanook generate", "Testdaten generieren".
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # nanook.xhub: Generate test data from an existing table
@@ -106,13 +106,6 @@ import type { DataGeneratorGenerateRequest } from '@xhubio/nanook-table'
 export class GeneratorCustomerNo extends DataGeneratorBase {
   private counter = 0
 
-  // DataGeneratorBase caches per instance id only; gen::customerNo:A and gen::customerNo:B in
-  // one test case share that id. Key on the config too, unless one record SHOULD be shared.
-  public generate(request: DataGeneratorGenerateRequest): Promise<string> {
-    const config = request.generatorDirective?.config ?? ''
-    return super.generate({ ...request, instanceId: `${request.instanceId}:${config}` })
-  }
-
   protected doGenerate(request: DataGeneratorGenerateRequest): Promise<string> {
     const prefix = request.generatorDirective?.config || 'K'
     this.counter++
@@ -133,9 +126,14 @@ Rules for generators:
   `DataGeneratorBase` logs it and the field stays empty, `generate-fixtures.mts` exits 1.
 - **Same instance id = same entity.** `gen:1:person:firstName` and `gen:1:person:email`
   in one test case get the same `request.instanceId`; a generator that builds one record per
-  id and returns a field of it keeps them consistent (see `docs/tutorials/create-generator.md`).
-  `gen::…` (empty suffix) also shares one id across all fields of the test case, hence the
-  `generate()` override above for generators where each cell is independent.
+  id in `doGenerate` and returns a field of it keeps them consistent (see
+  `docs/tutorials/create-generator.md`). `gen::…` (empty suffix) uses the id of the test case,
+  shared by all its `gen::` cells.
+- **Caching**: `DataGeneratorBase` calls `doGenerate` once per instance id **and** config, so
+  `gen::customerNo:A` and `gen::customerNo:B` in one test case get their own values. Up to
+  Nanook 3.2.0 it cached per instance id only and every `gen::` cell of a generator got the
+  first value; on those versions add to the class:
+  `` generate(r) { return super.generate({ ...r, instanceId: `${r.instanceId}:${r.generatorDirective?.config ?? ''}` }) } ``
 - **A field built from other fields** returns `undefined` while one of them is missing;
   Nanook calls it again after the other directives ran. The record of the test case is
   `request.testcaseData.data[<table>][<instance id of the node>]`:
@@ -290,7 +288,7 @@ ExecuteSection: `t y j 1 yes ja si true ok` (any case) is **true**, everything e
 | a field is missing in the fixture, `Could not resolve all the fields` | a reference or a generator never got its value (cycle, missing field, generator returns `undefined` forever) | check the reference target; a composite generator must name existing fields |
 | `The targetTable 'X' does not exists` | the table name in `ref:` does not match a sheet name (case and spaces count) | correct the reference |
 | every `ref:` fails in an own script | `tables` passed as the array from `fileProcessor.tables` | key them by `tableName` (as `generate-fixtures.mts` does) |
-| several fields of one test case have the same random value | an own generator without the `generate()` override, all `gen::` cells share one instance id | step 3 |
+| several fields of one test case have the same random value | Nanook 3.2.0 or older (cache per instance id only), or an own `generate()` override that caches by id alone | upgrade, or see "Caching" in step 3 |
 | a table yields nothing | no column has a true Execute value (`x` is false) | `T` / `1` / `yes` |
 | a second sheet with the same name replaced the first | Nanook keys tables by name, a duplicate overwrites (warning in step 1) | rename one of them |
 | `Method not implemented` in `before()` | an own script uses `createDefaultWriter()`; it is a stub | use the writer from `generate-fixtures.mts` |

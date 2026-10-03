@@ -10,7 +10,7 @@ description: >
   "test data table", "nanook table".
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # nanook.xhub: Create a decision table

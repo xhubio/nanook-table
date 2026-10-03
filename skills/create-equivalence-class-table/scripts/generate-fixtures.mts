@@ -57,13 +57,6 @@ function randomAlpha(n: number): string {
 }
 
 class GeneratorText extends DataGeneratorBase {
-  // DataGeneratorBase caches per instance id only, and gen::text:… has the same id for every
-  // field of a test case: all of them would get the first value. Key on the instruction too.
-  public generate(request: DataGeneratorGenerateRequest): Promise<string> {
-    const config = request.generatorDirective?.config ?? ''
-    return super.generate({ ...request, instanceId: `${request.instanceId}:${config}` })
-  }
-
   protected doGenerate(request: DataGeneratorGenerateRequest): Promise<string> {
     const config = request.generatorDirective?.config ?? ''
     const [kind, arg] = config.split(':')

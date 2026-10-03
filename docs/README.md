@@ -166,7 +166,7 @@ When a test case is processed, it produces **directives** -- instructions that t
 
 A **data generator** produces values for test case fields. Generators are registered by name in a `DataGeneratorRegistry`. The processor looks up each generator by name when executing `GeneratorDirective` entries. Generators support:
 
-- **Instance IDs** -- calling the same generator with the same instance ID returns the same data
+- **Instance IDs** -- calling the same generator with the same instance ID and the same parameter returns the same data
 - **Uniqueness** -- optionally enforce that every generated value is unique
 - **Stores** -- persist generated data between runs
 - **Post-processing** -- additional generation passes after all primary generation is complete

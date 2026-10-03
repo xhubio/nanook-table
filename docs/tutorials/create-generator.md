@@ -268,7 +268,7 @@ Key observations:
 Understanding the full lifecycle helps when building more advanced generators:
 
 1. **`loadStore()`** -- Called once before processing begins. If `useStore` is enabled, it loads previously persisted data from disk (useful for maintaining uniqueness across runs).
-2. **`generate(request)`** -- Called for each generator directive in each test case. Should return the generated value. The base implementation caches by `instanceId` and delegates to `doGenerate()`.
+2. **`generate(request)`** -- Called for each generator directive in each test case. Should return the generated value. The base implementation caches by `instanceId` and parameter (`generatorDirective.config`) and delegates to `doGenerate()`.
 3. **`createPostProcessDirectives(request)`** -- Called after `generate()`. Returns additional directives that need processing in a second pass (e.g., when one generator depends on another generator's output).
 4. **`postProcess(request)`** -- Called after all generators have completed their first pass. Used for resolving cross-generator dependencies.
 5. **`saveStore()`** -- Called once after all processing is complete. Persists the generator state to disk if `useStore` is enabled.
