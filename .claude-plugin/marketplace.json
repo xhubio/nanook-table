@@ -11,7 +11,7 @@
     {
       "name": "nanook",
       "source": "./",
-      "description": "nanook.xhub: draft decision tables as XLSX, check the coverage, generate test data."
+      "description": "nanook.xhub: draft decision tables as XLSX, check the coverage, generate test data from new or existing tables."
     }
   ]
 }

@@ -177,10 +177,15 @@ See the [docs/](docs/) directory for detailed guides, API reference, and tutoria
 
 [![skills.sh](https://skills.sh/b/xhubio/nanook-table)](https://skills.sh/xhubio/nanook-table)
 
-The nanook.xhub skill `create-equivalence-class-table` drafts a decision table for a form, page or API
-as a formatted XLSX, checks its coverage and generates the test data. It lives in
-[`skills/`](skills/create-equivalence-class-table/SKILL.md) and ships in the npm package. It is listed on
-[skills.sh](https://skills.sh/xhubio/nanook-table/create-equivalence-class-table), and the docs are
+Two nanook.xhub skills live in [`skills/`](skills/) and ship in the npm package:
+
+- [`create-equivalence-class-table`](skills/create-equivalence-class-table/SKILL.md) drafts a decision
+  table for a form, page or API as a formatted XLSX, checks its coverage and generates the test data.
+- [`generate-test-data`](skills/generate-test-data/SKILL.md) starts from a table that already exists:
+  it inspects the workbook, writes and registers the generators it calls, generates one JSON fixture
+  per test case, checks the count and wires the fixtures into Vitest or Playwright tests.
+
+They are listed on [skills.sh](https://skills.sh/xhubio/nanook-table), and the docs are
 indexed on [Context7](https://context7.com/xhubio/nanook-table).
 
 **Claude Code** (CLI, desktop, web, IDE), as a plugin:
@@ -189,6 +194,7 @@ indexed on [Context7](https://context7.com/xhubio/nanook-table).
 /plugin marketplace add xhubio/nanook-table
 /plugin install nanook@nanook
 /nanook:create-equivalence-class-table Login form with email and password
+/nanook:generate-test-data resources/login-tests.xlsx
 ```
 
 **Other agents** (Codex, Cursor, Copilot, Gemini CLI and others that read
@@ -196,13 +202,15 @@ indexed on [Context7](https://context7.com/xhubio/nanook-table).
 
 ```bash
 npx skills add xhubio/nanook-table --skill create-equivalence-class-table
+npx skills add xhubio/nanook-table --skill generate-test-data
 ```
 
 **Any agent that reads `AGENTS.md`**: paste the block from
 [docs/agents-snippet.md](docs/agents-snippet.md) into your project's `AGENTS.md`. It points the agent
 to the Markdown docs in `node_modules/@xhubio/nanook-table/docs/`, which match the installed version.
 
-The generated script needs `exceljs` in your project (`npm install -D exceljs`). Setup for each agent,
+The script that `create-equivalence-class-table` generates needs `exceljs` in your project
+(`npm install -D exceljs`); `generate-test-data` does not. Setup for each agent,
 the docs as plain text (`llms.txt`) and how to check what the agent produced:
 [nanook.xhub.io/docs/guide/use-with-ai](https://nanook.xhub.io/docs/guide/use-with-ai).
 

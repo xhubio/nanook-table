@@ -41,6 +41,8 @@ After the table is created:
 1. Open the workbook in a spreadsheet app and check markers and coverage
 2. Register further generators in `scripts/generate-fixtures.mts` if the table calls any
 3. `node scripts/generate-fixtures.mts resources/<name>-tests.xlsx` to generate the fixtures
+4. For own generators, a count that does not match and data-driven tests from the fixtures, use the
+   skill `generate-test-data` (`/nanook:generate-test-data` in the plugin)
 
 ---
 

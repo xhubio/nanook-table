@@ -1,15 +1,16 @@
 ---
 name: create-equivalence-class-table
 description: >
-  nanook.xhub: Draft a decision table (equivalence classes, test cases, CASCADE coverage)
+  nanook.xhub: Draft a new decision table (equivalence classes, test cases, CASCADE coverage)
   as a formatted XLSX for a form, page or API, check its coverage and generate test
-  data from it with @xhubio/nanook-table. Use when asked to create an equivalence
-  class table, a decision table, a test case table or test data for a form or API
-  with Nanook. Also: "equivalence class table", "decision table",
+  data from it with @xhubio/nanook-table. Use when asked to create or extend an equivalence
+  class table, a decision table or a test case table for a form or API with Nanook.
+  For a table that already exists and only needs test data, fixtures or data-driven tests,
+  use generate-test-data instead. Also: "equivalence class table", "decision table",
   "test data table", "nanook table".
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # nanook.xhub: Create a decision table
@@ -51,7 +52,7 @@ node scripts/generate-fixtures.mts resources/<name>-tests.xlsx fixtures/<name>
 | Script | What it does | Exit 1 if |
 |---|---|---|
 | `check-classes.mts` | reads the markers from the cells (not the formula values), recomputes combinations, column products and coverage, reports every class without its own `x` | coverage < 100 %, class without `x`, field without marker, no decision table |
-| `generate-fixtures.mts` | Nanook reads the workbook, generators `faker` and `text` are registered, one JSON per test case, count per table | Nanook logged errors (Nanook does not throw, it logs and carries on) |
+| `generate-fixtures.mts` | Nanook reads the workbook, generators `faker` and `text` and the filter processors `SimpleArrayFilter` and `SimpleArrayIgnoreFilter` are registered, one JSON per test case, count per table | Nanook logged errors (Nanook does not throw, it logs and carries on) |
 
 The `text` generator (in `generate-fixtures.mts`) provides the edge cases `faker` cannot:
 `gen::text:empty` (empty string), `gen::text:spaces:N`, `gen::text:alpha:N`,
@@ -92,6 +93,8 @@ TCs needed for 100% CASCADE = (sum of all non-preferred EqClasses) + 1 happy
 - Run the script → generate the Excel file
 - Open it in a spreadsheet → check colours, formulas, markers
 - Run Nanook generate → check the fixtures
+- Own generators, a run with fewer test cases than expected, using the fixtures in Vitest or
+  Playwright: the `generate-test-data` skill covers that part
 
 ## Column layout (ParserDecision)
 
@@ -145,9 +148,9 @@ Category             ← TagSection with "negative"/"valid" rows
 | GeneratorSwitchSection | Multi-Row | Switch off specific generators per TC |
 
 ### ExecuteSection values
-- **True**: `x`, `1`, `y`, `j`, `yes`, `ja`, `si`, `true`, `ok`, `T` (case-insensitive)
+- **True**: `T`, `1`, `y`, `j`, `yes`, `ja`, `si`, `true`, `ok` (case-insensitive)
 - **False**: `F` or any other value
-- **CAUTION**: 'x' is recognised as TRUE! Always use 'F' for sub-tables
+- **CAUTION**: `x` is recognised as FALSE! Write `T` for tables that generate, `F` for sub-tables
 
 ## Marker system
 
@@ -554,6 +557,8 @@ Category         | TagSection      |                        |                   
    further element of a range reference. Fewer means: a generator failed.
 5. Tell the user to open the workbook in a spreadsheet application (colours, formulas, summary row),
    and name the assumptions that did not come from their request (lengths, error codes).
+6. For the next steps (generators the table calls that are not registered yet, using the fixtures
+   in tests), point to the `generate-test-data` skill.
 
 ## References between tables (Nanook's core feature)
 
