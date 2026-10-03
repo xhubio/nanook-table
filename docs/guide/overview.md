@@ -81,23 +81,25 @@ The `FileProcessor` is the entry point for loading spreadsheet files. It:
 import {
   FileProcessor,
   ImporterXlsx,
+  LoggerMemory,
   ParserDecision,
   ParserMatrix,
   ParserSpecification
 } from '@xhubio/nanook-table'
 
-const fileProcessor = new FileProcessor()
-fileProcessor.registerImporter('xlsx', new ImporterXlsx())
-fileProcessor.registerParser('<DECISION_TABLE>', new ParserDecision())
-fileProcessor.registerParser('<MATRIX_TABLE>', new ParserMatrix())
-fileProcessor.registerParser('<SPECIFICATION>', new ParserSpecification())
+const logger = new LoggerMemory()
+const fileProcessor = new FileProcessor({ logger })
+fileProcessor.registerImporter('xlsx', new ImporterXlsx({ logger }))
+fileProcessor.registerParser('<DECISION_TABLE>', new ParserDecision({ logger }))
+fileProcessor.registerParser('<MATRIX_TABLE>', new ParserMatrix({ logger }))
+fileProcessor.registerParser('<SPECIFICATION>', new ParserSpecification({ logger }))
 
 await fileProcessor.load('my-tests.xlsx')
 
 const tables = fileProcessor.tables // TableInterface[]
 ```
 
-Sheets whose A1 cell does not match any registered parser are silently ignored, allowing you to include documentation sheets or scratch space in the same workbook.
+`createDefaultFileProcessor(logger)` does exactly this setup in one call. Sheets whose A1 cell does not match any registered parser are ignored (with an info message), allowing you to include documentation sheets or scratch space in the same workbook.
 
 ### Parsers
 
@@ -125,19 +127,25 @@ The `TestcaseProcessor` is the core orchestrator. It takes the parsed table mode
 3. Resolves references (which may point to test cases in other tables).
 4. Handles range references by creating multiple instances of the calling test case.
 5. Applies multiplicity (creating N copies of a test case).
-6. Invokes data generators through the `DataGeneratorRegistry`.
-7. Applies filters to include or exclude test cases.
+6. Applies filters and NeverExecute to include or exclude test cases, before any data is generated.
+7. Invokes data generators through the `DataGeneratorRegistry`.
 8. Passes the generated test case data to all registered writers.
 
 ```typescript
-import { TestcaseProcessor, DataGeneratorRegistry } from '@xhubio/nanook-table'
+import {
+  TestcaseProcessor,
+  createDefaultGeneratorRegistry,
+  createDefaultWriter
+} from '@xhubio/nanook-table'
 
 const processor = new TestcaseProcessor({
+  logger,
   tables: {},
-  generatorRegistry: registry,
-  writer: [myWriter]
+  generatorRegistry: createDefaultGeneratorRegistry(logger),
+  writer: createDefaultWriter(logger) // tdg/<test case>/testcaseData.json
 })
 
+// addTables() keys the array from FileProcessor by table name
 processor.addTables(fileProcessor.tables)
 await processor.process()
 ```
@@ -155,6 +163,8 @@ registry.registerGenerator(
   new GeneratorFaker({ generatorRegistry: registry, name: 'faker' })
 )
 ```
+
+`createDefaultGeneratorRegistry(logger)` returns a registry with `faker` already registered (since 3.3.0). Registering a generator under a name that is taken replaces the earlier one.
 
 Each generator has a lifecycle: `loadStore() -> generate() -> createPostProcessDirectives() -> postProcess() -> saveStore()`. The registry coordinates calling `loadStore()` and `saveStore()` across all registered generators.
 
@@ -177,38 +187,30 @@ All components work together in a pipeline orchestrated by the `TestcaseProcesso
 
 ```typescript
 import {
-  FileProcessor,
-  ImporterXlsx,
-  ParserDecision,
-  ParserMatrix,
-  ParserSpecification,
+  LoggerMemory,
   TestcaseProcessor,
-  DataGeneratorRegistry,
-  GeneratorFaker
+  createDefaultFileProcessor,
+  createDefaultGeneratorRegistry,
+  createDefaultWriter
 } from '@xhubio/nanook-table'
 
+const logger = new LoggerMemory()
+
 // 1. Set up the file processor with importer and parsers
-const fileProcessor = new FileProcessor()
-fileProcessor.registerImporter('xlsx', new ImporterXlsx())
-fileProcessor.registerParser('<DECISION_TABLE>', new ParserDecision())
-fileProcessor.registerParser('<MATRIX_TABLE>', new ParserMatrix())
-fileProcessor.registerParser('<SPECIFICATION>', new ParserSpecification())
+const fileProcessor = createDefaultFileProcessor(logger)
 
 // 2. Load spreadsheet files
 await fileProcessor.load(['tests.xlsx', 'more-tests.xlsx'])
 
-// 3. Set up the data generator registry
-const registry = new DataGeneratorRegistry()
-registry.registerGenerator(
-  'faker',
-  new GeneratorFaker({ generatorRegistry: registry, name: 'faker' })
-)
+// 3. Set up the data generator registry ('faker' is already registered)
+const registry = createDefaultGeneratorRegistry(logger)
 
 // 4. Set up the processor with generators and writers
 const processor = new TestcaseProcessor({
+  logger,
   tables: {},
   generatorRegistry: registry,
-  writer: [myWriter]
+  writer: createDefaultWriter(logger) // tdg/<test case>/testcaseData.json
 })
 
 // 5. Add tables and run

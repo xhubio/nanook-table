@@ -4,18 +4,21 @@ The model module defines the core interfaces and classes that represent tables, 
 
 ```typescript
 import {
-  TableInterface,
-  TestcaseDefinitionInterface,
   DirectiveBase,
   StaticDirective,
   GeneratorDirective,
   ReferenceDirective,
   FieldDirective,
-  MetaTable,
-  MetaTestcase,
-  FilterInterface,
   PREFIX_GENERATOR,
   PREFIX_REFERENCE
+} from '@xhubio/nanook-table'
+import type {
+  TableInterface,
+  TestcaseDefinitionInterface,
+  TestcaseDirectivesInterface,
+  MetaTable,
+  MetaTestcase,
+  FilterInterface
 } from '@xhubio/nanook-table'
 ```
 
@@ -27,9 +30,11 @@ Common interface implemented by all table models (`TableDecision`, `TableMatrix`
 
 | Property | Type | Description |
 |---|---|---|
-| `name` | `string` | The name of this table, typically derived from the sheet name |
-| `tableType` | `string` | The type identifier for this table (e.g., `'decision'`, `'matrix'`) |
-| `meta` | `MetaTable` | Metadata about the table, including the source file name |
+| `tableName` | `string` | The name of this table: the sheet name. References and `TestcaseProcessor.tables` use it |
+| `fileName` | `string` | The workbook the table was read from |
+| `tableType` | `string` (read-only) | `'decision-table'` (`TABLE_TYPE_DECISION_TABLE`) or `'matrix-table'` (`TABLE_TYPE_MATRIX_TABLE`); specification sheets become decision tables |
+| `tableMeta` | `MetaTable` (read-only) | `fileName`, `tableName` and `tableType` in one object |
+| `logger` | `LoggerInterface` | The logger of the table |
 
 ### Methods
 
@@ -40,25 +45,25 @@ Returns the test case definition with the given name. Throws an error if no test
 ```typescript
 const table: TableInterface = // ... loaded table
 const tc = table.getTestcaseForName('tc1')
-console.log(tc.testcaseName, tc.execute)
+console.log(tc.testcaseMeta.testcaseName, tc.execute)
 ```
 
 #### `getTestcasesForExecution(): Generator<TestcaseDefinitionInterface>`
 
-A generator function that yields all test case definitions that should be executed. Test cases marked with `execute = false` or `neverExecute = true` are excluded.
+A generator function that yields all test case definitions that should be executed. In a decision table these are the columns with a true Execute value, each once per Multiplicity (named `<column>.1`, `<column>.2`, …); NeverExecute only takes effect when another test case references the column.
 
 ```typescript
 for (const tc of table.getTestcasesForExecution()) {
-  console.log(tc.testcaseName)
+  console.log(tc.testcaseMeta.testcaseName)
 }
 ```
 
 #### `processRanges(testcaseName: string): string[]`
 
-Parses a test case name that may contain a range expression and returns an array of individual test case names. For example, `'tc12-14'` expands to `['tc12', 'tc13', 'tc14']`. If the name is not a range, returns a single-element array.
+Parses a test case name that may contain a range expression and returns an array of individual test case names. A range is written in square brackets, with comma-separated elements: `'[tc12-14]'` expands to `['tc12', 'tc13', 'tc14']`, `'[1,5]'` to `['1', '5']`. A name without brackets returns a single-element array.
 
 ```typescript
-const names = table.processRanges('tc3-5')
+const names = table.processRanges('[tc3-5]')
 // ['tc3', 'tc4', 'tc5']
 ```
 
@@ -73,15 +78,13 @@ Interface for a single test case definition within a table. Each column in a dec
 | Property | Type | Description |
 |---|---|---|
 | `id` | `string` | Unique identifier (UUID) for this test case |
-| `testcaseName` | `string` | The name of this test case (e.g., `'tc1'`). Used to look up the test case in the table |
-| `data` | `Record<string, Record<string, string>>` | The cell data for this test case, organized by section and row |
+| `testcaseMeta` | `MetaTestcase` (read-only) | `fileName`, `tableName`, `tableType` and `testcaseName` (e.g. `'tc1'`) |
+| `data` | `any` (optional) | The cell data for this test case, keyed by row ID |
 | `execute` | `boolean` | Whether this test case should be executed. `false` means it exists only as a reference target |
-| `neverExecute` | `boolean` | If `true`, this test case is never executed, even when referenced from another test case |
+| `neverExecute` | `boolean` | If `true`, a test case that references this one is dropped |
 | `multiplicity` | `number` | How many times this test case should be generated. Default is `1` |
 | `table` | `TableInterface` | Reference back to the table this test case belongs to |
-| `tableType` | `string` | The table type of the parent table |
-| `tableName` | `string` | The name of the parent table |
-| `tableMeta` | `MetaTable` | The metadata of the parent table |
+| `logger` | `LoggerInterface` | The logger |
 
 ### Methods
 
@@ -116,12 +119,12 @@ const tags = testcase.createTags()
 
 #### `createFilter(): FilterInterface[]`
 
-Returns all filter definitions for this test case. Each filter has a name and a value expression.
+Returns all filter definitions for this test case. Each filter names a filter processor and an expression.
 
 ```typescript
 const filters = testcase.createFilter()
 for (const f of filters) {
-  console.log(`Filter: ${f.filterName} = ${f.filterValue}`)
+  console.log(`Filter: ${f.filterProcessorName} = ${f.expression}`)
 }
 ```
 
@@ -142,10 +145,10 @@ The return type of `createDirectives()`. Groups all directives by type.
 
 ```typescript
 interface TestcaseDirectivesInterface {
-  generator: GeneratorDirective[]
-  static: StaticDirective[]
-  reference: ReferenceDirective[]
-  field: FieldDirective[]
+  generator: GeneratorDirectiveInterface[]
+  static: StaticDirectiveInterface[]
+  reference: ReferenceDirectiveInterface[]
+  field: FieldDirectiveInterface[]
 }
 ```
 
@@ -191,19 +194,21 @@ Extends `DirectiveBase`. Represents a call to a named data generator. Created wh
 | `fieldName` | `string` | Inherited from `DirectiveBase` |
 | `testcaseMeta` | `MetaTestcase` | Inherited from `DirectiveBase` |
 | `generatorName` | `string` | The registered name of the generator to call |
-| `config` | `Record<string, unknown>` | Configuration parameters passed to the generator |
-| `instanceIdSuffix` | `string \| undefined` | Optional suffix appended to the instance ID. When two directives share the same suffix, the generator returns the same data |
+| `config` | `string` | Everything after the third colon of the cell, passed to the generator (`person.firstName`) |
+| `instanceIdSuffix` | `string` | The second part of the cell; empty for `gen::`. Directives with the same suffix in one test case share an instance ID |
 | `order` | `number` | Execution order. Directives are sorted by this value before execution. Default is `1000` |
 
 ### Spreadsheet Syntax
 
 ```
-gen:<generatorName>(<instanceIdSuffix>):<config>
+gen:<instanceIdSuffix>:<generatorName>:<config>
 ```
 
 Examples:
-- `gen:faker:{"method": "person.firstName"}` -- call GeneratorFaker with the given config
-- `gen:password(pwd):{"minLength": 8}` -- call the password generator; uses instance ID suffix `pwd`
+- `gen::faker:person.firstName` -- call the generator registered as `faker` with the config `person.firstName`
+- `gen:pwd:password:8` -- call the generator registered as `password` with the config `8`; instance ID suffix `pwd`
+
+Full description: [`docs/guide/directives.md`](../guide/directives.md).
 
 ---
 
@@ -220,7 +225,7 @@ Extends `DirectiveBase`. Represents a reference to data generated by another tab
 | `targetTableName` | `string` | The name of the table being referenced |
 | `targetFieldName` | `string` | The field name in the target table |
 | `targetTestcaseName` | `string` | The test case name in the target table |
-| `instanceIdSuffix` | `string \| undefined` | Optional suffix for the instance ID |
+| `instanceIdSuffix` | `string` | The second part of the cell; may be empty |
 
 ### Spreadsheet Syntax
 
@@ -236,14 +241,17 @@ reads `parts[1]` for it (see `createReferenceDirective`). Full description with 
 
 ## FieldDirective
 
-Extends `DirectiveBase`. Represents a field selection marker. Used internally to track which fields are active in a test case.
+Extends `DirectiveBase`. Represents a marked row of a MultiRowSection (for example an Expected Result row). Each one becomes an entry `{ key, comment, other }` in the array the field holds in the test case data.
 
 ### Properties
 
 | Property | Type | Description |
 |---|---|---|
-| `fieldName` | `string` | Inherited from `DirectiveBase` |
+| `fieldName` | `string` | Inherited from `DirectiveBase`: the name of the section |
 | `testcaseMeta` | `MetaTestcase` | Inherited from `DirectiveBase` |
+| `key` | `string` | Column C of the row |
+| `other` | `string` | Column D of the row |
+| `comment` | `string` | Column E of the row |
 
 ---
 
@@ -255,8 +263,9 @@ Defines a filter that can be applied to test cases during processing.
 
 | Property | Type | Description |
 |---|---|---|
-| `filterName` | `string` | The name of the filter processor to use |
-| `filterValue` | `string` | The filter expression passed to the filter processor |
+| `filterProcessorName` | `string` | The name of the filter processor to use |
+| `expression` | `string` | The filter expression passed to the filter processor |
+| `comment` | `string` (optional) | The comment of the FilterSection row |
 
 ---
 
@@ -293,5 +302,5 @@ Metadata about a specific test case. Extends the table metadata with test case i
 
 | Constant | Value | Description |
 |---|---|---|
-| `PREFIX_GENERATOR` | `'gen'` | The prefix that identifies generator commands in cell values |
-| `PREFIX_REFERENCE` | `'ref'` | The prefix that identifies reference commands in cell values |
+| `PREFIX_GENERATOR` | `'gen:'` | The prefix that identifies generator commands in cell values (compared case-insensitively) |
+| `PREFIX_REFERENCE` | `'ref:'` | The prefix that identifies reference commands in cell values (compared case-insensitively) |

@@ -18,7 +18,7 @@ npx vitest run tests/path/to/file.test.ts  # single test
 - **No semicolons** — Prettier removes them
 - **ESM**: Use `.js` extension in relative imports
 - **xlsx**: `import XLSX from 'xlsx'` (default import, NOT namespace)
-- **`createDefaultGeneratorRegistry()`** returns an EMPTY registry — register generators manually
+- **`createDefaultGeneratorRegistry()`** registers only `faker` — register every other generator manually; `new DataGeneratorRegistry()` is empty
 - **No namespace imports** — import only what you need
 - **Max 3 function parameters** (ESLint enforced)
 - Versions managed by semantic-release — never edit version in package.json

@@ -4,10 +4,8 @@ The file processor module handles loading spreadsheet files and parsing their sh
 
 ```typescript
 import {
-  ImporterInterface,
   ImporterXlsx,
   FileProcessor,
-  ParserInterface,
   ParserDecision,
   ParserMatrix,
   ParserSpecification,
@@ -15,13 +13,18 @@ import {
   RuleConverterRegistry,
   createDefaultConverterRegistry
 } from '@xhubio/nanook-table'
+import type {
+  ImporterInterface,
+  ParserInterface,
+  ParserParseRequest
+} from '@xhubio/nanook-table'
 ```
 
 ---
 
 ## ImporterInterface
 
-Abstract interface for spreadsheet readers. An importer loads a file and provides cell-level access to its content. The `FileProcessor` depends on this interface, so you can replace the XLSX importer with one for a different file format.
+The interface for spreadsheet readers (a type). An importer loads a file and provides cell-level access to its content. The `FileProcessor` depends on this interface, so you can replace the XLSX importer with one for a different file format.
 
 ### Methods
 
@@ -33,18 +36,18 @@ Opens and loads the given file. After this call, the importer's sheet data is av
 |---|---|---|
 | `fileName` | `string` | Path to the file to load |
 
-#### `sheetNames(): string[]`
+#### `sheetNames: string[]` (property)
 
-Returns an array of sheet names in the loaded file, in the original order they appear.
+The sheet names of the loaded file, in the order they appear. In `ImporterXlsx` it is a getter: read it, do not call it.
 
 ```typescript
 const importer = new ImporterXlsx()
 await importer.loadFile('tests.xlsx')
-const sheets = importer.sheetNames()
+const sheets = importer.sheetNames
 // ['LoginTests', 'RegistrationTests', 'PaymentMatrix']
 ```
 
-#### `cellValue(sheetName: string, column: number, row: number): string | undefined`
+#### `cellValue(sheetName: string, columnNumber: number, rowNumber: number): number | string | undefined`
 
 Returns the value of a single cell. Column and row indices are zero-based.
 
@@ -56,6 +59,14 @@ Returns the value of a single cell. Column and row indices are zero-based.
 
 Returns `undefined` if the cell is empty.
 
+#### `cellValueString(sheetName: string, columnNumber: number, rowNumber: number): string | undefined`
+
+Like `cellValue()`, but returns the value as a string. The parsers use this one.
+
+#### `logger: LoggerInterface` (property)
+
+The logger of the importer.
+
 #### `clear(): void`
 
 Releases the loaded file data to free memory. Call this after parsing is complete.
@@ -64,7 +75,7 @@ Releases the loaded file data to free memory. Call this after parsing is complet
 
 ## ImporterXlsx
 
-XLSX implementation of `ImporterInterface`. Uses the `xlsx` library to read Excel files (.xlsx, .xls).
+XLSX implementation of `ImporterInterface`. Uses the `xlsx` library to read Excel files (.xlsx, .xls). The constructor takes `{ logger? }`.
 
 ### Properties
 
@@ -81,7 +92,7 @@ import { ImporterXlsx } from '@xhubio/nanook-table'
 const importer = new ImporterXlsx()
 await importer.loadFile('resources/tests.xlsx')
 
-for (const name of importer.sheetNames()) {
+for (const name of importer.sheetNames) {
   const firstCell = importer.cellValue(name, 0, 0)
   console.log(`Sheet "${name}" starts with: ${firstCell}`)
 }
@@ -98,12 +109,13 @@ Orchestrates the loading and parsing of spreadsheet files. It uses an importer t
 ### Constructor
 
 ```typescript
-new FileProcessor({ logger }: { logger: LoggerInterface })
+new FileProcessor(options?: { logger?: LoggerInterface; tableTypeKeys?: string[] })
 ```
 
 | Option | Type | Description |
 |---|---|---|
-| `logger` | `LoggerInterface` | Logger instance for diagnostic messages |
+| `logger` | `LoggerInterface` | Logger instance for diagnostic messages. Default: the shared `getLoggerMemory()` instance |
+| `tableTypeKeys` | `string[]` | Stored, but not evaluated: which sheets are loaded depends only on the parsers registered with `registerParser()`. A sheet whose first cell names no registered parser is skipped with an info message |
 
 The `FileProcessor` requires an importer and parsers to be registered before calling `load()`. Use `createDefaultFileProcessor()` to get a pre-configured instance with all standard parsers.
 
@@ -111,32 +123,32 @@ The `FileProcessor` requires an importer and parsers to be registered before cal
 
 | Property | Type | Description |
 |---|---|---|
-| `tables` | `TableInterface[]` | Array of parsed table models. Populated after calling `load()` |
+| `tables` | `TableInterface[]` | Array of parsed table models. Populated after calling `load()`. A second sheet with the same name replaces the first (a warning is logged). `TestcaseProcessor` wants them keyed by `tableName`; convert the array |
 
 ### Methods
 
-#### `async load(fileName: string): Promise<void>`
+#### `async load(fileNames: string | string[]): Promise<void>`
 
-Loads the given file, iterates over all sheets, and parses each one into a table model. The parser is selected based on the table type marker in cell `(0, 0)` of each sheet.
+Loads the given file or files, iterates over all sheets, and parses each one into a table model. The importer is selected by the file extension, the parser by the table type marker in cell `(0, 0)` of each sheet.
 
-After this call, the `tables` property contains all parsed table models.
+After this call, the `tables` property contains all parsed table models. `load()` does not throw: a file it cannot read or a sheet it cannot parse is logged as an error, so check `logger.entries.error`.
 
 ```typescript
 import { createDefaultFileProcessor, LoggerMemory } from '@xhubio/nanook-table'
 
 const logger = new LoggerMemory()
-const fp = await createDefaultFileProcessor(logger)
+const fp = createDefaultFileProcessor(logger)
 await fp.load('resources/tests.xlsx')
 
 console.log(`Loaded ${fp.tables.length} tables`)
 for (const table of fp.tables) {
-  console.log(`- ${table.name} (${table.tableType})`)
+  console.log(`- ${table.tableName} (${table.tableType})`)
 }
 ```
 
-#### `registerImporter(importer: ImporterInterface): void`
+#### `registerImporter(extension: string, importer: ImporterInterface): void`
 
-Sets the importer to use for loading files.
+Registers the importer for files with the given extension, without the dot (`'xlsx'`, `'xls'`).
 
 #### `registerParser(tableType: string, parser: ParserInterface): void`
 
@@ -146,20 +158,21 @@ Registers a parser for the given table type marker. When a sheet's first cell ma
 
 ## ParserInterface
 
-Abstract interface for table parsers. Each concrete parser knows how to read a specific table type from raw spreadsheet cells and produce a table model.
+The interface for table parsers (a type). Each concrete parser knows how to read a specific table type from raw spreadsheet cells and produce a table model. Besides `parse()` it has the properties `startRow`, `startColumn`, `endKey` and `logger`. The built-in parsers extend `ParserBase`, whose constructor requires `{ logger }`: `new ParserDecision({ logger })`.
 
 ### Methods
 
-#### `parse(sheetName: string, importer: ImporterInterface): TableInterface`
+#### `parse(request: ParserParseRequest): TableInterface | undefined`
 
-Parses the sheet with the given name using the provided importer and returns a table model.
+Parses one sheet and returns a table model, or `undefined` if the sheet could not be parsed (the errors are logged).
 
-| Parameter | Type | Description |
+| Field of `request` | Type | Description |
 |---|---|---|
 | `sheetName` | `string` | The name of the sheet to parse |
 | `importer` | `ImporterInterface` | The importer providing cell access |
+| `fileName` | `string` | The file the sheet comes from |
 
-**Returns:** A `TableInterface` implementation (e.g., `TableDecision`, `TableMatrix`).
+**Returns:** A `TableInterface` implementation (e.g., `TableDecision`, `TableMatrix`), or `undefined`.
 
 ---
 
@@ -205,7 +218,7 @@ Row 0:  <DECISION_TABLE>   |  tc1  |  tc2  |  tc3  | ...
 
 ### Methods
 
-#### `parse(sheetName: string, importer: ImporterInterface): TableDecision`
+#### `parse(request: ParserParseRequest): TableInterface | undefined`
 
 Parses the decision table and returns a `TableDecision` model.
 
@@ -221,7 +234,7 @@ A matrix table has row headers on the left, column headers on top, and data valu
 
 ### Methods
 
-#### `parse(sheetName: string, importer: ImporterInterface): TableMatrix`
+#### `parse(request: ParserParseRequest): TableInterface | undefined`
 
 Parses the matrix table and returns a `TableMatrix` model.
 
@@ -229,7 +242,7 @@ Parses the matrix table and returns a `TableMatrix` model.
 
 ## ParserSpecification
 
-Parser for sheets marked with `<SPECIFICATION_TABLE>`. Reads a high-level specification of fields, rules, and severities, and produces a `SpecificationModel`.
+Parser for sheets marked with `<SPECIFICATION>` (the legacy marker `<SPECIFICATION_TABLE>` works too). Reads a high-level specification of fields, rules, and severities into a `SpecificationModel`; `parse()` converts that into a `TableDecision` right away, so a specification sheet arrives in `FileProcessor.tables` as a decision table.
 
 ### Sheet Structure
 
@@ -241,9 +254,13 @@ A specification table has three sections:
 
 ### Methods
 
-#### `parseSpecification(sheetName: string, importer: ImporterInterface): SpecificationModel`
+#### `parse(request: ParserParseRequest): TableInterface | undefined`
 
-Parses the specification sheet and returns a `SpecificationModel`.
+Parses the specification sheet and returns the converted `TableDecision`.
+
+#### `parseSpecification(sheetName: string, importer: ImporterInterface): SpecificationModel | undefined`
+
+Parses the specification sheet and returns the `SpecificationModel`, without converting it.
 
 ---
 
@@ -261,38 +278,38 @@ The converter creates:
 ### Constructor
 
 ```typescript
-new ParserSpecificationConverter(options?: {
-  logger?: LoggerInterface
-  converterRegistry?: RuleConverterRegistry
-})
+new ParserSpecificationConverter(options?: { registry?: RuleConverterRegistry })
 ```
 
 | Option | Type | Description |
 |---|---|---|
-| `logger` | `LoggerInterface` | Logger instance |
-| `converterRegistry` | `RuleConverterRegistry` | Registry of rule converter plugins. If not provided, uses `createDefaultConverterRegistry()` |
+| `registry` | `RuleConverterRegistry` | Registry of rule converter plugins. If not provided, uses `createDefaultConverterRegistry()` |
 
 ### Methods
 
-#### `convert(specification: SpecificationModel): TableDecision`
+#### `convert(request: { specification: SpecificationInterface; logger: LoggerInterface; fileName: string }): TableDecision`
 
 Converts the specification model into a decision table.
 
 ```typescript
 import {
+  LoggerMemory,
   ParserSpecification,
   ParserSpecificationConverter,
   ImporterXlsx
 } from '@xhubio/nanook-table'
 
-const importer = new ImporterXlsx()
+const logger = new LoggerMemory()
+const importer = new ImporterXlsx({ logger })
 await importer.loadFile('spec.xlsx')
 
-const parser = new ParserSpecification()
+const parser = new ParserSpecification({ logger })
 const spec = parser.parseSpecification('MySpec', importer)
 
-const converter = new ParserSpecificationConverter()
-const decisionTable = converter.convert(spec)
+if (spec !== undefined) {
+  const converter = new ParserSpecificationConverter()
+  const decisionTable = converter.convert({ specification: spec, logger, fileName: 'spec.xlsx' })
+}
 ```
 
 ---
@@ -323,16 +340,16 @@ Context object passed to `RuleConverterPlugin.convert()`. Contains all informati
 ```typescript
 interface RuleConversionContext {
   /** The field definition being processed */
-  field: FieldDefinition
+  field: SpecificationFieldInterface
 
   /** The specific rule being converted */
-  rule: RuleDefinition
+  rule: SpecificationFieldRuleInterface
 
   /** All rules that apply to this field */
-  allFieldRules: RuleDefinition[]
+  allFieldRules: SpecificationFieldRuleInterface[]
 
   /** The full specification model */
-  specification: SpecificationModel
+  specification: SpecificationInterface
 }
 ```
 
@@ -360,8 +377,8 @@ interface EquivalenceClassEntry {
   /** Display name of the equivalence class */
   name: string
 
-  /** Optional explanatory comment */
-  comment?: string
+  /** Explanatory comment (required; may be an empty string) */
+  comment: string
 
   /** Optional severity level for error classes */
   severity?: string
@@ -378,11 +395,11 @@ Registry for rule converter plugins. Used by `ParserSpecificationConverter` to l
 
 #### `register(plugin: RuleConverterPlugin): void`
 
-Registers a converter plugin. The plugin's `name` property is used as the key.
+Registers a converter plugin. The plugin's `name` property is used as the key. Throws if a plugin with that name is already registered.
 
-#### `get(name: string): RuleConverterPlugin`
+#### `get(name: string): RuleConverterPlugin | undefined`
 
-Returns the plugin registered under the given name. Throws an error if not found.
+Returns the plugin registered under the given name, or `undefined`.
 
 #### `has(name: string): boolean`
 
@@ -438,11 +455,11 @@ console.log(registry.names()) // list of all built-in converter names
 
 ## Parser Constants
 
-The parsers use the following constants when reading spreadsheet data:
+The parsers use the following internal constants when reading spreadsheet data. They are not exported; they are listed so you know how a sheet is read:
 
 | Constant | Value | Description |
 |---|---|---|
 | `START_ROW` | `0` | Default starting row in a sheet |
 | `START_COLUMN` | `0` | Default starting column in a sheet |
-| `MAX_EMPTY_LINES` | `30` | Maximum consecutive empty lines before the parser assumes the table has ended |
+| `MAX_EMPTY_LINES` | `100` | Maximum consecutive empty lines before the parser assumes the table has ended |
 | `KEY_TABLE_END` | `'<END>'` | Marker string in a cell that explicitly marks the end of a table |

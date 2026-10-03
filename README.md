@@ -39,7 +39,8 @@ async function main() {
   logger.writeConsole = true
 
   const fileProcessor = createDefaultFileProcessor(logger)
-  // the registry starts empty: register every generator your tables call (gen::faker:...)
+  // a new registry starts empty: register every generator your tables call (gen::faker:...);
+  // createDefaultGeneratorRegistry(logger) comes with 'faker' (3.3.0 or later)
   const generatorRegistry = new DataGeneratorRegistry()
   generatorRegistry.registerGenerator(
     'faker',
@@ -92,7 +93,7 @@ FileProcessor             -- delegates to the right parser per sheet
     +-- ParserDecision     -- sheets starting with <DECISION_TABLE>
     +-- ParserMatrix       -- sheets starting with <MATRIX_TABLE>
     +-- ParserSpecification + ParserSpecificationConverter
-    |                         -- sheets starting with <SPECIFICATION_TABLE>
+    |                         -- sheets starting with <SPECIFICATION> (or <SPECIFICATION_TABLE>)
     v
 Table Models              -- TableDecision, TableMatrix
     |
@@ -116,7 +117,7 @@ Output Files / Data
 |---|---|---|
 | `<DECISION_TABLE>` | Decision / Equivalence Class | Fields with equivalence classes, one column per test case |
 | `<MATRIX_TABLE>` | Matrix | Two-dimensional parameter combinations |
-| `<SPECIFICATION_TABLE>` | Specification | High-level rules that convert to a decision table |
+| `<SPECIFICATION>` (also `<SPECIFICATION_TABLE>`) | Specification | High-level rules that convert to a decision table |
 
 ## Writing a Custom Generator
 

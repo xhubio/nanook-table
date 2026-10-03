@@ -8,114 +8,102 @@ import {
   LoggerMemory,
   getLoggerMemory
 } from '@xhubio/nanook-table'
+import type { LogEntry, LogMessageType } from '@xhubio/nanook-table'
 ```
 
 ---
 
 ## LoggerInterface
 
-Abstract base class that defines the logging contract. All Nanook components accept a `LoggerInterface` and use it for diagnostic output. You can implement this interface to integrate with any logging framework (Winston, Pino, console, etc.).
+The base class that defines the logging contract (a concrete class, not an interface, despite the name). All Nanook components accept a `LoggerInterface` and use it for diagnostic output. Extend it to integrate with any logging framework (Winston, Pino, console, etc.). On its own it discards every message.
 
 ### Log Levels
 
-Log levels are ordered by severity. Setting the logger to a given level means it will only output messages at that level or higher.
+Log levels are ordered by severity. Setting the logger to a given level means it will only output messages at that level or higher. **The default level is `error`**: `debug`, `info` and `warning` messages are dropped unless you lower it.
 
 | Level | Numeric Value | Description |
 |---|---|---|
 | `debug` | `0` | Detailed diagnostic information |
 | `info` | `1` | General informational messages |
 | `warning` | `2` | Potentially problematic situations |
-| `error` | `3` | Error conditions that allow continued operation |
+| `error` | `3` | Error conditions that allow continued operation (the default level) |
 | `fatal` | `4` | Severe errors that may cause the process to abort |
 
 ### Properties
 
 | Property | Type | Description |
 |---|---|---|
-| `level` | `string \| number` | The current log level. Messages below this level are suppressed. Can be set as a string (`'debug'`, `'info'`, etc.) or a number (`0`--`4`) |
+| `level` | set: `string \| number`, get: `string` | The current log level. Messages below this level are suppressed. Set it as a string (`'debug'`, `'info'`, etc.) or a number (`0`--`4`); reading it returns the name. Default `'error'` |
 
 ### Methods
 
-#### `clear(): void`
-
-Clears all stored log entries. The specific behavior depends on the implementation.
-
-#### `getLevelNumber(level: string): number`
-
-Converts a log level string to its numeric value.
-
-```typescript
-logger.getLevelNumber('warning') // 2
-logger.getLevelNumber('debug')   // 0
-```
-
-#### `getTime(): string`
-
-Returns the current time formatted for log entries. The format is implementation-specific.
-
-#### `async debug(message: string | object): Promise<void>`
+#### `debug(message: string | object): void`
 
 Logs a message at the `debug` level (numeric value `0`).
 
 ```typescript
-await logger.debug('Processing table: LoginTests')
-await logger.debug({ table: 'LoginTests', testcases: 5 })
+logger.debug('Processing table: LoginTests')
+logger.debug({ table: 'LoginTests', testcases: 5 })
 ```
 
-#### `async info(message: string | object): Promise<void>`
+#### `info(message: string | object): void`
 
 Logs a message at the `info` level (numeric value `1`).
 
 ```typescript
-await logger.info('File loaded successfully')
+logger.info('File loaded successfully')
 ```
 
-#### `async warning(message: string | object): Promise<void>`
+#### `warning(message: string | object): void`
 
 Logs a message at the `warning` level (numeric value `2`).
 
 ```typescript
-await logger.warning('Sheet "OldFormat" uses deprecated section type')
+logger.warning('Sheet "OldFormat" uses deprecated section type')
 ```
 
-#### `async error(message: string | object): Promise<void>`
+#### `error(message: string | object): void`
 
 Logs a message at the `error` level (numeric value `3`).
 
 ```typescript
-await logger.error('Generator "myGen" failed after 100 uniqueness retries')
+logger.error('Generator "myGen" returned no value')
 ```
 
-#### `async fatal(message: string | object): Promise<void>`
+#### `fatal(message: string | object): void`
 
 Logs a message at the `fatal` level (numeric value `4`).
 
 ```typescript
-await logger.fatal('Cannot open file: tests.xlsx')
+logger.fatal('Cannot open file: tests.xlsx')
 ```
+
+The log methods are synchronous. The helpers `getLevelNumber()`, `getLevelName()`, `getLogEntry()` and `getTime()` are `protected`: available to subclasses, not to callers.
 
 ### Implementing a Custom Logger
 
-To integrate Nanook with your own logging infrastructure, extend `LoggerInterface` and override the `_writeLog` method:
+To integrate Nanook with your own logging infrastructure, extend `LoggerInterface` and override the protected `writeLog()` method. It is called only for messages at or above `level`, with an entry `{ level, time, message }`:
 
 ```typescript
 import { LoggerInterface } from '@xhubio/nanook-table'
+import type { LogEntry } from '@xhubio/nanook-table'
+
+interface WinstonLike {
+  log(level: string, message: string): void
+}
 
 class WinstonLogger extends LoggerInterface {
-  private winston: WinstonInstance
+  private winston: WinstonLike
 
-  constructor(winston: WinstonInstance) {
+  constructor(winston: WinstonLike) {
     super()
     this.winston = winston
   }
 
-  _writeLog(level: string, entry: string | object): void {
-    const message = typeof entry === 'string' ? entry : JSON.stringify(entry)
+  protected override writeLog(level: string, entry: LogEntry): void {
+    const message =
+      typeof entry.message === 'string' ? entry.message : JSON.stringify(entry.message)
     this.winston.log(level, message)
-  }
-
-  clear(): void {
-    // Winston does not support clearing logs
   }
 }
 ```
@@ -124,7 +112,7 @@ class WinstonLogger extends LoggerInterface {
 
 ## LoggerMemory
 
-In-memory logger that stores all log entries in arrays, organized by level. Optionally also writes to the console. This is the default logger used in examples and tests.
+In-memory logger that stores log entries in arrays, organized by level. Optionally also writes to the console. This is the default logger used in examples and tests. Like every `LoggerInterface`, it stores only messages at or above `level`, which defaults to `error`.
 
 ### Extends
 
@@ -133,7 +121,7 @@ In-memory logger that stores all log entries in arrays, organized by level. Opti
 ### Constructor
 
 ```typescript
-new LoggerMemory()
+new LoggerMemory(options?: { writeConsole?: boolean })
 ```
 
 ### Properties
@@ -141,7 +129,7 @@ new LoggerMemory()
 | Property | Type | Default | Description |
 |---|---|---|---|
 | `writeConsole` | `boolean` | `false` | When `true`, log entries are also printed to `console`. Set this to `true` during development to see output |
-| `entries` | `LogEntries` | `{ debug: [], info: [], warning: [], error: [], fatal: [] }` | All stored log entries, organized by level. Each entry contains the timestamp and message |
+| `entries` | `Record<string, LogEntry[]>` | `{ debug: [], info: [], warning: [], error: [], fatal: [] }` | The stored log entries, organized by level |
 
 ### Methods
 
@@ -151,7 +139,8 @@ Empties all log entry arrays.
 
 ```typescript
 const logger = new LoggerMemory()
-await logger.info('hello')
+logger.level = 'info'
+logger.info('hello')
 console.log(logger.entries.info.length) // 1
 
 logger.clear()
@@ -163,16 +152,15 @@ console.log(logger.entries.info.length) // 0
 ```typescript
 import { LoggerMemory } from '@xhubio/nanook-table'
 
-const logger = new LoggerMemory()
-logger.writeConsole = true
+const logger = new LoggerMemory({ writeConsole: true })
+logger.level = 'warning' // keep warnings too; the default keeps only error and fatal
 
-await logger.info('Starting generation')
-await logger.debug('Processing sheet: LoginTests')
-await logger.warning('Empty test case column found')
+logger.info('Starting generation')          // dropped: below 'warning'
+logger.warning('Empty test case column found')
 
 // Access stored entries
 for (const entry of logger.entries.warning) {
-  console.log(`Warning at ${entry.time}: ${entry.message}`)
+  console.log(`Warning at ${entry.time}: ${JSON.stringify(entry.message)}`)
 }
 
 // Check for errors after processing
@@ -183,28 +171,28 @@ if (logger.entries.error.length > 0) {
 
 ### Log Entry Structure
 
-Each entry in the `entries` arrays is an object with:
+Each entry in the `entries` arrays is a `LogEntry`:
 
 | Field | Type | Description |
 |---|---|---|
+| `level` | `string` | The level the entry was logged at |
 | `time` | `string` | Formatted timestamp of when the entry was logged |
 | `message` | `string \| object` | The logged message or data object |
 
 ---
 
-## getLoggerMemory()
+## getLoggerMemory(options?: { writeConsole?: boolean }): LoggerMemory
 
-Factory function that creates and returns a new `LoggerMemory` instance.
+Returns a shared `LoggerMemory` instance: the first call creates it, every later call returns the same object (and ignores `options`). Nanook uses it where no logger is passed, for example in `new FileProcessor()` and `createDefaultGeneratorRegistry()`. For a logger of your own, use `new LoggerMemory()`.
 
 ```typescript
 import { getLoggerMemory } from '@xhubio/nanook-table'
 
 const logger = getLoggerMemory()
 logger.writeConsole = true
-await logger.info('Ready')
+logger.level = 'info'
+logger.info('Ready')
 ```
-
-This is a convenience shorthand for `new LoggerMemory()`.
 
 ---
 
@@ -222,17 +210,24 @@ logger.level = 'debug'
 
 ```typescript
 import { describe, it, expect } from 'vitest'
-import { LoggerMemory } from '@xhubio/nanook-table'
+import { DataGeneratorRegistry, LoggerMemory } from '@xhubio/nanook-table'
+import type { GeneratorDirectiveInterface } from '@xhubio/nanook-table'
+import { MyGenerator } from '../src/MyGenerator.js' // your generator
 
 describe('my generator', () => {
-  it('logs a warning for empty config', async () => {
+  it('logs an error for an unknown config', async () => {
     const logger = new LoggerMemory()
-    const gen = new MyGenerator({ logger })
+    const generatorRegistry = new DataGeneratorRegistry()
+    const gen = new MyGenerator({ generatorRegistry, name: 'my', logger })
 
-    await gen.generate('id1', testcase, directive)
+    // DataGeneratorBase logs a rejected doGenerate() and returns undefined
+    const value = await gen.generate({
+      instanceId: 'id1',
+      generatorDirective: { config: 'unknown' } as GeneratorDirectiveInterface
+    })
 
-    expect(logger.entries.warning.length).toBe(1)
-    expect(logger.entries.warning[0].message).toContain('empty config')
+    expect(value).toBeUndefined()
+    expect(logger.entries.error.length).toBe(1)
   })
 })
 ```
