@@ -219,10 +219,12 @@ export class DataGeneratorBase implements DataGeneratorInterface {
   }
 
   /**
-   * Generates data based on the provided request and caches it per instance.
+   * Generates data based on the provided request and caches it per instance and parameter.
    *
-   * If data for the given instance ID already exists, it returns the cached data.
-   * Otherwise, it calls the generator-specific `doGenerate()` method to produce new data.
+   * If data for the given instance ID and the parameter of the directive already exists, it
+   * returns the cached data. Otherwise, it calls the generator-specific `doGenerate()` method to
+   * produce new data. `doGenerate()` gets the request unchanged, so a generator that builds one
+   * record per instance can still key it on `request.instanceId`.
    *
    * @param request - The generation request parameters, as defined by DataGeneratorGenerateRequest.
    * @returns The generated data, or `undefined` if generation could not be completed.
@@ -230,15 +232,16 @@ export class DataGeneratorBase implements DataGeneratorInterface {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async generate(request: DataGeneratorGenerateRequest): Promise<any> {
-    const { instanceId, testcaseData, generatorDirective } = request
-    if (instanceId && this.instanceData.has(instanceId)) {
-      return this.instanceData.get(instanceId)
+    const { testcaseData, generatorDirective } = request
+    const cacheKey = this.createCacheKey(request)
+    if (cacheKey && this.instanceData.has(cacheKey)) {
+      return this.instanceData.get(cacheKey)
     }
 
     try {
       const genData = await this.doGenerate(request)
-      if (genData !== undefined && instanceId) {
-        this.instanceData.set(instanceId, genData)
+      if (genData !== undefined && cacheKey) {
+        this.instanceData.set(cacheKey, genData)
       }
       return genData
     } catch (err) {
@@ -267,6 +270,30 @@ export class DataGeneratorBase implements DataGeneratorInterface {
         stack
       })
     }
+  }
+
+  /**
+   * Creates the key under which `generate()` caches a value.
+   *
+   * All `gen::` cells of a test case share one instance ID, so the ID alone would hand the first
+   * value to every other cell of the same generator. The parameter of the directive is part of
+   * the key: same instance and parameter give the same value, a different parameter its own.
+   * Without a parameter the key is the instance ID, as stored by earlier versions.
+   *
+   * @param request - The generation request parameters
+   * @returns The cache key, or `undefined` if the request has no instance ID
+   */
+  protected createCacheKey(
+    request: DataGeneratorGenerateRequest
+  ): string | undefined {
+    const { instanceId, generatorDirective } = request
+    if (!instanceId) {
+      return undefined
+    }
+    const config = generatorDirective?.config
+    return typeof config === 'string' && config !== ''
+      ? `${instanceId}\u0000${config}`
+      : instanceId
   }
 
   /**

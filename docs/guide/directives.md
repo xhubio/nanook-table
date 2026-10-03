@@ -36,7 +36,7 @@ gen:<instanceIdSuffix>:<generatorName>:<parameter>
 gen::PersonGenerator:firstName
 ```
 
-This calls the generator registered as `PersonGenerator`, passes `firstName` as the parameter, and uses no explicit instance ID (a new UUID is assigned automatically).
+This calls the generator registered as `PersonGenerator`, passes `firstName` as the parameter, and uses no explicit instance ID: the generator gets the instance ID of the test case itself, which every `gen::` cell of that test case shares.
 
 ### Instance IDs
 
@@ -56,14 +56,25 @@ Here is what happens:
 2. The second call (`lastName`) finds that instance ID `1` already exists for `PersonGenerator`. Instead of generating new data, it retrieves the existing instance and returns the `lastName`.
 3. The third call (`email`) works the same way -- it returns the `email` from the already-generated instance.
 
-If you use a different instance ID (or no instance ID), a new independent data set is generated:
+If you use a different instance ID, a new independent data set is generated. No instance ID means the instance of the test case itself:
 
 ```
 gen:1:PersonGenerator:firstName    <- Person A
 gen:1:PersonGenerator:lastName     <- Person A (same instance)
 gen:2:PersonGenerator:firstName    <- Person B (different instance)
-gen::PersonGenerator:firstName     <- Person C (auto-generated UUID, always new)
+gen::PersonGenerator:firstName     <- Person C (the instance of the test case)
+gen::PersonGenerator:email         <- Person C as well
 ```
+
+Whether two cells of one instance share a record is up to the generator. `DataGeneratorBase` caches per instance ID **and parameter**:
+
+- same instance ID, same parameter: the cached value, the generator is not called again
+- same instance ID, different parameter: the generator is called again; a generator that hands out fields of one record (like `PersonGenerator`) builds the record once in `doGenerate()` and keys it on `request.instanceId`
+- a generator that returns independent values (for example one value per parameter) needs nothing else: `gen::text:empty` and `gen::text:alpha:5` in one test case get their own values
+
+Up to 3.2.0 the cache used the instance ID alone, so every `gen::` cell of a generator in a test case got the value of the first one.
+
+References behave differently: a reference without an instance ID gets a new one each time (see below).
 
 ### Execution Order
 
