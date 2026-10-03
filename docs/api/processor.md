@@ -41,6 +41,8 @@ new TestcaseProcessor(options: {
 | `generatorRegistry` | `DataGeneratorRegistry` | Registry containing all available data generators |
 | `writer` | `InterfaceWriter[]` | The writers that receive generated test case data |
 | `tables` | `Record<string, TableInterface>` | Required. The table models to process, keyed by table name. `FileProcessor.tables` is an array, so convert it: `Object.fromEntries(fileProcessor.tables.map((t) => [t.tableName, t]))` |
+| `writeStaticData` | `(testcaseData, directives) => void` | Optional. Writes the static cell values into the test case data. Replace it only to change how static values are stored |
+| `writeMetaData` | `(testcaseData, directives) => void` | Optional. Writes the MultiRowSection rows (`{ key, comment, other }`) into the test case data |
 
 ### Properties
 
@@ -207,6 +209,7 @@ class ConsoleWriter implements InterfaceWriter {
 The processor accepts an array of writers. All writers receive every test case.
 
 ```typescript
+// continues the examples above: logger, registry, tables and ConsoleWriter
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { TestcaseProcessor, type InterfaceWriter } from '@xhubio/nanook-table'

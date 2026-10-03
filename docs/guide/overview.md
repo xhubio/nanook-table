@@ -132,6 +132,7 @@ The `TestcaseProcessor` is the core orchestrator. It takes the parsed table mode
 8. Passes the generated test case data to all registered writers.
 
 ```typescript
+// continues the file processor example above: logger and fileProcessor
 import {
   TestcaseProcessor,
   createDefaultGeneratorRegistry,

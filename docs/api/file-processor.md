@@ -54,8 +54,8 @@ Returns the value of a single cell. Column and row indices are zero-based.
 | Parameter | Type | Description |
 |---|---|---|
 | `sheetName` | `string` | The name of the sheet |
-| `column` | `number` | Column index, starting at `0` |
-| `row` | `number` | Row index, starting at `0` |
+| `columnNumber` | `number` | Column index, starting at `0` |
+| `rowNumber` | `number` | Row index, starting at `0` |
 
 Returns `undefined` if the cell is empty.
 

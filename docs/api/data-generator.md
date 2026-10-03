@@ -171,7 +171,6 @@ import { DataGeneratorBase } from '@xhubio/nanook-table'
 import type { DataGeneratorGenerateRequest } from '@xhubio/nanook-table'
 
 class GeneratorTimestamp extends DataGeneratorBase {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected override async doGenerate(
     request: DataGeneratorGenerateRequest
   ): Promise<string> {

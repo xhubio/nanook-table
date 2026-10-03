@@ -245,13 +245,10 @@ export class DataGeneratorBase implements DataGeneratorInterface {
       }
       return genData
     } catch (err) {
-      const testcaseName = testcaseData ? testcaseData.name : undefined
-      const tableName = generatorDirective
-        ? generatorDirective.testcaseMeta.tableName
-        : 'unknown'
-      const fieldName = generatorDirective
-        ? generatorDirective.fieldName
-        : 'unknown'
+      // a directive built by hand (tests, direct calls) may lack testcaseMeta
+      const testcaseName = testcaseData?.name
+      const tableName = generatorDirective?.testcaseMeta?.tableName ?? 'unknown'
+      const fieldName = generatorDirective?.fieldName ?? 'unknown'
 
       let message: string = `Error in generating data`
       let stack: string | undefined
