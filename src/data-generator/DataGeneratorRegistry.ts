@@ -15,24 +15,20 @@ export class DataGeneratorRegistry {
   >()
 
   /**
-   * Registers a new data generator in the registry.
+   * Registers a data generator in the registry.
    *
-   * @param generatorName - The unique name to assign to the generator.
+   * A generator registered under a name that is already taken replaces the
+   * earlier one: the last registration wins. This lets a script register its
+   * own 'faker' on a registry from `createDefaultGeneratorRegistry()`, which
+   * already holds one.
+   *
+   * @param generatorName - The name the tables use to call the generator.
    * @param dataGenerator - The instance of the data generator to be registered.
-   *
-   * @throws Error If a generator with the given name is already registered.
    */
   registerGenerator(
     generatorName: string,
     dataGenerator: DataGeneratorInterface
   ) {
-    if (this.registry.has(generatorName)) {
-      // A generator with the same name is already registered.
-      throw new Error(
-        `There is already a generator registered with the name '${generatorName}'`
-      )
-    }
-
     // Assign the generator's name and store it in the registry.
     dataGenerator.name = generatorName
     this.registry.set(generatorName, dataGenerator)
