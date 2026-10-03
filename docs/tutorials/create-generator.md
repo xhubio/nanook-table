@@ -8,22 +8,24 @@ First, update your Excel file to use the new generator. Add two more FieldSubSec
 
 In the Generator Function column, reference the generator like this:
 
-| Field Name   | Section Type    | Equivalence Class | Generator Function          |
-| ------------ | --------------- | ----------------- | --------------------------- |
-| Primary Data | FieldSection    |                   |                             |
-| first name   | FieldSubSection |                   |                             |
-|              |                 | valid             | generatorPerson:firstName   |
-| last name    | FieldSubSection |                   |                             |
-|              |                 | valid             | generatorPerson:lastName    |
-| email        | FieldSubSection |                   |                             |
-|              |                 | valid             | generatorPerson:email       |
+| Field Name   | Section Type    | Equivalence Class | Generator Function             |
+| ------------ | --------------- | ----------------- | ------------------------------ |
+| Primary Data | FieldSection    |                   |                                |
+| first name   | FieldSubSection |                   |                                |
+|              |                 | valid             | gen::generatorPerson:firstName |
+| last name    | FieldSubSection |                   |                                |
+|              |                 | valid             | gen::generatorPerson:lastName  |
+| email        | FieldSubSection |                   |                                |
+|              |                 | valid             | gen::generatorPerson:email     |
 
 The format for a generator call is:
 
 ```
-generatorName:config
+gen:instanceIdSuffix:generatorName:config
 ```
 
+- **gen:** -- The prefix that marks the cell as a generator call. Without it, Nanook takes the cell as a static value: `generatorPerson:firstName` would end up in the test data as exactly that text.
+- **instanceIdSuffix** -- Empty here (`gen::`), so all three cells use the instance of the test case and get fields of the same person. `gen:1:…` and `gen:2:…` would describe two different persons in one test case.
 - **generatorName** -- The name under which the generator is registered in the registry.
 - **config** -- A parameter string passed to the generator. The generator decides how to interpret it. In this example, it determines which field of the person record to return.
 
@@ -139,10 +141,10 @@ export class GeneratorPerson extends DataGeneratorBase {
 There are several important concepts in this generator:
 
 **The `config` parameter.**
-When the spreadsheet contains `generatorPerson:firstName`, Nanook splits this into the generator name (`generatorPerson`) and the config string (`firstName`). The config is available via `request.generatorDirective.config`. The generator uses it to decide which field of the person record to return.
+When the spreadsheet contains `gen::generatorPerson:firstName`, Nanook splits this into the instance ID suffix (empty), the generator name (`generatorPerson`) and the config string (`firstName`). The config is available via `request.generatorDirective.config`. The generator uses it to decide which field of the person record to return.
 
 **The `instanceId` concept.**
-Each test case has a unique instance ID. When the processor encounters the three generator calls (`generatorPerson:firstName`, `generatorPerson:lastName`, `generatorPerson:email`) for the same test case, all three calls receive the same `instanceId`. The generator uses this to ensure it generates the person data only once and returns consistent fields. Without instance ID caching, the first name, last name, and email could come from different randomly generated persons.
+Each test case has a unique instance ID. When the processor encounters the three generator calls (`gen::generatorPerson:firstName`, `gen::generatorPerson:lastName`, `gen::generatorPerson:email`) for the same test case, all three calls receive the same `instanceId`. The generator uses this to ensure it generates the person data only once and returns consistent fields. Without instance ID caching, the first name, last name, and email could come from different randomly generated persons.
 
 **The `uniqueSet`.**
 `DataGeneratorBase` provides a built-in `Set` called `uniqueSet`. The generator uses it to track generated emails and ensure no duplicates. If a collision is detected, a numeric suffix is appended.
@@ -279,7 +281,7 @@ For most generators, you only need to override `generate()` or `doGenerate()`.
 
 In this tutorial you learned how to:
 
-1. Reference a custom generator from the spreadsheet using `generatorName:config` syntax.
+1. Reference a custom generator from the spreadsheet using `gen:instanceIdSuffix:generatorName:config` syntax.
 2. Extend `DataGeneratorBase` to create a generator that produces structured data.
 3. Use `instanceId` to ensure consistent data across multiple generator calls within the same test case.
 4. Use `uniqueSet` to guarantee uniqueness across test cases.
