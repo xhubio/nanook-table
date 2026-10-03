@@ -1,3 +1,15 @@
+# [3.3.0](https://github.com/xhubio/nanook-table/compare/v3.2.2...v3.3.0) (2026-10-03)
+
+
+### Bug Fixes
+
+* **skills:** keep warnings in the scripts; skills 0.5.0 ([118e780](https://github.com/xhubio/nanook-table/commit/118e78080f06aec534fec9c9f4850968bcddb2a5))
+
+
+### Features
+
+* **defaults:** default registry with faker, a default writer that works ([00ce74a](https://github.com/xhubio/nanook-table/commit/00ce74a05417059f8d6d4b5061a3caa2dd5ed161))
+
 ## [3.2.2](https://github.com/xhubio/nanook-table/compare/v3.2.1...v3.2.2) (2026-10-03)
 
 
