@@ -4,6 +4,7 @@ import fs from 'node:fs/promises'
 
 import { DataGeneratorRegistry } from '../../src/data-generator/DataGeneratorRegistry.js'
 import { DataGeneratorBase } from '../../src/data-generator/DataGeneratorBase.js'
+import { LoggerMemory } from '../../src/logger/index.js'
 import type { DataGeneratorGenerateRequest } from '../../src/data-generator/DataGeneratorInterface.js'
 import type { GeneratorDirectiveInterface } from '../../src/model/directive/GeneratorDirective.js'
 
@@ -208,4 +209,33 @@ test('generate: doGenerate is called per parameter with the unchanged instance i
   })
 
   expect(seen).toEqual(['1', '1'])
+})
+
+test('generate: a rejecting doGenerate is logged, also without testcaseMeta', async () => {
+  class GeneratorRejecting extends DataGeneratorBase {
+    // eslint-disable-next-line require-await
+    protected async doGenerate(request: DataGeneratorGenerateRequest) {
+      throw new Error(`unknown config '${request.generatorDirective?.config}'`)
+    }
+  }
+  const logger = new LoggerMemory()
+  const gen = new GeneratorRejecting({
+    generatorRegistry: new DataGeneratorRegistry(),
+    name: 'rejecting',
+    logger
+  })
+
+  // the directive a test builds by hand has no testcaseMeta
+  const value = await gen.generate({
+    instanceId: 'id1',
+    generatorDirective: directive('unknown')
+  })
+
+  expect(value).toBeUndefined()
+  expect(logger.entries.error).toHaveLength(1)
+  expect(logger.entries.error[0].message).toMatchObject({
+    message: "unknown config 'unknown'",
+    tableName: 'unknown',
+    generatorName: 'rejecting'
+  })
 })
