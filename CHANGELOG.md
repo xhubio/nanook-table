@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/xhubio/nanook-table/compare/v3.1.3...v3.2.0) (2026-10-03)
+
+
+### Features
+
+* **skill:** generate-test-data skill for tables that already exist ([c9be16a](https://github.com/xhubio/nanook-table/commit/c9be16af9c4497a35c1461c83db0bf2c96834657))
+
 ## [3.1.3](https://github.com/xhubio/nanook-table/compare/v3.1.2...v3.1.3) (2026-10-02)
 
 
