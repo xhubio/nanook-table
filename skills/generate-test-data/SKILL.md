@@ -11,7 +11,7 @@ description: >
   "nanook generate", "Testdaten generieren".
 license: MIT
 metadata:
-  version: "0.4.1"
+  version: "0.4.2"
 ---
 
 # nanook.xhub: Generate test data from an existing table
@@ -247,8 +247,7 @@ the workbook before writing the test. Generate the fixtures before the test run,
 
 - `data[tableName][instanceId]` is the record of the test case itself: one entry per field,
   MultiRowSections as arrays of `{ key, comment, other }`. Use the top-level `instanceId`:
-  `callTree.instanceId` of the root is a different id (Nanook renews the ids after building
-  the call tree).
+  up to Nanook 3.2.1, `callTree.instanceId` of the root was a different id.
 - **A table without a record of its own**: when every field of the test case is a reference to a
   whole record, `data[tableName]` does not exist. The referenced records are reached through the
   call tree, whose children ids do match `data`:

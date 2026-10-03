@@ -1,7 +1,7 @@
 {
   "name": "nanook",
   "description": "nanook.xhub: draft decision tables (equivalence classes, CASCADE coverage) as XLSX for a form, page or API, check the coverage, generate test data from new or existing tables and use it in tests with @xhubio/nanook-table.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": {
     "name": "xhub.io",
     "url": "https://xhub.io"

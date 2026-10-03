@@ -21,6 +21,7 @@ import type {
 import type { CallTreeInterface } from './CallTreeInterface.js'
 import type { NodeInterface } from './NodeInterface.js'
 import type { NodeGeneratorDirectiveInterface } from './NodeGeneratorDirectiveInterface.js'
+import type { GeneratorDirectiveInterface } from '../model/index.js'
 import type { NodeReferenceDirectiveInterface } from './NodeReferenceDirectiveInterface.js'
 import type { NodeFieldDirectiveInterface } from './NodeFieldDirectiveInterface.js'
 
@@ -74,6 +75,15 @@ export class TestcaseProcessor implements InterfaceProcessor {
 
   /** All the writer used to write the data of the test cases */
   writer: InterfaceWriter[]
+
+  /**
+   * The instance ID of the node a post-processing directive was created for. postProcess()
+   * gets the same instance ID as generate() got for that node, also for referenced tables.
+   */
+  private postProcessNodeIds = new WeakMap<
+    GeneratorDirectiveInterface,
+    string
+  >()
 
   constructor(opts: TestcaseProcessorOptions) {
     if (opts.writeMetaData) {
@@ -289,9 +299,11 @@ export class TestcaseProcessor implements InterfaceProcessor {
 
     // Now execute the directives in their order
     for (const directive of directives) {
-      const instanceId = directive.instanceIdSuffix
-        ? `${testcaseData.instanceId}:${directive.instanceIdSuffix}`
-        : testcaseData.instanceId
+      // a directive not created during generateData() falls back to the root instance
+      const instanceId = createGeneratorInstanceId(
+        this.postProcessNodeIds.get(directive) ?? testcaseData.instanceId,
+        directive.instanceIdSuffix
+      )
 
       const generator = this.generatorRegistry.getGenerator(
         directive.generatorName
@@ -341,7 +353,8 @@ export class TestcaseProcessor implements InterfaceProcessor {
           tableName: node.testcaseMeta.tableName,
           name: node.testcaseMeta.testcaseName,
           instanceId: node.instanceId,
-          callTree
+          // built again: the root node got a new instance ID after the checks above
+          callTree: this.buildCallTree(node)
         })
 
         await this.generateData(tcData, node, generatorSwitches)
@@ -569,9 +582,10 @@ export class TestcaseProcessor implements InterfaceProcessor {
       )
 
       // the instance id used for the generator
-      const genInstanceId = directive.instanceIdSuffix
-        ? `${directive.node.instanceId} : ${directive.instanceIdSuffix}`
-        : directive.node.instanceId
+      const genInstanceId = createGeneratorInstanceId(
+        directive.node.instanceId,
+        directive.instanceIdSuffix
+      )
 
       let data
       try {
@@ -640,6 +654,7 @@ export class TestcaseProcessor implements InterfaceProcessor {
         if (postProcessDirectives !== undefined) {
           for (const postProcessDirective of postProcessDirectives) {
             // The directive for postprocessing will only be stored if data was created
+            this.postProcessNodeIds.set(postProcessDirective, instanceId)
             testcaseData.postProcessDirectives.push(postProcessDirective)
           }
         }
@@ -959,4 +974,21 @@ export class TestcaseProcessor implements InterfaceProcessor {
 
     return nodeList
   }
+}
+
+/**
+ * Creates the instance ID a generator gets for a directive: the instance ID of the node, and
+ * with an instance ID suffix (gen:<suffix>:…) the suffix appended. generate() and postProcess()
+ * use the same ID for the same node and suffix.
+ * @param nodeInstanceId - The instance ID of the node the directive belongs to
+ * @param instanceIdSuffix - The instance ID suffix of the directive, if any
+ * @returns The instance ID for the generator
+ */
+function createGeneratorInstanceId(
+  nodeInstanceId: string,
+  instanceIdSuffix?: string
+): string {
+  return instanceIdSuffix
+    ? `${nodeInstanceId} : ${instanceIdSuffix}`
+    : nodeInstanceId
 }
