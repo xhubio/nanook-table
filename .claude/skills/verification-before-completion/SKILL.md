@@ -6,6 +6,9 @@ description: >
   Trigger: "verify before done", "abschluss pruefen", "verification",
   "ist alles fertig", "final check", "before completion"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Verification Before Completion — Abschluss-Pruefung

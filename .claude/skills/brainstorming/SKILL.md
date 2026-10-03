@@ -6,6 +6,9 @@ description: >
   Trigger: "brainstorm", "let's brainstorm", "ideenfindung", "design session",
   "lass uns brainstormen", "feature brainstorming"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Brainstorming — Strukturierte Ideenfindung

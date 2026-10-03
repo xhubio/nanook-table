@@ -6,6 +6,9 @@ description: >
   Trigger: "subagent development", "sub-agent driven", "agent-basierte entwicklung",
   "mit sub-agents implementieren", "orchestrated development"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Subagent-Driven Development — Orchestrierte Entwicklung

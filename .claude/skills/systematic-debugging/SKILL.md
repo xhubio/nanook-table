@@ -6,6 +6,9 @@ description: >
   Trigger: "debug", "systematisch debuggen", "root cause", "fehler finden",
   "bug analysieren", "systematic debugging", "why is this failing"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Systematic Debugging — Strukturiertes Fehlersuchen

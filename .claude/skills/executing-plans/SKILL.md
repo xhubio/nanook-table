@@ -6,6 +6,9 @@ description: >
   Trigger: "execute plan", "plan ausfuehren", "implement plan",
   "plan umsetzen", "schritte ausfuehren", "plan abarbeiten"
 version: 0.1.0
+metadata:
+  # development workflow of this repo, not offered by npx skills add
+  internal: true
 ---
 
 # Executing Plans — Plaene ausfuehren
