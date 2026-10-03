@@ -6,7 +6,10 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { DataGeneratorRegistry } from '../data-generator/index.js'
+import {
+  DataGeneratorRegistry,
+  GeneratorFaker
+} from '../data-generator/index.js'
 import type { InterfaceWriter } from './InterfaceWriter.js'
 import {
   FileProcessor,
@@ -16,15 +19,37 @@ import {
 } from '../file-processor/index.js'
 
 import { ImporterXlsx } from '../importer-xlsx/index.js'
+import { getLoggerMemory } from '../logger/index.js'
 import type { LoggerInterface } from '../logger/index.js'
 import type { TestcaseDataInterface } from './TestcaseDataInterface.js'
 
-export function createDefaultGeneratorRegistry() {
-  return new DataGeneratorRegistry()
+/**
+ * Creates a generator registry with 'faker' registered, so that cells like
+ * 'gen::faker:person.firstName' work. Register further generators on it; one
+ * registered as 'faker' replaces the built-in one.
+ * @param logger - The logger for the faker generator (default: the shared LoggerMemory)
+ * @returns The registry
+ */
+export function createDefaultGeneratorRegistry(
+  logger: LoggerInterface = getLoggerMemory()
+) {
+  const generatorRegistry = new DataGeneratorRegistry()
+  generatorRegistry.registerGenerator(
+    'faker',
+    new GeneratorFaker({ generatorRegistry, name: 'faker', logger })
+  )
+  return generatorRegistry
 }
 
-export function createDefaultWriter(logger: LoggerInterface) {
-  return [new DefaultWriter({ logger })]
+/**
+ * Creates the default writer: one JSON file per test case, written as
+ * testcaseData.json into a folder named after the test case inside 'dir'.
+ * @param logger - The logger
+ * @param dir - The directory to write into (default: 'tdg')
+ * @returns An array with the writer, as TestcaseProcessor expects it
+ */
+export function createDefaultWriter(logger: LoggerInterface, dir = 'tdg') {
+  return [new DefaultWriter({ logger, dir })]
 }
 
 export function createDefaultFileProcessor(logger: LoggerInterface) {
@@ -53,21 +78,31 @@ export function createDefaultFileProcessor(logger: LoggerInterface) {
 class DefaultWriter implements InterfaceWriter {
   logger: LoggerInterface
 
-  constructor(opts: { logger: LoggerInterface }) {
+  /** The directory the test cases are written into */
+  dir: string
+
+  constructor(opts: { logger: LoggerInterface; dir: string }) {
     this.logger = opts.logger
+    this.dir = opts.dir
   }
 
-  before(): Promise<void> {
-    throw new Error('Method not implemented.')
+  /**
+   * Creates the target directory
+   */
+  async before(): Promise<void> {
+    await fs.mkdir(this.dir, { recursive: true })
   }
+
   after(): Promise<void> {
-    throw new Error('Method not implemented.')
+    return Promise.resolve()
   }
+
   /**
    * Writes the data
    */
   async write(testcaseData: TestcaseDataInterface): Promise<void> {
     const fileName = this.createFileName(testcaseData)
+    await fs.mkdir(path.dirname(fileName), { recursive: true })
     await fs.writeFile(fileName, JSON.stringify(testcaseData, null, 2))
   }
 
@@ -78,7 +113,7 @@ class DefaultWriter implements InterfaceWriter {
    */
   createFileName(testcaseData: TestcaseDataInterface): string {
     const tcName = testcaseData.name
-    const targetDir = path.join('tdg', tcName)
+    const targetDir = path.join(this.dir, tcName)
     return path.join(targetDir, 'testcaseData.json')
   }
 }

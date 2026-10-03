@@ -11,7 +11,7 @@ description: >
   "nanook generate", "Testdaten generieren".
 license: MIT
 metadata:
-  version: "0.4.2"
+  version: "0.5.0"
 ---
 
 # nanook.xhub: Generate test data from an existing table
@@ -290,7 +290,7 @@ ExecuteSection: `t y j 1 yes ja si true ok` (any case) is **true**, everything e
 | several fields of one test case have the same random value | Nanook 3.2.0 or older (cache per instance id only), or an own `generate()` override that caches by id alone | upgrade, or see "Caching" in step 3 |
 | a table yields nothing | no column has a true Execute value (`x` is false) | `T` / `1` / `yes` |
 | a second sheet with the same name replaced the first | Nanook keys tables by name, a duplicate overwrites (warning in step 1) | rename one of them |
-| `Method not implemented` in `before()` | an own script uses `createDefaultWriter()`; it is a stub | use the writer from `generate-fixtures.mts` |
+| `Method not implemented` in `before()` | an own script uses `createDefaultWriter()` with Nanook 3.2.x or older, where it is a stub | upgrade to 3.3.0, or use the writer from `generate-fixtures.mts` |
 | `A filterProcessor with the name 'X' does not exists. Filter is ignored` | the FilterSection names a processor `generate-fixtures.mts` does not register | use `SimpleArrayFilter`/`SimpleArrayIgnoreFilter` in the table, or write one (`name` and `filter(tags, expression)`) and add it with `processor.addFilterProcessor(new X({ name: 'X' }))` next to the two existing ones |
 
 ## After generating

@@ -244,7 +244,7 @@ main()
 
 Key points:
 
-- **Do not use `createDefaultWriter(logger)` here.** In 3.x its `before()` and `after()` throw `Method not implemented`, so the processor stops before the first test case. Write your own writer, as above.
+- **`createDefaultWriter(logger)`** writes `tdg/<test case>/testcaseData.json` since 3.3.0, like the JSON writer above. Up to 3.2.x its `before()` and `after()` threw `Method not implemented`, so the processor stopped before the first test case; there, write your own writer.
 - **The `writer` option** accepts an array of writers. They execute in the order they appear: the JSON writer runs first (creating the directory and writing `testcaseData.json`), then the CSV writer runs second (writing `person.csv` into the same directory).
 - You can register as many writers as you need. Each writer independently extracts and formats the data it cares about.
 

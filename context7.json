@@ -17,9 +17,10 @@
   "rules": [
     "Import everything from '@xhubio/nanook-table' (ESM, Node.js 22 or newer).",
     "Pass the tables to TestcaseProcessor keyed by table name, not as the array from FileProcessor.tables, or every ref: directive fails.",
-    "createDefaultGeneratorRegistry() returns an empty registry: register every generator a table calls, e.g. new GeneratorFaker({ generatorRegistry, name: 'faker', logger }).",
+    "createDefaultGeneratorRegistry(logger) comes with 'faker' (3.3.0 or later; empty up to 3.2.x); register every other generator a table calls. new DataGeneratorRegistry() starts empty. Registering a taken name replaces the generator.",
     "The built-in faker generator takes a Faker path and no arguments (gen::faker:internet.email); anything else needs its own generator extending DataGeneratorBase.",
-    "In 3.x the default writer throws in before(); use your own InterfaceWriter.",
+    "createDefaultWriter(logger, dir) writes dir/<test case>/testcaseData.json (3.3.0 or later); up to 3.2.x it throws in before(), use your own InterfaceWriter there.",
+    "The logger's default level is 'error': set logger.level = 'warning' or lower to keep warnings in LoggerMemory.entries.",
     "Nanook logs a failed generator or unresolved reference and goes on: compare the number of generated test cases with the test-case columns."
   ]
 }

@@ -174,11 +174,11 @@ main()
 Let's walk through what each part does:
 
 1. **LoggerMemory** stores all log entries in memory. Setting `writeConsole = true` also prints them to the terminal so you can follow what happens.
-2. **createDefaultFileProcessor** creates a pre-configured file processor that knows how to read `.xlsx` files and parse `<DECISION_TABLE>`, `<MATRIX_TABLE>`, and `<SPECIFICATION_TABLE>` sheets.
+2. **createDefaultFileProcessor** creates a pre-configured file processor that knows how to read `.xlsx` files and parse `<DECISION_TABLE>`, `<MATRIX_TABLE>`, and `<SPECIFICATION>` sheets.
 3. **fileProcessor.load()** reads the Excel file, identifies sheets by their identifier, and parses them into table model objects. You can call `load()` multiple times to load multiple spreadsheets. Table names must be unique across all loaded files.
 4. **tables** -- `fileProcessor.tables` is an array, but the processor expects an object keyed by table name. Without this step every reference (`ref:`) to another table fails with "The targetTable 'X' does not exists".
-5. **writer** -- a writer receives every generated test case. This one writes `tdg/<test case>/testcaseData.json`. [Create a Custom Writer](create-writer.md) shows how to build writers as classes. (`createDefaultWriter()` is not usable in 3.x: its `before()` throws `Method not implemented`.)
-6. **TestcaseProcessor** is the core engine. It needs a generator registry (where data generators are registered; `createDefaultGeneratorRegistry()` returns an empty one, which is enough for static values), one or more writers (that output the generated data), the tables, and a logger.
+5. **writer** -- a writer receives every generated test case. This one writes `tdg/<test case>/testcaseData.json`. [Create a Custom Writer](create-writer.md) shows how to build writers as classes. Since 3.3.0 `createDefaultWriter(logger)` writes the same layout; up to 3.2.x its `before()` threw `Method not implemented`.
+6. **TestcaseProcessor** is the core engine. It needs a generator registry (where data generators are registered; `createDefaultGeneratorRegistry(logger)` returns one with `faker` registered; up to 3.2.x it was empty, which is enough for static values), one or more writers (that output the generated data), the tables, and a logger.
 7. **processor.process()** iterates over every table and every test case, runs the generators, and passes the results to the writers.
 
 ### Run the Script

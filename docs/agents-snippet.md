@@ -23,8 +23,11 @@ Test cases are defined in XLSX workbooks and turned into test data with
   needs its own generator.
 - Pass the tables to TestcaseProcessor keyed by table name, not as the
   array from FileProcessor, or every ref: fails.
-- In 3.0.1 the default writer throws in before(); use an inline
-  InterfaceWriter.
+- Up to 3.2.x the default writer throws in before() and the default
+  registry is empty; use an inline InterfaceWriter and register faker
+  yourself. From 3.3.0 both work.
+- LoggerMemory keeps only errors by default; set logger.level =
+  'warning' to see warnings as well.
 - After generating, compare the number of test cases with the number of
   test-case columns (plus one per extra element of a range reference).
   Fewer means a generator failed: Nanook logs the error and goes on.

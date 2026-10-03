@@ -82,13 +82,13 @@ All source code lives under `src/` organized by module:
 
 ```typescript
 import {
-  createDefaultGeneratorRegistry,  // returns EMPTY registry — register generators manually
-  createDefaultWriter,             // DefaultWriter (JSON output to tdg/)
+  createDefaultGeneratorRegistry,  // registry with 'faker' registered (since 3.3.0)
+  createDefaultWriter,             // DefaultWriter (tdg/<test case>/testcaseData.json)
   createDefaultFileProcessor       // FileProcessor with all parsers pre-registered
 } from '@xhubio/nanook-table'
 ```
 
-**Important**: `createDefaultGeneratorRegistry()` returns an empty registry. You must manually register generators (e.g., `GeneratorFaker`).
+**Important**: `createDefaultGeneratorRegistry()` registers only `faker`; register every other generator a table calls. `new DataGeneratorRegistry()` starts empty. `registerGenerator()` replaces a generator registered under the same name (up to 3.2.x it threw).
 
 ## Code Style & Conventions
 
@@ -122,7 +122,7 @@ Key domain concepts for understanding the codebase:
 
 ## Common Pitfalls
 
-1. `createDefaultGeneratorRegistry()` returns an EMPTY registry — always register generators
+1. `createDefaultGeneratorRegistry()` registers only `faker` — register every other generator; `new DataGeneratorRegistry()` is empty
 2. xlsx must be imported as default import, not namespace import
 3. ExecuteSection boolean values must match `/^[tyj]$|^1$|^yes$|^ja$|^si$|^true$|^ok$/i` — `'x'` is NOT recognized as true
 4. Relative imports need `.js` extension (ESM NodeNext resolution)
