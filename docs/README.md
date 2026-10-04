@@ -110,6 +110,11 @@ Output Files / Data
 
 ## Documentation Structure
 
+### For AI agents
+
+- [agents.md](agents.md) -- One guide an agent follows end to end: install, which skill to read, what goes in a cell, how to check the count
+- [agents-snippet.md](agents-snippet.md) -- Rules block for a project's `AGENTS.md`
+
 ### API Reference (`api/`)
 
 Detailed reference for every public class, interface, and function:

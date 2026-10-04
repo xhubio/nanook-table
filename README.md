@@ -178,6 +178,15 @@ See the [docs/](docs/) directory for detailed guides, API reference, and tutoria
 
 [![skills.sh](https://skills.sh/b/xhubio/nanook-table)](https://skills.sh/xhubio/nanook-table)
 
+**Any agent, no setup**: paste this prompt into it.
+
+```
+Read https://nanook.xhub.io/agents.md and follow it to add Nanook test cases and test data for <the form or API to test> to this project.
+```
+
+[`docs/agents.md`](docs/agents.md) is that guide: install, which skill to read, what goes in a cell,
+how to check the count. It ships in the npm package as well.
+
 Two nanook.xhub skills live in [`skills/`](skills/) and ship in the npm package:
 
 - [`create-equivalence-class-table`](skills/create-equivalence-class-table/SKILL.md) drafts a decision
