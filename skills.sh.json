@@ -1,0 +1,10 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Nanook",
+      "description": "Draft a decision table for a form or API, then generate test data from it. Any agent: https://nanook.xhub.io/agents.md",
+      "skills": ["create-equivalence-class-table", "generate-test-data"]
+    }
+  ]
+}
