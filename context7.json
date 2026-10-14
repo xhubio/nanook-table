@@ -1,5 +1,7 @@
 {
   "$schema": "https://context7.com/schema/context7.json",
+  "url": "https://context7.com/xhubio/nanook-table",
+  "public_key": "pk_rH1oz2XRmYeOwGHOQ9jmk",
   "projectTitle": "nanook.xhub",
   "description": "Test cases from equivalence class tables in XLSX, test data from pluggable generators and writers (@xhubio/nanook-table).",
   "excludeFolders": [
